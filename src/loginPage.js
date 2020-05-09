@@ -5,13 +5,43 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state={
-            username:"",
+            email:"",
             password:""
         }
 
     }
-    handleSubmit=()=>{
+    handleEmail=(e)=>{
+        this.setState({
+            email:e.target.value
+        })
+    }
+    handlePassword=(e)=>{
+        this.setState({
+            password:e.target.value
+        })
+    }
+    handleLogin=()=>{
+        let data = {
+            email:this.state.email,
+            password:this.state.password
+        }
+        console.log(data)
         // Check to see if they could authenticate
+        fetch("http://localhost:3000/users/login", {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Access-Control-Allow-Origin':"http://localhost:8000/sign-in"
+            },
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
     }
 
 
@@ -38,7 +68,7 @@ class LoginPage extends Component {
                         </div>
                     </div>
 
-                    <Button color="primary" type="submit" variant="contained" >Submit</Button>
+                    <Button color="primary" type="submit" variant="contained" onClick={this.handleLogin} >Submit</Button>
                     <p className="forgot-password text-right">
                         Forgot <a href="#">password?</a>
                     </p>
