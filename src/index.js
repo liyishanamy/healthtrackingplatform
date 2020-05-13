@@ -3,10 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter as Router, BrowserRouter, Route, Switch} from "react-router-dom";
+import LoginPage from "./loginPage";
+import SignupPage from "./signupPage";
+import NewPage from "./newPage";
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+      <div className="auth-wrapper">
+          <div className="auth-inner">
+              <Switch>
+                  <Route exact path='/' component={LoginPage} />
+                  <Route path="/sign-in" component={LoginPage} />
+                  <Route path="/sign-up" component={SignupPage} />
+                  <Route path="/dashboard" component={NewPage}/>
+                  <Route path="/logout" component={LoginPage}/>
+              </Switch>
+              <App/>
+          </div>
+      </div>
+
   </BrowserRouter>,
   document.getElementById('root')
 );

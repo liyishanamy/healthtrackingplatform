@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state={
             email:"",
-            password:""
+            password:"",
+            status:false
         }
 
+
     }
+
     handleEmail=(e)=>{
         this.setState({
             email:e.target.value
@@ -20,14 +24,14 @@ class LoginPage extends Component {
             password:e.target.value
         })
     }
-    handleLogin=()=>{
+    handleLogin=(event)=>{
         let data = {
             email:this.state.email,
             password:this.state.password
         }
         console.log(data)
         // Check to see if they could authenticate
-        fetch("http://localhost:3000/users/login", {
+        fetch("http://localhost:3000/login", {
             method: 'POST',
             headers:{
                 'Content-Type':'application/json',
@@ -36,11 +40,18 @@ class LoginPage extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
+
                 console.log('Success:', data);
+                localStorage.setItem("accessToken",data.accessToken)
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
+        event.preventDefault();
+        const {history} = this.props
+        localStorage.setItem("loggedIn",true)
+
+        history.push('/dashboard')
 
     }
 
@@ -53,12 +64,12 @@ class LoginPage extends Component {
 
                     <div className="form-group">
                         <label>Email address</label>
-                        <Input type="email" className="form-control" placeholder="Enter email" />
+                        <Input type="email" className="form-control" placeholder="Enter email" value={this.state.email} onChange={this.handleEmail} required/>
                     </div>
 
                     <div className="form-group">
                         <label>Password</label>
-                        <Input type="password" className="form-control" placeholder="Enter password" />
+                        <Input type="password" className="form-control" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword} required/>
                     </div>
 
                     <div className="form-group">

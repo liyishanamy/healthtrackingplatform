@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link,useHistory } from "react-router-dom";
 import DatePicker from "react-date-picker";
 import Radio from "@material-ui/core/Radio";
 import {Button,FormControl,FormLabel,RadioGroup,FormControlLabel} from "@material-ui/core";
@@ -121,8 +121,6 @@ class SignupPage extends Component {
                 confirmedPassword: this.state.confirmedPassword
             }
             console.log(JSON.stringify(data))
-
-
             fetch("http://localhost:3000/users", {
                 method: 'POST',
                 headers:{
@@ -137,6 +135,9 @@ class SignupPage extends Component {
                 .catch((error) => {
                     console.error('Error:', error);
                 });
+            const {history} = this.props
+
+            history.push('/sign-in')
 
 
 
