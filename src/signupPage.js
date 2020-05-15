@@ -14,6 +14,8 @@ class SignupPage extends Component {
             firstname:"",
             lastname:"",
             gender:"",
+            role:"",
+            shouldInvitation:false,
             date:new Date(),
             street:"",
             city:"",
@@ -49,6 +51,23 @@ class SignupPage extends Component {
     handleGender=(e)=>{
         this.setState({
             gender:e.target.value
+        })
+    }
+
+    handleRole=(e)=>{
+        this.setState({
+            role:e.target.value
+        },()=>{
+            if (this.state.role ==="patient"){
+                this.setState({
+                    shouldInvitation:true
+                })
+            }if(this.state.role==="doctor"){
+                this.setState({
+                    shouldInvitation:false
+                })
+            }
+
         })
     }
     handleInvitation=(e)=>{
@@ -96,48 +115,78 @@ class SignupPage extends Component {
         event.preventDefault();
         const form = event.target;
         console.log(event.target);
-        if(this.state.password!==this.state.confirmedPassword){
+        if(this.state.password!==this.state.confirmedPassword) {
             this.setState({
-                passwordErrorMsg:"Error message does not match up"
+                passwordErrorMsg: "Error message does not match up"
             })
         }
         else{
-            this.setState({
-                passwordErrorMsg:""
-            })
-
-            var data = {
-                firstname: this.state.firstname,
-                lastname: this.state.lastname,
-                gender: this.state.gender,
-                invitation:this.state.invitation,
-                street: this.state.street,
-                city: this.state.city,
-                state: this.state.state,
-                postcode: this.state.zip_code,
-                birthday:this.state.date,
-                email: this.state.email,
-                password: this.state.password,
-                confirmedPassword: this.state.confirmedPassword
-            }
-            console.log(JSON.stringify(data))
-            fetch("http://localhost:3000/users", {
-                method: 'POST',
-                headers:{
-                    'Content-Type':'application/json',
-                    'Access-Control-Allow-Origin':"http://localhost:8000/sign-up"
-                },
-                body: JSON.stringify(data),
-            }).then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
+            const passwordRegex =new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")
+            let pwd= this.state.password
+            if (!passwordRegex.test(pwd)){
+                this.setState({
+                    passwordErrorMsg:"The password should have at least 8 digits,and it must contain at least one digit, lower case letter, and one uppercase letter and one special char"
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            const {history} = this.props
+            }else{
+                this.setState({
+                    passwordErrorMsg:""
+                })
 
-            history.push('/sign-in')
+                var data = {
+                    firstname: this.state.firstname,
+                    lastname: this.state.lastname,
+                    gender: this.state.gender,
+                    role:this.state.role,
+                    invitation:this.state.invitation,
+                    street: this.state.street,
+                    city: this.state.city,
+                    state: this.state.state,
+                    postcode: this.state.zip_code,
+                    birthday:this.state.date,
+                    email: this.state.email,
+                    password: this.state.password,
+                    confirmedPassword: this.state.confirmedPassword
+                }
+                console.log(JSON.stringify(data))
+                fetch("http://localhost:3000/users", {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Access-Control-Allow-Origin':"http://localhost:8000/sign-up"
+                    },
+                    body: JSON.stringify(data),
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        if(data.message==="The doctor invitation code does not exist") {
+                            this.setState({
+                                passwordErrorMsg: data.message
+                            })
+                        }
+                        if(data.message==="The user email has been already in use."){
+                            this.setState({
+                                passwordErrorMsg:data.message
+                            })
+                        }
+
+
+                        else{
+                            this.setState({
+                                passwordErrorMsg:""
+                            })
+                            const {history} = this.props
+
+                            history.push('/sign-in')
+
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+
+                    });
+
+            }
+
 
 
 
@@ -164,24 +213,30 @@ class SignupPage extends Component {
 
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1"  onChange={this.handleGender} required>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                        <RadioGroup aria-label="gender" name="gender"  onChange={this.handleGender}  >
+                            <FormControlLabel value="female" control={<Radio required={true}/>}  label="Female" />
+                            <FormControlLabel value="male" control={<Radio required={true}/>}  label="Male" />
+                            <FormControlLabel value="other" control={<Radio required={true}/>}  label="Other" />
                         </RadioGroup>
                     </FormControl>
-
-
-
 
                     <div className="form-group">
                         <label>Email address</label>
                         <Input type="email" className="form-control" placeholder="Enter email" value={this.state.email} onChange={this.handleEmail} required />
                     </div>
-                    <div className="form-group">
+
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Role</FormLabel>
+                        <RadioGroup aria-label="role" name="role"  onChange={this.handleRole} >
+                            <FormControlLabel value="doctor" control={<Radio required={true} />} label="doctor" />
+                            <FormControlLabel value="patient" control={<Radio required={true} />} label="patient" />
+                        </RadioGroup>
+                    </FormControl>
+                    {this.state.shouldInvitation? (<div className="form-group">
                         <label>invitation code</label>
                         <Input type="text" className="form-control" placeholder="invitation code" value={this.state.invitation} onChange={this.handleInvitation} required />
-                    </div>
+                    </div>):null
+                    }
 
                     <div className="form-group">
                         <label>Birthday </label><br/>
