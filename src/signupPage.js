@@ -5,6 +5,7 @@ import DatePicker from "react-date-picker";
 import Radio from "@material-ui/core/Radio";
 import {Button,FormControl,FormLabel,RadioGroup,FormControlLabel} from "@material-ui/core";
 import Input from '@material-ui/core/Input';
+import MuiPhoneNumber from '@material-ui/core/TextField';
 
 
 class SignupPage extends Component {
@@ -24,6 +25,7 @@ class SignupPage extends Component {
             invitation:"",
             googleMapLink:"",
             autocomplete:null,
+            phone:"",
             email:"",
             password:"",
             confirmedPassword:"",
@@ -75,6 +77,11 @@ class SignupPage extends Component {
             invitation:e.target.value
         })
     }
+    handlePhone=(e)=>{
+        this.setState({
+            phone:e.target.value
+        })
+    }
 
     handleStreet=(e)=>{
         this.setState({
@@ -121,7 +128,8 @@ class SignupPage extends Component {
             })
         }
         else{
-            const passwordRegex =new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")
+            //const passwordRegex =new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")
+            const passwordRegex =new RegExp("^(?=.{3,})")
             let pwd= this.state.password
             if (!passwordRegex.test(pwd)){
                 this.setState({
@@ -143,16 +151,17 @@ class SignupPage extends Component {
                     state: this.state.state,
                     postcode: this.state.zip_code,
                     birthday:this.state.date,
+                    phone:this.state.phone,
                     email: this.state.email,
                     password: this.state.password,
                     confirmedPassword: this.state.confirmedPassword
                 }
                 console.log(JSON.stringify(data))
-                fetch("http://localhost:3000/users", {
+                fetch("http://localhost:3000/users/signup", {
                     method: 'POST',
                     headers:{
                         'Content-Type':'application/json',
-                        'Access-Control-Allow-Origin':"http://localhost:8000/sign-up"
+                        'Access-Control-Allow-Origin':"http://localhost:8000/signup"
                     },
                     body: JSON.stringify(data),
                 }).then(response => response.json())
@@ -175,8 +184,16 @@ class SignupPage extends Component {
                                 passwordErrorMsg:""
                             })
                             const {history} = this.props
+                            localStorage.setItem("accessToken",data.accessToken)
 
-                            history.push('/sign-in')
+                            //history.push(`/setSecurityQuestions`)
+                            history.push({
+                                pathname: '/setSecurityQuestions',
+                                state: { detail: data}
+                            });
+
+
+
 
                         }
                     })
@@ -242,6 +259,11 @@ class SignupPage extends Component {
                         <label>Birthday </label><br/>
                         <DatePicker onChange={this.onChange} value={this.state.date} />
                     </div>
+                    <div>
+                        <label>Phone </label><br/>
+                        <MuiPhoneNumber defaultCountry={'us'} onChange={this.handlePhone} value={this.state.phone}/>
+                    </div>
+
 
 
                     <div className="form-group">

@@ -6,7 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import {BrowserRouter as Router, BrowserRouter, Route, Switch} from "react-router-dom";
 import LoginPage from "./loginPage";
 import SignupPage from "./signupPage";
-import NewPage from "./newPage";
+import DoctorDashboard from "./doctorDashboard";
+import PatientDashboard from './patientDashboard';
+import SetSecurityQuestions from './setSecurityQuestions';
+import ForgetPasswordPage from './resetPassword/forgetPasswordPage';
+import AuthenticateUser from './resetPassword/authenticateUser';
 ReactDOM.render(
   <BrowserRouter>
       <div className="auth-wrapper">
@@ -15,8 +19,12 @@ ReactDOM.render(
                   <Route exact path='/' component={LoginPage} />
                   <Route path="/sign-in" component={LoginPage} />
                   <Route path="/sign-up" component={SignupPage} />
-                  <Route path="/dashboard" component={NewPage}/>
+                  <Route path="/dashboard/doctor" component={DoctorDashboard}/>
+                  <Route path="/dashboard/patient" component={PatientDashboard}/>
+                  <Route path="/setSecurityQuestions" component={SetSecurityQuestions}/>
                   <Route path="/logout" component={LoginPage}/>
+                  <Route path="/resetPassword" component={ForgetPasswordPage}/>
+                  <Route path='/authenticate' component={AuthenticateUser}/>
               </Switch>
               <App/>
           </div>

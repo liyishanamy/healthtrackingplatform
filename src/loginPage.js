@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state={
             email:"",
             password:"",
-            status:false
+            status:false,
+            errMsg:""
         }
 
 
@@ -25,6 +26,7 @@ class LoginPage extends Component {
         })
     }
     handleLogin=(event)=>{
+        event.preventDefault();
         let data = {
             email:this.state.email,
             password:this.state.password
@@ -40,19 +42,40 @@ class LoginPage extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
+                console.log("data",data)
+                if(data.message==="Authentication failed"){
+                    this.setState({
+                        errMsg:data.message
+                    })
 
-                console.log('Success:', data);
-                localStorage.setItem("accessToken",data.accessToken)
+                }else{
+                    console.log('Success:', data);
+                    localStorage.setItem("accessToken",data.accessToken)
+                    if(data.role==="doctor"){
+                        console.log("doctor")
+                        const {history} = this.props
+                        localStorage.setItem("loggedIn",true)
+                        localStorage.setItem('role',"doctor")
+                        history.push('/dashboard/doctor')
+                    }else if(data.role==="patient"){
+                        console.log("patient")
+                        const {history} = this.props
+                        localStorage.setItem("loggedIn",true)
+                        localStorage.setItem('role',"patient")
+                        history.push('/dashboard/patient')
+
+                    }
+
+                }
+
+
             })
             .catch((error) => {
+                this.setState({
+                    errMsg:error.toString()
+                })
                 console.error('Error:', error);
             });
-        event.preventDefault();
-        const {history} = this.props
-        localStorage.setItem("loggedIn",true)
-
-        history.push('/dashboard')
-
     }
 
 
@@ -71,6 +94,7 @@ class LoginPage extends Component {
                         <label>Password</label>
                         <Input type="password" className="form-control" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword} required/>
                     </div>
+                    <div>{this.state.errMsg}</div>
 
                     <div className="form-group">
                         <div className="custom-control custom-checkbox">
@@ -81,7 +105,7 @@ class LoginPage extends Component {
 
                     <Button color="primary" type="submit" variant="contained" onClick={this.handleLogin} >Submit</Button>
                     <p className="forgot-password text-right">
-                        Forgot <a href="#">password?</a>
+                         <Link className="nav-link" to={"/authenticate"}> Forgot password?</Link>
                     </p>
                 </form>
                 
