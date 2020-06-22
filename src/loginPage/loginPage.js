@@ -51,9 +51,11 @@ class LoginPage extends Component {
                 }else{
                     console.log('Success:', data);
                     localStorage.setItem("accessToken",data.accessToken)
+                    localStorage.setItem("userInfo",data)
                     if(data.role==="doctor"){
                         console.log("doctor")
                         const {history} = this.props
+                        localStorage.setItem("email",data.email)
                         localStorage.setItem("loggedIn",true)
                         localStorage.setItem('role',"doctor")
                         history.push('/dashboard/doctor')
@@ -61,6 +63,7 @@ class LoginPage extends Component {
                         console.log("patient")
                         const {history} = this.props
                         localStorage.setItem("loggedIn",true)
+                        localStorage.setItem("email",data.email)
                         localStorage.setItem('role',"patient")
                         history.push('/dashboard/patient')
 

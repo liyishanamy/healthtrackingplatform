@@ -167,12 +167,12 @@ class SignupPage extends Component {
                 }).then(response => response.json())
                     .then(data => {
                         console.log('Success:', data);
-                        if(data.message==="The doctor invitation code does not exist") {
+                        if(data.message==="The doctor invitation code is not valid") {
                             this.setState({
                                 passwordErrorMsg: data.message
                             })
                         }
-                        if(data.message==="The user email has been already in use."){
+                        else if(data.message==="The user email has been already in use."){
                             this.setState({
                                 passwordErrorMsg:data.message
                             })
@@ -185,7 +185,6 @@ class SignupPage extends Component {
                             })
                             const {history} = this.props
                             localStorage.setItem("accessToken",data.accessToken)
-
                             //history.push(`/setSecurityQuestions`)
                             history.push({
                                 pathname: '/setSecurityQuestions',

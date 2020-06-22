@@ -21,12 +21,15 @@ class AuthenticateUser extends Component {
     getSecurityQuestion=(e)=>{
         console.log("here",this.state.email)
         const data={
-            email:this.state.email
+            "email":this.state.email
         }
 
         console.log(JSON.stringify(data))
         fetch('http://localhost:3000/security-questions/getQuestions',{
             method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(data => {
@@ -36,6 +39,9 @@ class AuthenticateUser extends Component {
                         cannotFindUserMsg:data.message
                     })
                 }else{
+                    this.setState({
+                        cannotFindUserMsg:""
+                    })
 
                     this.setState({
                         question1:data['question1'],
@@ -75,7 +81,8 @@ class AuthenticateUser extends Component {
         fetch('http://localhost:3000/security-questions/authenticate',{
             method:'POST',
             headers:{
-                'Access-Control-Allow-Origin':'http://localhost:8000/authenticate'
+                'Access-Control-Allow-Origin':'http://localhost:8000/authenticate',
+                'Content-Type':'application/json'
             },
             body: JSON.stringify(data),
         })
@@ -89,7 +96,12 @@ class AuthenticateUser extends Component {
                 console.log('Success:', data);
                 this.setState({
                     accessToken:data.accessToken
+                },()=>{
+                    localStorage.setItem("accessToken",this.state.accessToken)
                 })
+
+                const {history} = this.props
+                history.push('/resetPassword')
 
             })
             .catch((error) => {

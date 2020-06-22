@@ -83,12 +83,14 @@ class SetSecurityQuestions extends Component {
                     const {history} = this.props
                     localStorage.setItem("loggedIn", true)
                     localStorage.setItem("role", "patient")
+                    localStorage.setItem('email',this.state.email)
                     history.push('/dashboard/patient')
 
                 } else if (this.state.userInfo.role === "doctor") {
                     const {history} = this.props
                     localStorage.setItem("loggedIn", true)
                     localStorage.setItem("role", "doctor")
+                    localStorage.setItem('email',this.state.email)
                     history.push('/dashboard/doctor')
                 }
             } )}

@@ -4,13 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter as Router, BrowserRouter, Route, Switch} from "react-router-dom";
-import LoginPage from "./loginPage";
-import SignupPage from "./signupPage";
-import DoctorDashboard from "./doctorDashboard";
-import PatientDashboard from './patientDashboard';
-import SetSecurityQuestions from './setSecurityQuestions';
+import LoginPage from "./loginPage/loginPage";
+import SignupPage from "./signupProcess/signupPage";
+import DoctorDashboard from "./doctor/doctorDashboard";
+import PatientDashboard from './patient/patientDashboard';
+import SetSecurityQuestions from './signupProcess/setSecurityQuestions';
 import ForgetPasswordPage from './resetPassword/forgetPasswordPage';
 import AuthenticateUser from './resetPassword/authenticateUser';
+import UserProfile from './profile/userProfile';
+import PatientList from './patientList/patientList';
+import HealthStatus from './patient/healthStatus';
+import MyStats from './patient/myStats'
 ReactDOM.render(
   <BrowserRouter>
       <div className="auth-wrapper">
@@ -25,6 +29,10 @@ ReactDOM.render(
                   <Route path="/logout" component={LoginPage}/>
                   <Route path="/resetPassword" component={ForgetPasswordPage}/>
                   <Route path='/authenticate' component={AuthenticateUser}/>
+                  <Route path='/userProfile' component={UserProfile}/>
+                  <Route path="/patientList" component={PatientList}/>
+                  <Route path='/healthStatus' component={HealthStatus} />
+                  <Route path='/myStats' component={MyStats}/>
               </Switch>
               <App/>
           </div>
