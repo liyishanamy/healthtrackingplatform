@@ -12,33 +12,43 @@ import SetSecurityQuestions from './signupProcess/setSecurityQuestions';
 import ForgetPasswordPage from './resetPassword/forgetPasswordPage';
 import AuthenticateUser from './resetPassword/authenticateUser';
 import UserProfile from './profile/userProfile';
-import PatientList from './patientList/patientList';
+import PatientList from './doctor/patientList';
 import HealthStatus from './patient/healthStatus';
 import MyStats from './patient/myStats'
+import PatientChatbox from "./patient/patientChatbox";
+import PatientHealthStatus from "./doctor/patientPanel"
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import theme from "./theme";
 ReactDOM.render(
-  <BrowserRouter>
-      <div className="auth-wrapper">
-          <div className="auth-inner">
-              <Switch>
-                  <Route exact path='/' component={LoginPage} />
-                  <Route path="/sign-in" component={LoginPage} />
-                  <Route path="/sign-up" component={SignupPage} />
-                  <Route path="/dashboard/doctor" component={DoctorDashboard}/>
-                  <Route path="/dashboard/patient" component={PatientDashboard}/>
-                  <Route path="/setSecurityQuestions" component={SetSecurityQuestions}/>
-                  <Route path="/logout" component={LoginPage}/>
-                  <Route path="/resetPassword" component={ForgetPasswordPage}/>
-                  <Route path='/authenticate' component={AuthenticateUser}/>
-                  <Route path='/userProfile' component={UserProfile}/>
-                  <Route path="/patientList" component={PatientList}/>
-                  <Route path='/healthStatus' component={HealthStatus} />
-                  <Route path='/myStats' component={MyStats}/>
-              </Switch>
-              <App/>
-          </div>
-      </div>
+    <ThemeProvider theme={theme}>
+        <BrowserRouter>
+            <div className="auth-wrapper">
+                <div className="auth-inner">
+                    <Switch>
+                        <Route exact path='/' component={LoginPage} />
+                        <Route path="/sign-in" component={LoginPage} />
+                        <Route path="/sign-up" component={SignupPage} />
+                        <Route path="/dashboard/doctor" component={DoctorDashboard}/>
+                        <Route path="/dashboard/patient" component={PatientDashboard}/>
+                        <Route path="/setSecurityQuestions" component={SetSecurityQuestions}/>
+                        <Route path="/logout" component={LoginPage}/>
+                        <Route path="/resetPassword" component={ForgetPasswordPage}/>
+                        <Route path='/authenticate' component={AuthenticateUser}/>
+                        <Route path='/userProfile' component={UserProfile}/>
+                        <Route path="/patientList" component={PatientList}/>
+                        <Route path='/healthStatus' component={HealthStatus} />
+                        <Route path='/myStats' component={MyStats}/>
+                        <Route path='/patientChatbox' component={PatientChatbox}/>
+                        <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
+                    </Switch>
+                    <App/>
+                </div>
+            </div>
 
-  </BrowserRouter>,
+        </BrowserRouter>
+
+    </ThemeProvider>,
+
   document.getElementById('root')
 );
 

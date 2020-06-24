@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import UserProfile from "../profile/userProfile";
 import HealthStatus from "./healthStatus";
+import MyStats from "./myStats";
+import PatientChatbox from './patientChatbox';
+import PatientAppointment from './patientAppointment'
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -22,7 +25,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -64,8 +67,9 @@ export default function SimpleTabs() {
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="User profile" {...a11yProps(0)} />
                     <Tab label="Daily Health Updates" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} />
-                    <Tab label="Item Four" {...a11yProps(3)} />
+                    <Tab label="My Health" {...a11yProps(2)} />
+                    <Tab label="My Appointment" {...a11yProps(3)} />
+                    <Tab label="Chat" {...a11yProps(4)} />
 
                 </Tabs>
             </AppBar>
@@ -76,10 +80,13 @@ export default function SimpleTabs() {
                 <HealthStatus />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
+                <MyStats />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                Item Four
+                <PatientAppointment/>
+            </TabPanel>
+            <TabPanel value={value} index={4}>
+                <PatientChatbox/>
             </TabPanel>
         </div>
     );

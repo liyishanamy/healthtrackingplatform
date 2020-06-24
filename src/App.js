@@ -6,6 +6,7 @@ import LoginPage from "./loginPage/loginPage";
 import SignupPage from "./signupProcess/signupPage";
 import DoctorDashboard from "./doctor/doctorDashboard";
 
+
 function handleLogout() {
     console.log("click logout")
     let deleteToken={"token":localStorage.getItem("accessToken")}
@@ -76,7 +77,10 @@ function App() {
   return (
       <div className="App">
           {element}
-        </div>
+      </div>
+
+
+
 
   );
 }

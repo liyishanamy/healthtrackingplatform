@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Select from 'react-select';
@@ -48,50 +48,55 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
-function handleSubmit(temp,symptoms) {
-    const data={
-        email:localStorage.getItem("email"),
-        temperature:temp,
-        symptom:symptoms
-
-    }
-    console.log(data)
-    console.log("hello")
-    fetch("http://localhost:3000/healthStatus", {
-        method: 'POST',
-        headers:{
-            'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-            'Content-Type':'application/json'
-        },
-        body: JSON.stringify(data),
-    }).then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-
-
-        })
-
-}
 
 export default function DiscreteSlider() {
     //const alert = useAlert()
     const classes = useStyles();
     const options = [
-        { value: 'Headache', label: 'Headache' },
-        { value: 'Cough', label: 'Cough' },
-        { value: 'Running Nose', label: 'Running Nose' },
-        { value: 'Diarrhea', label: 'Diarrhea' },
-        { value: 'Breathe Hard', label: 'Breathe Hard' }
+        {value: 'Headache', label: 'Headache'},
+        {value: 'Cough', label: 'Cough'},
+        {value: 'Running Nose', label: 'Running Nose'},
+        {value: 'Diarrhea', label: 'Diarrhea'},
+        {value: 'Breathe Hard', label: 'Breathe Hard'}
     ]
-    const [temp, setTemp] = useState("35");
-    const [symptoms,setSymptoms] = useState([])
+    const [temp, setTemp] = useState(35);
+    const [symptoms, setSymptoms] = useState([])
     let symptom = symptoms
 
+    function handleSubmit(temp, symptoms) {
+        console.log(temp)
+        console.log(symptoms)
+        let symptom = []
+        for(var i=0;i<symptoms.length;i++){
+            symptom = symptom.concat(symptoms[i].value)
+        }
+        const data = {
+            email: localStorage.getItem("email"),
+            temperature: temp,
+            symptom: symptom
+        }
+        console.log(data)
+        fetch("http://localhost:3000/healthStatus", {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                setSymptoms([])
+                setTemp(35);
+
+            })
+
+    }
 
 
     return (
         <div className={classes.root}>
-            <div>{new Date().getFullYear()+"/"+(new Date().getMonth()+1)+"/"+new Date().getDate()}</div>
+            <div>{new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate()}</div>
 
 
             <Typography id="discrete-slider-custom" gutterBottom>
@@ -106,8 +111,9 @@ export default function DiscreteSlider() {
                 marks={marks}
                 min={35}
                 max={40}
+                value={temp}
                 // onChange={(value) => setTemp(value)}
-                onChange={(event,value) => setTemp(value)}
+                onChange={(event, value) => setTemp(value)}
             />
             <label>Symptoms</label>
 
@@ -117,21 +123,26 @@ export default function DiscreteSlider() {
                 options={options}
                 className="basic-multi-select"
                 classNamePrefix="select"
-                onChange = {(event,value) => {
-                    if(value.action==="select-option"){
-                        symptom = symptom.concat(value.option.value)
+                isClearable={true}
+                value={symptoms}
+                onChange={(event, value) => {
+
+                    console.log(value)
+                    if (value.action === "select-option") {
+                        symptom = symptom.concat(value.option)
+                        console.log(symptoms)
                         setSymptoms(symptom)
-                    }
-                    else if(value.action ==="remove-value"){
-                       symptom = symptom.filter(item=>item!==value.removedValue.value);
-                       setSymptoms(symptom)
+                    } else if (value.action === "remove-value") {
+                        symptom = symptom.filter(item => item !== value.removedValue.value);
+                        setSymptoms(symptom)
 
                     }
 
 
                 }}
             />
-            <Button onClick={()=>handleSubmit(temp,symptoms)}>Submit</Button>
+
+            <Button onClick={() => handleSubmit(temp, symptoms)}>Submit</Button>
 
         </div>
     );
