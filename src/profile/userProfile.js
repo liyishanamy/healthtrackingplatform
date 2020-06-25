@@ -1,13 +1,18 @@
 import React, {Component} from 'react';
 import ImageUploader from 'react-images-upload';
 import {Button} from "@material-ui/core";
-import axios from 'axios';
+import axios from "axios";
+import Avatar from "@material-ui/core/Avatar";
+import {render} from 'react-dom';
+import AvatarUploader from "react-avatar-uploader"
 class UserProfile extends Component {
     constructor(props) {
         super(props);
         this.state={
             email:localStorage.getItem("email"),
             pictures:null,
+            image_preview:null,
+            image:null,
             firstname:"",
             lastname:"",
             birthday:"",
@@ -15,40 +20,53 @@ class UserProfile extends Component {
             invitationCode:"",
             address:""
         }
-        this.onDrop = this.onDrop.bind(this);
+        //this.onDrop = this.onDrop.bind(this);
     }
-    onDrop(picture) {
-        this.setState({
-            pictures: picture,
-        },()=>{
-            console.log(this.state.pictures)
-        });
-    }
-    fileUploadHandler=()=>{
+    // onDrop(picture) {
+    //     this.setState({
+    //         pictures: picture,
+    //     },()=>{
+    //         console.log(this.state.pictures)
+    //     });
+    // }
+    fileUploadHandler=(e)=>{
+        e.preventDefault()
         let formData = new FormData()
-        let pic = this.state.pictures;
+        let pic = this.state.image;
         let email = this.state.email;
-        let url = " http://localhost:3000/user/profileImage"
-        formData.set('image', pic)
-        formData.set('email', email)
+        let url = "http://localhost:3000/user/profileImage"
+        formData.append('image', pic)
+        formData.append('email', email)
         console.log(formData)
         for (var key of formData.entries()) {
             console.log(key[0] + ', ' + key[1])
+
         }
+        // fetch(url, {
+        //     method: 'POST',
+        //     headers:{
+        //         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+        //     },
+        //     body: formData,
+        // }).then(response => response.json())
+        //     .then(data => {
+        //
+        //     })
 
-        axios({
-            method: 'post',
-            url: url,
-            data: formData,
+        axios.post(url,formData,{
+            //method: 'post',
+            //url: url,
             headers:
-                {'Content-Type': 'multipart/form-data',
+                {
+                    'Content-Type': 'multipart/form-data',
                 'Authorization':'Bearer ' +(localStorage.getItem("accessToken")),
-
             }
+        }).then(res=>{
+            console.log(res);
+
         })
             .then(function (response) {
                 //handle success
-                console.log("hello")
                 console.log(response);
             })
             .catch(function (response) {
@@ -57,6 +75,21 @@ class UserProfile extends Component {
             });
 
     }
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    };
+
+    handleImageChange = (e) => {
+        console.log(e.target.files[0])
+        let image_as_base64 = URL.createObjectURL(e.target.files[0])
+        console.log("image_as_base64",image_as_base64)
+        this.setState({
+            image: e.target.files[0],
+            image_preview:image_as_base64
+        })
+    };
     componentDidMount() {
         fetch("http://localhost:3000/user", {
             method: 'POST',
@@ -78,20 +111,37 @@ class UserProfile extends Component {
                 })
 
             })
+        fetch('http://localhost:3000/user/getImage',{
+            method: 'POST',
+            headers:{
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type':'application/json',
+
+            },
+            body: JSON.stringify({userEmail:this.state.email}),
+
+        }).then(response => response.json())
+            .then(data => {
+                this.setState({
+                    image_preview:data.url
+                })
+
+
+        })
     }
 
     render() {
         return (
             <div>
                 <div>User profile</div>
-                <ImageUploader
-                    withIcon={true}
-                    buttonText='Choose images'
-                    onChange={this.onDrop}
-                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                    maxFileSize={5242880}
-                />
-                <Button onClick={this.fileUploadHandler}>Upload</Button>
+                <input style={{display:'none'}} type="file"
+                       id="image"
+                       accept="image/png, image/jpeg"  onChange={this.handleImageChange}
+                       ref={fileInput=>this.fileInput = fileInput}
+                       required/>
+                       <Button onClick={this.fileUploadHandler}>Upload</Button>
+                <Button onClick={()=>this.fileInput.click()}><Avatar alt="Remy Sharp" src={this.state.image_preview} /></Button>
+
                 <div>Firstname:{this.state.firstname}</div>
                 <div>Lastname:{this.state.lastname}</div>
                 <div>Email:{this.state.email}</div>

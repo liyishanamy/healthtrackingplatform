@@ -53,7 +53,7 @@ class AgeDistribution extends Component {
                 this.state.age_6080['number']=results[3]['number']
                 this.state.age_80100['number']=results[4]['number']
                 this.setState({
-                    buddle:[this.state.age_020,this.state.age_2040,this.state.age_4060,this.state.age_6080,this.state.age_80100]
+                    bundle:[this.state.age_020,this.state.age_2040,this.state.age_4060,this.state.age_6080,this.state.age_80100]
                 })
 
 
@@ -62,7 +62,7 @@ class AgeDistribution extends Component {
 
 
     render() {
-        const data = this.state.buddle
+        const data = this.state.bundle
         return (
             <card>
                 <CardHeader
