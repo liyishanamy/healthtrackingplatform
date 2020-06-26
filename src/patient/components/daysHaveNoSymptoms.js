@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+
 
 
 
@@ -43,34 +43,31 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const GetBetterRate= props => {
+const DaysHaveNoSymptoms= props => {
     const { className, ...rest } = props;
-    const [gettingBetterRate,setGettingBetterRate]=useState(0)
+    const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
     const [error,setError]=useState("")
 
     const classes = useStyles();
     useEffect(()=>{
-        let today = new Date()
-        let today_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate()
-        today.setDate(today.getDate()+1)
-        let tomorrow_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate();
-
-        fetch(`http://localhost:3000/healthStatus/stats?from=${today_format}&to=${tomorrow_format}`,{
-            method: 'GET',
+        const data = {
+            email:localStorage.getItem("email")
+        }
+        fetch('http://localhost:3000/healthStatus/daysHavingNoSymptoms',{
+            method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type':'application/json',
             },
+            body: JSON.stringify(data),
+
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const getBetterRate = (data['gettingBetter']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
-                console.log(getBetterRate)
-                setGettingBetterRate(getBetterRate)
+                setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
             })
             .catch(err => setError(err))
-
-    })
+})
 
     return (
         <Card
@@ -89,15 +86,11 @@ const GetBetterRate= props => {
                             gutterBottom
                             variant="body2"
                         >
-                            Today Get-Better Rates
+                            Days having no Symptom
                         </Typography>
-                        <Typography variant="h3">{gettingBetterRate}</Typography>
+                        <Typography variant="h3">{daysHavingNoSymptoms}</Typography>
                     </Grid>
-                    <Grid item>
-                        <Avatar className={classes.avatar}>
-                            <AssignmentIcon className={classes.icon} />
-                        </Avatar>
-                    </Grid>
+
                 </Grid>
                 <div className={classes.difference}>
                     <ArrowUpwardIcon className={classes.differenceIcon} />
@@ -119,9 +112,9 @@ const GetBetterRate= props => {
     );
 };
 
-GetBetterRate.propTypes = {
+DaysHaveNoSymptoms.propTypes = {
     className: PropTypes.string
 };
 
-export default GetBetterRate;
+export default DaysHaveNoSymptoms;
 

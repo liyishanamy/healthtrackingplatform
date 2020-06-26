@@ -2,15 +2,11 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import React, {Component} from 'react';
 import ReferenceLine from "recharts/lib/cartesian/ReferenceLine";
-import {CardHeader, Divider, IconButton} from "@material-ui/core";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import CardContent from "@material-ui/core/CardContent";
-import PolarGrid from "recharts/lib/polar/PolarGrid";
-import PolarAngleAxis from "recharts/lib/polar/PolarAngleAxis";
-import PolarRadiusAxis from "recharts/lib/polar/PolarRadiusAxis";
-import Radar from "recharts/lib/polar/Radar";
-import Legend from "recharts/lib/component/Legend";
-import RadarChart from "recharts/lib/chart/RadarChart";
+import {CardHeader, Divider, Grid, IconButton} from "@material-ui/core";
+
+import DaysHaveNoSymptoms from "./patientComponent/daysHaveNoSymptoms";
+import PatientSymptoms from "./patientComponent/patientSymptoms";
+import PatientTemperature from "./patientComponent/patientTemperature";
 
 class PatientPanel extends Component {
     constructor(props) {
@@ -93,54 +89,48 @@ class PatientPanel extends Component {
         console.log(data)
         return (
             <div>
-                <card>
-                    <CardHeader
-                        action={
-                            <IconButton size="small">
-                                <RefreshIcon />
-                            </IconButton>
-                        }
-                        title="My daily temperature"
-                    />
-                    <Divider />
-                    <CardContent>
+                <Grid
+                    container
+                    spacing={4}
+                >
 
-                        <div>
-                            <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                                <Line type="monotone" dataKey="temperature" stroke="#8884d8" />
-                                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                                <XAxis dataKey="Date" />
-                                <ReferenceLine y="37" stroke="red" label={{ position: 'top',  value: 'Abnormal', fill: 'red', fontSize: 14 }}/>
-                                <YAxis domain={[dataMin=>35, dataMax => 40]}/>
-                                <Tooltip />
-                            </LineChart>
-                        </div>
-                    </CardContent>
-                </card>
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+                        <DaysHaveNoSymptoms patientEmail={this.state.patientEmail}/>
+                    </Grid>
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+                    </Grid>
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+                    </Grid>
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+                    </Grid>
+                </Grid>
                 <br/>
-                <div>
-                    <card>
-                        <CardContent>
-                            <CardHeader
-                                action={
-                                    <IconButton size="small">
-                                        <RefreshIcon />
-                                    </IconButton>
-                                }
-                                title="My daily symptom"
-                            />
-                            <Divider />
-
-                            <RadarChart outerRadius={90} width={730} height={250} data={symptom}>
-                                <PolarGrid />
-                                <PolarAngleAxis dataKey="symptom" />
-                                <PolarRadiusAxis angle={30} domain={[0, 14]} />
-                                <Radar name="My Symptom" dataKey="frequency" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                                <Legend />
-                            </RadarChart>
-                        </CardContent></card>
-
-                </div>
+                <PatientTemperature patientEmail={this.state.patientEmail}/>
+                <PatientSymptoms patientEmail={this.state.patientEmail}/>
 
             </div>
         );

@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const GetBetterRate= props => {
+const GetWorseRate= props => {
     const { className, ...rest } = props;
     const [gettingWorseRate,setGettingWorseRate]=useState(0)
     const [error,setError]=useState("")
@@ -65,7 +65,7 @@ const GetBetterRate= props => {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                const getBetterRate = data['gettingWorse']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])
+                const getBetterRate = (data['gettingWorse']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
                 console.log(getBetterRate)
                 setGettingWorseRate(getBetterRate)
             })
@@ -90,7 +90,7 @@ const GetBetterRate= props => {
                             gutterBottom
                             variant="body2"
                         >
-                           Today Get-Better Rates
+                           Today Get-Worse Rates
                         </Typography>
                         <Typography variant="h3">{gettingWorseRate}</Typography>
                     </Grid>
@@ -120,9 +120,9 @@ const GetBetterRate= props => {
     );
 };
 
-GetBetterRate.propTypes = {
+GetWorseRate.propTypes = {
     className: PropTypes.string
 };
 
-export default GetBetterRate;
+export default GetWorseRate;
 

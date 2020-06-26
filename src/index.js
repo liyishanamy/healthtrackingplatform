@@ -19,6 +19,7 @@ import PatientChatbox from "./patient/patientChatbox";
 import PatientHealthStatus from "./doctor/patientPanel"
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import theme from "./theme";
+import PatientAppointment from "./patient/patientAppointment";
 ReactDOM.render(
     <ThemeProvider theme={theme}>
         <BrowserRouter>
@@ -40,6 +41,7 @@ ReactDOM.render(
                         <Route path='/myStats' component={MyStats}/>
                         <Route path='/patientChatbox' component={PatientChatbox}/>
                         <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
+                        <Route path='/bookAppointment' component={PatientAppointment}/>
                     </Switch>
                     <App/>
                 </div>

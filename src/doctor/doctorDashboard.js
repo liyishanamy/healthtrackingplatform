@@ -11,7 +11,7 @@ import UserProfile from "../profile/userProfile";
 import PatientDashboard from "../patient/patientDashboard";
 import PatientList from "./patientList";
 import DoctorChatbox from "./doctorChatbox";
-import PatientStatsView from "./PatientStatsView";
+import ManageAppointment from './manageAppointment'
 import AllStats from './AllStats';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -68,7 +68,7 @@ export default function SimpleTabs() {
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="User profile" {...a11yProps(0)} />
                     <Tab label="Patient List" {...a11yProps(1)} />
-                    <Tab label="Patients health Stats" {...a11yProps(2)} />
+                    <Tab label="Manage Appointment" {...a11yProps(2)} />
                     <Tab label="All Stats" {...a11yProps(3)} />
                     <Tab label="Doctor chats" {...a11yProps(4)} />
 
@@ -81,7 +81,7 @@ export default function SimpleTabs() {
                 <PatientList/>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <PatientStatsView/>
+              <ManageAppointment/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <AllStats/>

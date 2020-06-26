@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import {Link} from "react-router-dom";
+
 
 
 
@@ -43,33 +44,45 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const GetBetterRate= props => {
+const DaysHaveNoSymptoms= props => {
     const { className, ...rest } = props;
-    const [gettingBetterRate,setGettingBetterRate]=useState(0)
+    const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
+    const [appointmentDate, setAppointmentDate] = useState(null)
+    const [userMsg,setUseMsg] = useState("")
     const [error,setError]=useState("")
 
     const classes = useStyles();
     useEffect(()=>{
-        let today = new Date()
-        let today_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate()
-        today.setDate(today.getDate()+1)
-        let tomorrow_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate();
-
-        fetch(`http://localhost:3000/healthStatus/stats?from=${today_format}&to=${tomorrow_format}`,{
-            method: 'GET',
+        const data = {
+            email:localStorage.getItem("email")
+        }
+        fetch('http://localhost:3000/healthStatus/daysHavingNoSymptoms',{
+            method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type':'application/json',
             },
+            body: JSON.stringify(data),
+
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const getBetterRate = (data['gettingBetter']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
-                console.log(getBetterRate)
-                setGettingBetterRate(getBetterRate)
+                console.log("here",data)
+                setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
+
+
+                //Change the val to 14 once done
+                if(daysHavingNoSymptoms>=2){
+                    setUseMsg("You can now book a retesting appointment")
+
+                }else{
+                    setUseMsg("You have at least "+(14-parseInt(daysHavingNoSymptoms))+" to go to book an appointment")
+
+
+                }
+
             })
             .catch(err => setError(err))
-
     })
 
     return (
@@ -89,39 +102,33 @@ const GetBetterRate= props => {
                             gutterBottom
                             variant="body2"
                         >
-                            Today Get-Better Rates
+                           Your appointment is on:
                         </Typography>
-                        <Typography variant="h3">{gettingBetterRate}</Typography>
+                        <Typography variant="h3">{appointmentDate}</Typography>
+
                     </Grid>
-                    <Grid item>
-                        <Avatar className={classes.avatar}>
-                            <AssignmentIcon className={classes.icon} />
-                        </Avatar>
-                    </Grid>
+
                 </Grid>
                 <div className={classes.difference}>
-                    <ArrowUpwardIcon className={classes.differenceIcon} />
-                    <Typography
-                        className={classes.differenceValue}
-                        variant="body2"
-                    >
-                        16%
-                    </Typography>
+
                     <Typography
                         className={classes.caption}
                         variant="caption"
                     >
-                        Since last month
+                        {userMsg}
                     </Typography>
+                    <br/>
+                    <Typography variant="h6"><Link to={`/bookAppointment/`}>Book Appointment
+                    </Link></Typography>
                 </div>
             </CardContent>
         </Card>
     );
 };
 
-GetBetterRate.propTypes = {
+DaysHaveNoSymptoms.propTypes = {
     className: PropTypes.string
 };
 
-export default GetBetterRate;
+export default DaysHaveNoSymptoms;
 
