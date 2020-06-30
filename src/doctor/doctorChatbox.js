@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Launcher} from 'react-chat-window'
 
-
 class DoctorChatbox extends Component {
 
     constructor(props) {
@@ -10,6 +9,7 @@ class DoctorChatbox extends Component {
             messageList: []
         };
     }
+
 
     _onMessageWasSent(message) {
         this.setState({

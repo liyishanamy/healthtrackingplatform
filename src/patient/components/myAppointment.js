@@ -50,6 +50,11 @@ const DaysHaveNoSymptoms= props => {
     const [appointmentDate, setAppointmentDate] = useState(null)
     const [userMsg,setUseMsg] = useState("")
     const [error,setError]=useState("")
+    const [appointmentStart,setAppointmentStart]=useState(null)
+    const [appointmentEnd,setAppointmentEnd]=useState(null)
+    const [appointment,setAppointment]=useState(false)
+
+
 
     const classes = useStyles();
     useEffect(()=>{
@@ -67,7 +72,6 @@ const DaysHaveNoSymptoms= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("here",data)
                 setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
 
 
@@ -84,6 +88,43 @@ const DaysHaveNoSymptoms= props => {
             })
             .catch(err => setError(err))
     })
+    useEffect(()=>{
+        fetch('http://localhost:3000/appointment/myAppointment',{
+            method: 'GET',
+            headers:{
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log("get",data)
+                if(data.message==="You do not have a booked appointment yet."){
+                   setAppointment(false)
+                }
+                if(data.message!=="You do not have a booked appointment yet." && data.length!==0){
+                    setAppointment(true)
+                    setAppointmentStart(data[0].appointmentTime.startTime)
+                    setAppointmentEnd(data[0].appointmentTime.endTime)
+                    setAppointmentDate(new Date(data[0].appointmentTime.startTime).getFullYear()+"/"+(new Date(data[0].appointmentTime.startTime).getMonth()+1)+"/"+new Date(data[0].appointmentTime.startTime).getDate())
+                }
+            })
+    })
+
+    let renderDate;
+    let bookAppointment;
+    if (appointment){
+        renderDate = appointmentDate
+        bookAppointment=
+            <Typography variant="h6"><Link to={`/viewAppointment/`}>View Appointment
+        </Link></Typography>
+    }else{
+        renderDate=""
+        bookAppointment=<Typography variant="h6"><Link to={`/bookAppointment/`}>Book Appointment
+        </Link></Typography>
+    }
+
+
+
+
 
     return (
         <Card
@@ -103,8 +144,10 @@ const DaysHaveNoSymptoms= props => {
                             variant="body2"
                         >
                            Your appointment is on:
+
                         </Typography>
-                        <Typography variant="h3">{appointmentDate}</Typography>
+
+                        <Typography variant="h3">{renderDate}</Typography>
 
                     </Grid>
 
@@ -118,8 +161,9 @@ const DaysHaveNoSymptoms= props => {
                         {userMsg}
                     </Typography>
                     <br/>
-                    <Typography variant="h6"><Link to={`/bookAppointment/`}>Book Appointment
-                    </Link></Typography>
+                    {bookAppointment}
+
+
                 </div>
             </CardContent>
         </Card>

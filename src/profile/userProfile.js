@@ -5,6 +5,7 @@ import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import {render} from 'react-dom';
 import AvatarUploader from "react-avatar-uploader"
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 class UserProfile extends Component {
     constructor(props) {
         super(props);
@@ -16,19 +17,17 @@ class UserProfile extends Component {
             firstname:"",
             lastname:"",
             birthday:"",
+            role:"",
             gender:"",
             invitationCode:"",
-            address:""
+            address:"",
+
+            value:"",
+            copied:false
         }
         //this.onDrop = this.onDrop.bind(this);
     }
-    // onDrop(picture) {
-    //     this.setState({
-    //         pictures: picture,
-    //     },()=>{
-    //         console.log(this.state.pictures)
-    //     });
-    // }
+
     fileUploadHandler=(e)=>{
         e.preventDefault()
         let formData = new FormData()
@@ -42,17 +41,6 @@ class UserProfile extends Component {
             console.log(key[0] + ', ' + key[1])
 
         }
-        // fetch(url, {
-        //     method: 'POST',
-        //     headers:{
-        //         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-        //     },
-        //     body: formData,
-        // }).then(response => response.json())
-        //     .then(data => {
-        //
-        //     })
-
         axios.post(url,formData,{
             //method: 'post',
             //url: url,
@@ -105,6 +93,7 @@ class UserProfile extends Component {
                     firstname:data.firstname,
                     lastname:data.lastname,
                     birthday:data.birthday,
+                    role:data.role,
                     gender:data.gender,
                     invitationCode:data.invitationCode,
                     address:data.street.concat(" "+data.city+" "+data.state)
@@ -125,8 +114,6 @@ class UserProfile extends Component {
                 this.setState({
                     image_preview:data.url
                 })
-
-
         })
     }
 
@@ -145,9 +132,21 @@ class UserProfile extends Component {
                 <div>Firstname:{this.state.firstname}</div>
                 <div>Lastname:{this.state.lastname}</div>
                 <div>Email:{this.state.email}</div>
-                <div>Code:{this.state.invitationCode}</div>
+                {this.state.role==="doctor"?<div>Code:<div>
+                    <input value={this.state.invitationCode} disabled={true}/>
+
+
+                    <CopyToClipboard text={this.state.invitationCode}
+                                     onCopy={() => this.setState({copied: true})}>
+                        <button>Copy to clipboard </button>
+                    </CopyToClipboard>
+
+                    {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
+                </div></div>:""}
+
                 <div>birthday:{this.state.birthday}</div>
                 <div>address:{this.state.address}</div>
+
 
             </div>
         );

@@ -18,6 +18,8 @@ import MyStats from './patient/myStats'
 import PatientChatbox from "./patient/patientChatbox";
 import PatientHealthStatus from "./doctor/patientPanel"
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import ViewAppointment from './patient/Appointment/viewAppointment';
+import TestResult from './patient/Appointment/testResult'
 import theme from "./theme";
 import PatientAppointment from "./patient/patientAppointment";
 ReactDOM.render(
@@ -42,6 +44,8 @@ ReactDOM.render(
                         <Route path='/patientChatbox' component={PatientChatbox}/>
                         <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
                         <Route path='/bookAppointment' component={PatientAppointment}/>
+                        <Route path='/viewAppointment' component={ViewAppointment}/>
+                        <Route path='/viewTestResult' component={TestResult}/>
                     </Switch>
                     <App/>
                 </div>
