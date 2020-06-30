@@ -31,6 +31,7 @@
     "react-chat-window": "^1.2.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-date-picker": "^8.0.1",
+    "react-date-range": "^1.0.3",
     "react-datepicker": "^3.0.0",
     "react-dom": "^16.13.1",
     "react-images-upload": "^1.2.8",

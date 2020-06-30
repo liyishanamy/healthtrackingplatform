@@ -22,6 +22,7 @@ import ViewAppointment from './patient/Appointment/viewAppointment';
 import TestResult from './patient/Appointment/testResult'
 import theme from "./theme";
 import PatientAppointment from "./patient/patientAppointment";
+import ManageAppointment from "./doctor/manageAppointment";
 ReactDOM.render(
     <ThemeProvider theme={theme}>
         <BrowserRouter>
@@ -43,6 +44,7 @@ ReactDOM.render(
                         <Route path='/myStats' component={MyStats}/>
                         <Route path='/patientChatbox' component={PatientChatbox}/>
                         <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
+                        <Route path='/updateResult/:email' component={ManageAppointment}/>
                         <Route path='/bookAppointment' component={PatientAppointment}/>
                         <Route path='/viewAppointment' component={ViewAppointment}/>
                         <Route path='/viewTestResult' component={TestResult}/>

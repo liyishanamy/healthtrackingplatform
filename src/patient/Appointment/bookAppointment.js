@@ -85,6 +85,7 @@ class BookAppointment extends Component {
                     timeIntervals={30}
                     timeCaption="time"
                     dateFormat="MMMM d, yyyy h:mm aa"
+                    inputProps={{readOnly: true}}
                 />
                 <button className="btn btn-primary" >Book Appointment</button>
             </div>

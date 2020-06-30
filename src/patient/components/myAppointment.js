@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const DaysHaveNoSymptoms= props => {
+const MyAppointment= props => {
     const { className, ...rest } = props;
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
     const [appointmentDate, setAppointmentDate] = useState(null)
@@ -89,11 +89,17 @@ const DaysHaveNoSymptoms= props => {
             .catch(err => setError(err))
     })
     useEffect(()=>{
+        const data = {
+            email:localStorage.getItem("email")
+        }
         fetch('http://localhost:3000/appointment/myAppointment',{
-            method: 'GET',
+            method: 'POST',
             headers:{
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type':'application/json',
+
             },
+            body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
                 console.log("get",data)
@@ -170,9 +176,9 @@ const DaysHaveNoSymptoms= props => {
     );
 };
 
-DaysHaveNoSymptoms.propTypes = {
+MyAppointment.propTypes = {
     className: PropTypes.string
 };
 
-export default DaysHaveNoSymptoms;
+export default MyAppointment;
 

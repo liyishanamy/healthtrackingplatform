@@ -19,11 +19,16 @@ class ViewAppointment extends Component {
     }
 
     componentDidMount() {
+        const data={
+            email:localStorage.getItem('email')
+        }
         fetch('http://localhost:3000/appointment/myAppointment',{
-            method: 'GET',
+            method: 'POST',
             headers:{
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type':'application/json',
             },
+            body:JSON.stringify(data)
         }).then(response => response.json())
         .then(data => {
             console.log("get",data)

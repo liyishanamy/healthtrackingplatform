@@ -7,6 +7,7 @@ import {CardHeader, Divider, Grid, IconButton} from "@material-ui/core";
 import DaysHaveNoSymptoms from "./patientComponent/daysHaveNoSymptoms";
 import PatientSymptoms from "./patientComponent/patientSymptoms";
 import PatientTemperature from "./patientComponent/patientTemperature";
+import PatientAppointment from "./patientComponent/patientAppointment";
 
 class PatientPanel extends Component {
     constructor(props) {
@@ -110,6 +111,7 @@ class PatientPanel extends Component {
                         xl={3}
                         xs={12}
                     >
+                        <PatientAppointment patientEmail={this.state.patientEmail}/>
                     </Grid>
                     <Grid
                         item
