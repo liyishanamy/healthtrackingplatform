@@ -8,6 +8,7 @@ import ReportUpdateStats from "./components/reportUpdateStats";
 import GetBetterRate from "./components/getBetterRate";
 import GetWorseRate from "./components/getWorseRate";
 import FullyRecovered from "./components/fullyRecovered";
+import TestResultStats from "./patientComponent/testResultStats";
 
 class AllStats extends Component {
     render() {
@@ -60,6 +61,7 @@ class AllStats extends Component {
 
                 <AgeDistribution/>
                 <GenderDistribution/>
+                <TestResultStats/>
 
 
 
@@ -67,14 +69,9 @@ class AllStats extends Component {
 
 
 
-                total Appointments
-                people get better today
-                People get worse today
-                People forget today
-                1.age
-                2.gender
-                3.Everyday growth
-                4.Total patient
+
+
+
             </div>
         );
     }

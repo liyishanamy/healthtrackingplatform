@@ -45,17 +45,13 @@ const useStyles = makeStyles(theme => ({
 
 const FullyRecovered= props => {
     const { className, ...rest } = props;
-    const [gettingWorseRate,setGettingWorseRate]=useState(0)
+    const [positive,setPositive]=useState(0)
+    const [negative,setNegative]=useState(0)
     const [error,setError]=useState("")
 
     const classes = useStyles();
     useEffect(()=>{
-        let today = new Date()
-        let today_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate()
-        today.setDate(today.getDate()+1)
-        let tomorrow_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate();
-
-        fetch(`http://localhost:3000/healthStatus/stats?from=${today_format}&to=${tomorrow_format}`,{
+        fetch(`http://localhost:3000/appointment/stats`,{
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
@@ -63,10 +59,8 @@ const FullyRecovered= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const getBetterRate = data['gettingWorse']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])
-                console.log(getBetterRate)
-                setGettingWorseRate(getBetterRate)
+                setNegative(data['negative'])
+
             })
             .catch(err => setError(err))
 
@@ -91,7 +85,7 @@ const FullyRecovered= props => {
                         >
                             Fully Recovered
                         </Typography>
-                        <Typography variant="h3">100</Typography>
+                        <Typography variant="h3">{negative}</Typography>
                     </Grid>
                     <Grid item>
                         <Avatar className={classes.avatar}>
@@ -99,21 +93,7 @@ const FullyRecovered= props => {
                         </Avatar>
                     </Grid>
                 </Grid>
-                <div className={classes.difference}>
-                    <ArrowUpwardIcon className={classes.differenceIcon} />
-                    <Typography
-                        className={classes.differenceValue}
-                        variant="body2"
-                    >
-                        16%
-                    </Typography>
-                    <Typography
-                        className={classes.caption}
-                        variant="caption"
-                    >
-                        Since last month
-                    </Typography>
-                </div>
+
             </CardContent>
         </Card>
     );

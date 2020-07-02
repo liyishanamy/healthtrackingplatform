@@ -22,12 +22,16 @@ import ViewAppointment from './patient/Appointment/viewAppointment';
 import TestResult from './patient/Appointment/testResult'
 import theme from "./theme";
 import PatientAppointment from "./patient/patientAppointment";
-import ManageAppointment from "./doctor/manageAppointment";
+import SpecificAppointment from "./doctor/AppointmentComponents/SpecificAppointment";
 ReactDOM.render(
     <ThemeProvider theme={theme}>
+
         <BrowserRouter>
+            <App/>
             <div className="auth-wrapper">
+
                 <div className="auth-inner">
+
                     <Switch>
                         <Route exact path='/' component={LoginPage} />
                         <Route path="/sign-in" component={LoginPage} />
@@ -43,13 +47,14 @@ ReactDOM.render(
                         <Route path='/healthStatus' component={HealthStatus} />
                         <Route path='/myStats' component={MyStats}/>
                         <Route path='/patientChatbox' component={PatientChatbox}/>
+
                         <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
-                        <Route path='/updateResult/:email' component={ManageAppointment}/>
+                        <Route path='/updateResult/:email' component={SpecificAppointment}/>
                         <Route path='/bookAppointment' component={PatientAppointment}/>
                         <Route path='/viewAppointment' component={ViewAppointment}/>
                         <Route path='/viewTestResult' component={TestResult}/>
                     </Switch>
-                    <App/>
+
                 </div>
             </div>
 

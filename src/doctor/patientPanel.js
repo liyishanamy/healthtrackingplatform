@@ -36,7 +36,6 @@ class PatientPanel extends Component {
                 for(var i=0;i<data.length;i++){
                     let date =new Date(data[i]['Date'])
                     formateDate = formateDate.concat({temperature:data[i]['temperature'],Date:(date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate())})
-
                 }
                 this.setState({
                     userTemp:formateDate

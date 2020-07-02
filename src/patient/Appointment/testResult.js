@@ -13,18 +13,23 @@ class TestResult extends Component {
     }
 
     componentDidMount() {
+        const data = {
+            email:localStorage.getItem("email")
+        }
         fetch('http://localhost:3000/appointment/myAppointment',{
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-            }
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify(data),
+
         })
             .then(response => response.json())
             .then(data => {
                 this.setState({
-                    testResult:data[0].testResult
+                    testResult:data[0]['testResult']
                 })
-
             })
     }
 

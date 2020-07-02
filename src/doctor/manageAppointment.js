@@ -47,7 +47,7 @@ const columns = [
         minWidth: 100,
         align: "right",
         format: value => {
-            console.log(value)
+            console.log("format",value)
             return manageAppointment(value)
         }
     }
@@ -56,11 +56,13 @@ const columns = [
 
 
 function manageAppointment(email) {
+    console.log("manageAppointment",email)
     return <div key={email}><Link to={`/updateResult/${email}`}>Update Result</Link></div>
 }
 
 
 function createData(name, email, date, time_start, time_end, testDone, testResult, updateResult) {
+    console.log("updateResult",updateResult)
     let testDone_format;
     let date_format;
     let timeStart_format;
@@ -92,7 +94,8 @@ function createData(name, email, date, time_start, time_end, testDone, testResul
     timeEnd_format = new Date(time_end).getHours() + ":" + minute2
     time_format = timeStart_format + '-' + timeEnd_format
     console.log("test", date_format, time_format, testDone_format)
-
+    console.log('inCreateData',updateResult)
+    updateResult=email
 
     return {name, email, date_format, time_format, testDone_format, testResult, updateResult};
 }
@@ -108,8 +111,6 @@ const useStyles = makeStyles({
 });
 
 export default function ManageAppointment() {
-
-
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -121,15 +122,9 @@ export default function ManageAppointment() {
     const [endDate, setEndDate] = React.useState(new Date(tomorrow).getFullYear()+"-"+(new Date(tomorrow).getMonth()+1)+"-"+new Date(tomorrow).getDate())
 
     function handleSelect(ranges) {
-        console.log(ranges);
-        console.log(new Date(ranges['selection']['startDate']).getFullYear() + "/" + (new Date(ranges['selection']['startDate']).getMonth() + 1) + "/" + new Date(ranges['selection']['startDate']).getDate())
-        console.log(ranges['selection']['endDate'])
-        console.log(new Date(ranges['selection']['startDate']).getTime())
         setStartDate(new Date(ranges['selection']['startDate']).getFullYear()+"-"+(new Date(ranges['selection']['startDate']).getMonth()+1)+"-"+new Date(ranges['selection']['startDate']).getDate())
         setEndDate(new Date(ranges['selection']['endDate']).getFullYear()+"-"+(new Date(ranges['selection']['endDate']).getMonth()+1)+"-"+new Date(ranges['selection']['endDate']).getDate())
 
-        //setStartDate(new Date(ranges['selection']['startDate']))
-        //setEndDate(new Date(ranges['selection']['endDate']))
     }
 
     const handleChangePage = (event, newPage) => {
