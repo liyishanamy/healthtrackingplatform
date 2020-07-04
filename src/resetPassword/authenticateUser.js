@@ -50,12 +50,6 @@ class AuthenticateUser extends Component {
                     })
                 }
 
-
-
-
-
-
-
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -92,16 +86,18 @@ class AuthenticateUser extends Component {
                     this.setState({
                         errMsg:data.message
                     })
-                }
-                console.log('Success:', data);
-                this.setState({
-                    accessToken:data.accessToken
-                },()=>{
-                    localStorage.setItem("accessToken",this.state.accessToken)
-                })
+                }else{
+                    console.log('Success:', data);
+                    this.setState({
+                        accessToken:data.accessToken
+                    },()=>{
+                        localStorage.setItem("accessToken",this.state.accessToken)
+                    })
 
-                const {history} = this.props
-                history.push('/resetPassword')
+                    const {history} = this.props
+                    history.push('/resetPassword')
+
+                }
 
             })
             .catch((error) => {
@@ -137,7 +133,7 @@ class AuthenticateUser extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{padding:"50px"}}>
                 <div className="form-group">
                     <label>Email</label>
                     <Input type="text" className="form-control" placeholder="Email" value={this.state.email} onChange={this.handleEmail} required />

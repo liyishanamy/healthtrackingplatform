@@ -7,35 +7,23 @@ import SignupPage from "./signupProcess/signupPage";
 import DoctorDashboard from "./doctor/doctorDashboard";
 
 
-function handleLogout() {
-    console.log("click logout")
-    let deleteToken={"token":localStorage.getItem("accessToken")}
-    fetch('http://localhost:3000/logout', {
-        method: 'DELETE',
-        body: JSON.stringify(deleteToken)
-    })
-        .then(res => res.json()) // or res.json()
-        .then(res => console.log(res))
-    //localStorage.removeItem("accessToken")
-    localStorage.clear();
+function App(props) {
 
-    this.props.history.push('/sign-in')
-}
+    function handleLogout(props){
+        console.log("click logout")
+        let deleteToken={"token":localStorage.getItem("accessToken")}
+        fetch('http://localhost:3000/logout', {
+            method: 'DELETE',
+            body: JSON.stringify(deleteToken)
+        })
+            .then(res => res.json()) // or res.json()
+            .then(res => console.log(res))
+        //localStorage.removeItem("accessToken")
+        localStorage.clear();
+        const {history} = this.props;
 
-function App() {
-    /**
-  localStorage.setItem("loggedIn",false);
-  let healthTrackElement;
-  if(!localStorage.getItem("loggedIn")){
-      healthTrackElement = <Link className="navbar-brand" to={"/sign-in"}>HealthTrack</Link>
-  }else{
-      if(localStorage.getItem('role')==='patient'){
-          healthTrackElement = <Link className="navbar-brand" to={"/dashboard/patient"}>HealthTrack</Link>
-      }else if (localStorage.getItem('role')==='doctor'){
-          healthTrackElement = <Link className="navbar-brand" to={"/dashboard/doctor"}>HealthTrack</Link>
-      }
-
-  }*/
+        history.push('/sign-in')
+    }
 
     let element;
     console.log("localStorage",localStorage)
@@ -55,7 +43,7 @@ function App() {
                 </div>
             </div>
         </nav>
-    }else{
+    }else if (localStorage.length===0){
 
         element =  <nav className="navbar navbar-expand-lg navbar-light fixed-top">
 

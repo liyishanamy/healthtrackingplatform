@@ -70,7 +70,7 @@ class ForgetPasswordPage extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{padding:"50px"}}>
                 <h4>Reset my password</h4>
                 <label>Note:Before you reset the password, you have to authenticate yourself first</label>
                 <div className="form-group">

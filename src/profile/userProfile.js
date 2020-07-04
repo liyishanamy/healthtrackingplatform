@@ -6,29 +6,30 @@ import Avatar from "@material-ui/core/Avatar";
 import {render} from 'react-dom';
 import AvatarUploader from "react-avatar-uploader"
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 class UserProfile extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            email:localStorage.getItem("email"),
-            pictures:null,
-            image_preview:null,
-            image:null,
-            firstname:"",
-            lastname:"",
-            birthday:"",
-            role:"",
-            gender:"",
-            invitationCode:"",
-            address:"",
+        this.state = {
+            email: localStorage.getItem("email"),
+            pictures: null,
+            image_preview: null,
+            image: null,
+            firstname: "",
+            lastname: "",
+            birthday: "",
+            role: "",
+            gender: "",
+            invitationCode: "",
+            address: "",
 
-            value:"",
-            copied:false
+            value: "",
+            copied: false
         }
         //this.onDrop = this.onDrop.bind(this);
     }
 
-    fileUploadHandler=(e)=>{
+    fileUploadHandler = (e) => {
         e.preventDefault()
         let formData = new FormData()
         let pic = this.state.image;
@@ -41,15 +42,15 @@ class UserProfile extends Component {
             console.log(key[0] + ', ' + key[1])
 
         }
-        axios.post(url,formData,{
+        axios.post(url, formData, {
             //method: 'post',
             //url: url,
             headers:
                 {
                     'Content-Type': 'multipart/form-data',
-                'Authorization':'Bearer ' +(localStorage.getItem("accessToken")),
-            }
-        }).then(res=>{
+                    'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                }
+        }).then(res => {
             console.log(res);
 
         })
@@ -72,77 +73,96 @@ class UserProfile extends Component {
     handleImageChange = (e) => {
         console.log(e.target.files[0])
         let image_as_base64 = URL.createObjectURL(e.target.files[0])
-        console.log("image_as_base64",image_as_base64)
+        console.log("image_as_base64", image_as_base64)
         this.setState({
             image: e.target.files[0],
-            image_preview:image_as_base64
+            image_preview: image_as_base64
         })
     };
+
     componentDidMount() {
         fetch("http://localhost:3000/user", {
             method: 'POST',
-            headers:{
+            headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                'Content-Type':'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({userEmail:this.state.email}),
+            body: JSON.stringify({userEmail: this.state.email}),
         }).then(response => response.json())
             .then(data => {
                 console.log(data)
-                this.setState({
-                    firstname:data.firstname,
-                    lastname:data.lastname,
-                    birthday:data.birthday,
-                    role:data.role,
-                    gender:data.gender,
-                    invitationCode:data.invitationCode,
-                    address:data.street.concat(" "+data.city+" "+data.state)
-                })
+                if (data.status === "403") {
+                    // const {history} = this.props
+                    // localStorage.clear()
+                    // history.push({
+                    //     pathname: '/sign-in',
+                    // });
+                    alert("Your session is expired")
+                    window.location = '/sign-in'
+                    localStorage.clear()
+                    console.log(localStorage)
+
+                } else {
+                    this.setState({
+                        firstname: data.firstname,
+                        lastname: data.lastname,
+                        birthday: data.birthday,
+                        role: data.role,
+                        gender: data.gender,
+                        invitationCode: data.invitationCode,
+                        address: data.street.concat(" " + data.city + " " + data.state)
+
+                    })
+                    localStorage.setItem('name', data.firstname + " " + data.lastname)
+
+                }
 
             })
-        fetch('http://localhost:3000/user/getImage',{
+        fetch('http://localhost:3000/user/getImage', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                'Content-Type':'application/json',
+                'Content-Type': 'application/json',
 
             },
-            body: JSON.stringify({userEmail:this.state.email}),
+            body: JSON.stringify({userEmail: this.state.email}),
 
         }).then(response => response.json())
             .then(data => {
                 this.setState({
-                    image_preview:data.url
+                    image_preview: data.url
                 })
-        })
+            })
     }
 
     render() {
         return (
             <div>
                 <div>User profile</div>
-                <input style={{display:'none'}} type="file"
+                <input style={{display: 'none'}} type="file"
                        id="image"
-                       accept="image/png, image/jpeg"  onChange={this.handleImageChange}
-                       ref={fileInput=>this.fileInput = fileInput}
+                       accept="image/png, image/jpeg" onChange={this.handleImageChange}
+                       ref={fileInput => this.fileInput = fileInput}
                        required/>
-                       <Button onClick={this.fileUploadHandler}>Upload</Button>
-                <Button onClick={()=>this.fileInput.click()}><Avatar alt="Remy Sharp" src={this.state.image_preview} /></Button>
+                <Button onClick={this.fileUploadHandler}>Upload</Button>
+                <Button onClick={() => this.fileInput.click()}><Avatar alt="Remy Sharp" src={this.state.image_preview}/></Button>
 
                 <div>Firstname:{this.state.firstname}</div>
                 <div>Lastname:{this.state.lastname}</div>
                 <div>Email:{this.state.email}</div>
-                {this.state.role==="doctor"?<div>Code:<div>
-                    <input value={this.state.invitationCode} disabled={true}/>
+                {this.state.role === "doctor" ? <div>Code:
+                    <div>
+                        <input value={this.state.invitationCode} disabled={true}/>
 
 
-                    <CopyToClipboard text={this.state.invitationCode}
-                                     onCopy={() => this.setState({copied: true})}>
-                        <button>Copy to clipboard </button>
-                    </CopyToClipboard>
+                        <CopyToClipboard text={this.state.invitationCode}
+                                         onCopy={() => this.setState({copied: true})}>
+                            <button>Copy to clipboard</button>
+                        </CopyToClipboard>
 
-                    {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
-                </div></div>:""}
+                        {this.state.copied ? <span style={{color: 'red'}}>Copied.</span> : null}
+                    </div>
+                </div> : ""}
 
                 <div>birthday:{this.state.birthday}</div>
                 <div>address:{this.state.address}</div>

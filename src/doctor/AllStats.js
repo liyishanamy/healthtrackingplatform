@@ -11,6 +11,8 @@ import FullyRecovered from "./components/fullyRecovered";
 import TestResultStats from "./patientComponent/testResultStats";
 
 class AllStats extends Component {
+
+
     render() {
         return (
             <div>

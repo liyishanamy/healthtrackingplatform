@@ -12,6 +12,8 @@ import HealthStatus from "./healthStatus";
 import MyStats from "./myStats";
 import PatientChatbox from './patientChatbox';
 import PatientAppointment from './patientAppointment'
+import Layout from '../components/Layout'
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -86,7 +88,7 @@ export default function SimpleTabs() {
                 <PatientAppointment/>
             </TabPanel>
             <TabPanel value={value} index={4}>
-                <PatientChatbox/>
+                <Layout/>
             </TabPanel>
         </div>
     );
