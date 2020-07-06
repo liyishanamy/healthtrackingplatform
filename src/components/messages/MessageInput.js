@@ -21,7 +21,6 @@ export default class MessageInput extends Component {
 
 	sendMessage = ()=>{
 		//console.log("send msg",this.state.message)
-		console.log("send1")
 		this.props.sendMessage(this.state.message)
 
 	}

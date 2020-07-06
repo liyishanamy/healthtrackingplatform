@@ -34,7 +34,6 @@ export default class Messages extends Component {
                 body: JSON.stringify({userEmail: email}),
             }).then(response => response.json())
                 .then(data => {
-
                     this.setState(state => ({userList: {...state.userList, [email]: data.url}}))
 
                 })
@@ -45,62 +44,7 @@ export default class Messages extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         this.scrollDown()
-        // const {messages} = this.props
-        // console.log("messages",messages)
-        // this.scrollDown = this.scrollDown.bind(this);
-        // messages.map((mes) => {
-        //     console.log("mes--", mes)
-        //     const email = mes['email']
-        //
-        //     function fetchAvatar(email) {
-        //         fetch('http://localhost:3000/user/getImage', {
-        //             method: "POST",
-        //             headers: {
-        //                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({userEmail: email}),
-        //         }).then(response => response.json())
-        //             .then(data => {
-        //                 console.log("return",data.url)
-        //                 return data.url
-        //
-        //             })
-        //     }
-        //
-        //     console.log(!(email in this.state.urlList))
-        //
-        //     if (!(email in this.state.urlList)) {
-        //         const url = fetchAvatar(email)
-        //         console.log("url", url)
-        //         this.setState({
-        //             urlList: this.state.urlList.concat({email: url})
-        //         })
-        //
-        //     }
-        //
-        //
-        // })
-
     }
-
-    // findAvatar=(email) =>{
-    //     fetch('http://localhost:3000/user/getImage', {
-    //         method: "POST",
-    //         headers: {
-    //             'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({userEmail: email}),
-    //     }).then(response => response.json())
-    //         .then(data => {
-    //             this.setState({
-    //             	url: data.url
-    //             })
-    //
-    //         })
-    //
-    // }
 
     render() {
         const {messages, user, typingUsers} = this.props

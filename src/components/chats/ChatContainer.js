@@ -17,6 +17,8 @@ export default class ChatContainer extends Component {
         };
     }
 
+    flag = false
+
     componentDidMount() {
         const {socket} = this.props
         this.initSocket(socket)
@@ -24,7 +26,6 @@ export default class ChatContainer extends Component {
 
     initSocket(socket) {
         const {user} = this.props
-        console.log("userinfo", this.state.email)
         socket.emit(COMMUNITY_CHAT, this.resetChat)
 
         socket.on(PRIVATE_MESSAGE, this.addChat)
@@ -57,8 +58,7 @@ export default class ChatContainer extends Component {
     addChat = (chat, reset = false) => {
         const {socket} = this.props
         const {chats} = this.state
-        console.log("pass in", chat)
-
+        console.log('Add chat', Date.now())
         const newChats = reset ? [chat] : [...chats, chat]
         this.setState({chats: newChats, activeChat: reset ? chat : this.state.activeChat})
         console.log("newchats", chats)
@@ -80,23 +80,27 @@ export default class ChatContainer extends Component {
     */
     addMessageToChat = (chatId) => {
         console.log(Date.now())
-        return message => {
-            const {chats} = this.state
-            let newChats = chats.map((chat) => {
-                console.log("chat", chat)
-                if (chat.id === chatId)
-                    console.log(chat.messages)
+        if (!this.flag) {
+            this.flag = true
+            return message => {
+                const {chats} = this.state
+                let newChats = chats.map((chat) => {
+                    console.log("chat", chat)
+                    if (chat.id === chatId)
+                        console.log(chat.messages)
 
-                chat.messages.push(message)
-
-
-                return chat
-            })
+                    chat.messages.push(message)
 
 
-            this.setState({chats: newChats})
-            console.log("addMessageToChat", chats)
+                    return chat
+                })
+
+
+                this.setState({chats: newChats})
+                console.log("addMessageToChat", chats)
+            }
         }
+
     }
 
     /*
