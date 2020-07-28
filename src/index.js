@@ -23,11 +23,22 @@ import TestResult from './patient/Appointment/testResult'
 import theme from "./theme";
 import PatientAppointment from "./patient/patientAppointment";
 import SpecificAppointment from "./doctor/AppointmentComponents/SpecificAppointment";
+import Heatmap from "./doctor/mapVisualization/heatmap"
+
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import rootReducer from "./login_Reducers/reducers";
+
+const store = createStore(rootReducer)
+const unsubscribe = store.subscribe(() => console.log(store.getState()))
+
 ReactDOM.render(
     <ThemeProvider theme={theme}>
 
         <BrowserRouter>
-            <App/>
+            <Provider store={store}>>
+                <App/>
+            </Provider>
             <div className="auth-wrapper">
 
                 <div className="auth-inner">
@@ -53,6 +64,7 @@ ReactDOM.render(
                         <Route path='/bookAppointment' component={PatientAppointment}/>
                         <Route path='/viewAppointment' component={ViewAppointment}/>
                         <Route path='/viewTestResult' component={TestResult}/>
+                        <Route path='/viewHeatmap' component={Heatmap}/>
                     </Switch>
 
                 </div>

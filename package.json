@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^4.6.0",
     "@material-ui/core": "^4.9.13",
     "@material/react-card": "^0.15.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -17,6 +18,7 @@
     "cors": "^2.8.5",
     "edit": "^1.0.2",
     "express": "^4.17.1",
+    "mapbox-gl": "^1.11.1",
     "material-ui-phone-number": "^2.2.6",
     "multiselect-react-dropdown": "^1.5.0",
     "profile-picture": "git+https://github.com/dsalvagni/react-profile-picture.git",
@@ -36,13 +38,16 @@
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-images-upload": "^1.2.8",
+    "react-map-gl": "^5.2.7",
+    "react-map-gl-heatmap-overlay": "^1.1.4",
     "react-native-multiple-tags": "0.0.4",
-    "react-redux": "^7.2.0",
+    "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "rechart": "0.0.1",
     "recharts": "^1.8.5",
+    "redux": "^4.0.5",
     "styled-components": "^5.1.1"
   },
   "scripts": {
@@ -71,7 +76,9 @@
   "devDependencies": {
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.10.0",
+    "browserify-fs": "^1.0.0",
     "clsx": "^1.1.1",
+    "example-cities": "0.0.0",
     "nodemon": "^2.0.3",
     "prop-types": "^15.7.2",
     "redux-devtools": "^3.5.0"

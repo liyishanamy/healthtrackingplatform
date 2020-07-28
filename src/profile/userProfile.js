@@ -92,15 +92,9 @@ class UserProfile extends Component {
             .then(data => {
                 console.log(data)
                 if (data.status === "403") {
-                    // const {history} = this.props
-                    // localStorage.clear()
-                    // history.push({
-                    //     pathname: '/sign-in',
-                    // });
+
                     alert("Your session is expired")
                     window.location = '/sign-in'
-                    localStorage.clear()
-                    console.log(localStorage)
 
                 } else {
                     this.setState({

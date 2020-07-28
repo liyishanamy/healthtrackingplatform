@@ -14,6 +14,7 @@ import DoctorChatbox from "./doctorChatbox";
 import ManageAppointment from './manageAppointment'
 import AllStats from './AllStats';
 import Layout from "../components/Layout";
+import Heatmap from "./mapVisualization/heatmap";
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -71,7 +72,8 @@ export default function SimpleTabs() {
                     <Tab label="Patient List" {...a11yProps(1)} />
                     <Tab label="Manage Appointment" {...a11yProps(2)} />
                     <Tab label="All Stats" {...a11yProps(3)} />
-                    <Tab label="Doctor chats" {...a11yProps(4)} />
+                    <Tab label="City Heat Map" {...a11yProps(4)} />
+                    <Tab label="Doctor chats" {...a11yProps(5)} />
 
                 </Tabs>
             </AppBar>
@@ -88,6 +90,9 @@ export default function SimpleTabs() {
                 <AllStats/>
             </TabPanel>
             <TabPanel value={value} index={4}>
+                <Heatmap/>
+            </TabPanel>
+            <TabPanel value={value} index={5}>
                 <Layout/>
             </TabPanel>
         </div>

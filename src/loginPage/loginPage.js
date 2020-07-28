@@ -9,10 +9,62 @@ class LoginPage extends Component {
             email:"",
             password:"",
             status:false,
-            errMsg:""
+            errMsg:"",
+            rememberedVal:false
         }
+    }
+    rememberUser = async () =>{
+        try {
+            await localStorage.setItem("rememberMe",true)
+            await localStorage.setItem("YOUR-KEY", this.state.email);
+        } catch (error) {
+            // Error saving data
+            console.log("rememberedVal error ", error)
+        }
+    }
+    getRememberedUser = async () => {
+        try {
+            const username = await localStorage.getItem('YOUR-KEY');
+            if (username !== null) {
+                // We have username!!
+                return username;
+            }
+        } catch (error) {
+            // Error retrieving data
+            console.log("getRememberedUser error ", error)
+        }
+    };
+    forgetUser = async () => {
+        try {
+            await localStorage.setItem("rememberMe",false)
+            await localStorage.removeItem('YOUR-KEY');
+        } catch (error) {
+            // Error removing
+            console.log("forgetUser error ", error)
+        }
+    };
+    toggleRememberMe = (event) =>{
+        console.log(this.state.rememberedVal)
+        this.setState({
+            rememberedVal:event.target.checked
+        })
+        if(event.target.checked===true){
+            // User wants to be remembered
+            console.log("remember")
+            this.rememberUser()
+        }else{
+            console.log("forget")
+            this.forgetUser()
+        }
+    }
+    async componentDidMount() {
+        const username = await this.getRememberedUser()
+        console.log(this.state.rememberedVal)
 
-
+        this.setState({
+            email:username || "",
+            rememberedVal:username? true:false
+        })
     }
 
     handleEmail=(e)=>{
@@ -52,17 +104,16 @@ class LoginPage extends Component {
                     console.log('Success:', data);
                     localStorage.setItem("accessToken",data.accessToken)
                     localStorage.setItem("userInfo",data)
+                    localStorage.setItem("loggedIn",true)
                     if(data.role==="doctor"){
                         console.log("doctor")
                         const {history} = this.props
                         localStorage.setItem("email",data.email)
-                        localStorage.setItem("loggedIn",true)
                         localStorage.setItem('role',"doctor")
                         history.push('/dashboard/doctor')
                     }else if(data.role==="patient"){
                         console.log("patient")
                         const {history} = this.props
-                        localStorage.setItem("loggedIn",true)
                         localStorage.setItem("email",data.email)
                         localStorage.setItem('role',"patient")
                         history.push('/dashboard/patient')
@@ -101,10 +152,11 @@ class LoginPage extends Component {
 
                     <div className="form-group">
                         <div className="custom-control custom-checkbox">
-                            <Input type="checkbox" className="custom-control-input" id="customCheck1" />
-                            <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+                            <input type="checkbox" id="customCheck1"  value="remember" checked={this.state.rememberedVal}  onChange={this.toggleRememberMe}/>
+                                <label htmlFor="customCheck1">Remember me</label>
                         </div>
                     </div>
+
 
                     <Button color="primary" type="submit" variant="contained" onClick={this.handleLogin} >Submit</Button>
                     <p className="forgot-password text-right">
