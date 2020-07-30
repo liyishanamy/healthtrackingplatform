@@ -31,4 +31,4 @@ function loginReducer(state = LOGOUT, action) {
  const rootReducer = combineReducers({
      loginReducer
  })
-export default rootReducer
+export default loginReducer

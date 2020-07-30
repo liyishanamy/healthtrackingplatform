@@ -1,30 +1,61 @@
-import React,{useState} from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
-
-import {BrowserRouter as Router, Switch, Route, Link, Redirect, BrowserRouter} from "react-router-dom";
+import {BrowserRouter as Router, BrowserRouter, Link, Route, Switch} from "react-router-dom";
 import LoginPage from "./loginPage/loginPage";
 import SignupPage from "./signupProcess/signupPage";
 import DoctorDashboard from "./doctor/doctorDashboard";
+import PatientDashboard from './patient/patientDashboard';
+import SetSecurityQuestions from './signupProcess/setSecurityQuestions';
+import ForgetPasswordPage from './resetPassword/forgetPasswordPage';
+import AuthenticateUser from './resetPassword/authenticateUser';
+import UserProfile from './profile/userProfile';
+import PatientList from './doctor/patientList';
+import HealthStatus from './patient/healthStatus';
+import MyStats from './patient/myStats'
+import PatientChatbox from "./patient/patientChatbox";
+import PatientHealthStatus from "./doctor/patientPanel"
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import ViewAppointment from './patient/Appointment/viewAppointment';
+import TestResult from './patient/Appointment/testResult'
+import theme from "./theme";
+import PatientAppointment from "./patient/patientAppointment";
+import SpecificAppointment from "./doctor/AppointmentComponents/SpecificAppointment";
+import Heatmap from "./doctor/mapVisualization/heatmap"
+import {Provider} from 'react-redux'
+import {createStore} from 'redux'
+import {isLoggedInOptions, setLogin} from "./login_Actions";
+import loginReducer from "./login_Reducers/reducers";
+import LoginHeader from './headers/loginHeader'
+import LogoutHeader from './headers/logoutHeader'
+import {connect} from "react-redux";
 
-import { createStore, combineReducers } from "redux";
-import { Provider, connect } from 'react-redux';
-import {isLoggedInOptions} from './login_Actions/index'
-function App(props) {
-
-
-    function handleLogout(props){
+import {Component} from 'react';
+import store from "./store/store";
+class App extends Component {
+    constructor(props) {
+        super(props);
+        console.log("app",props,store)
+        props.dispatch(setLogin("LOGOUT"))
+        this.state={
+            status:props.isLoggedIn
+        }
+    }
+    handleLogout=(props)=> {
+        console.log("handlelogout",props)
         localStorage.removeItem("accessToken");
         localStorage.removeItem("userInfo");
         localStorage.removeItem("email");
         localStorage.removeItem("role");
         localStorage.removeItem("name");
         localStorage.setItem("loggedIn",false);
+        this.props.dispatch(setLogin("LOGOUT"))
+        console.log(props)
+        // const {history} = this.props;
+        // history.push('/sign-in')
+        alert("Your session is expired")
+        window.location = '/sign-in'
 
-        const {history} = this.props;
-        history.push('/sign-in')
-
-        console.log("click logout")
         let deleteToken={"token":localStorage.getItem("accessToken")}
         fetch('http://localhost:3000/logout', {
             method: 'DELETE',
@@ -32,54 +63,85 @@ function App(props) {
         })
             .then(res => res.json()) // or res.json()
             .then(res => console.log(res))
+    };
+
+    componentDidMount() {
+        // it remembers to subscribe to the store so it doesn't miss updates
+        this.unsubscribe = store.subscribe(this.handleChange.bind(this))
     }
 
-    let element;
-
-    if (localStorage.getItem("loggedIn")==="true"){
-        console.log(localStorage)
-         element =  <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-
-            <div className="container">
-
-                <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" onClick={handleLogout} to={"/sign-in"}>Logout</Link>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    }else if (localStorage.getItem("loggedIn")==="false"){
-
-        element =  <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-
-            <div className="container">
-
-                <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to={"/sign-in"}>Login</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    componentWillUnmount() {
+        // and unsubscribe later
+        this.unsubscribe()
     }
-  return (
-      <div className="App">
-          {element}
-      </div>
+
+    handleChange() {
+        // and whenever the store state changes, it re-renders.
+        this.forceUpdate()
+    }
 
 
+    render() {
+        let head;
+        if(store.getState()==="LOGIN"){
+            head=<LoginHeader/>
+        }else if(store.getState()==="LOGOUT"){
+            head=<LogoutHeader/>
+        }
+        return (
+            <ThemeProvider theme={theme}>
+
+                <BrowserRouter>
+
+                    <div className="auth-wrapper">
 
 
-  );
+                        {head}
+                        <div className="auth-inner">
+
+
+                            <Switch>
+                                <Route exact path='/' component={LoginPage}/>
+                                <Route path="/sign-in" component={LoginPage}/>
+                                <Route path="/sign-up" component={SignupPage}/>
+                                <Route path="/dashboard/doctor" component={DoctorDashboard}/>
+                                <Route path="/dashboard/patient" component={PatientDashboard}/>
+                                <Route path="/setSecurityQuestions" component={SetSecurityQuestions}/>
+                                <Route path="/logout" component={LoginPage}/>
+                                <Route path="/resetPassword" component={ForgetPasswordPage}/>
+                                <Route path='/authenticate' component={AuthenticateUser}/>
+                                <Route path='/userProfile' component={UserProfile}/>
+                                <Route path="/patientList" component={PatientList}/>
+                                <Route path='/healthStatus' component={HealthStatus}/>
+                                <Route path='/myStats' component={MyStats}/>
+                                <Route path='/patientChatbox' component={PatientChatbox}/>
+
+                                <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
+                                <Route path='/updateResult/:email' component={SpecificAppointment}/>
+                                <Route path='/bookAppointment' component={PatientAppointment}/>
+                                <Route path='/viewAppointment' component={ViewAppointment}/>
+                                <Route path='/viewTestResult' component={TestResult}/>
+                                <Route path='/viewHeatmap' component={Heatmap}/>
+                            </Switch>
+
+                        </div>
+                    </div>
+
+                </BrowserRouter>
+
+            </ThemeProvider>
+        );
+    }
 }
 
-export default App;
+
+const mapStateToProps = state => {
+    return {isLoggedIn: state}
+}
+
+
+
+
+const APP = connect(mapStateToProps)(App)
+
+export default APP;

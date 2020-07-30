@@ -2,6 +2,13 @@ import React, {Component} from 'react';
 import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
+import {connect} from "react-redux";
+import {setLogin} from "../login_Actions";
+
+const mapStateToProps = state => {
+    console.log("loginpage",state)
+    return {isLoggedIn: state}
+}
 class LoginPage extends Component {
     constructor(props) {
         super(props);
@@ -105,6 +112,8 @@ class LoginPage extends Component {
                     localStorage.setItem("accessToken",data.accessToken)
                     localStorage.setItem("userInfo",data)
                     localStorage.setItem("loggedIn",true)
+                    this.props.dispatch(setLogin("LOGIN"))
+                    console.log("already login",this.props)
                     if(data.role==="doctor"){
                         console.log("doctor")
                         const {history} = this.props
@@ -168,5 +177,7 @@ class LoginPage extends Component {
         );
     }
 }
+const login = connect(mapStateToProps)(LoginPage)
 
-export default LoginPage;
+
+export default login;
