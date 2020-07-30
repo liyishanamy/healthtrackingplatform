@@ -9,12 +9,6 @@ const mapStateToProps = state => {
 
     return {isLoggedIn: state}
 }
-// const mapDispatchToProps = (dispatch,ownProps) =>{
-//     dispatch(setLogin(!ownProps.loginOrNot))
-//
-// }
-
-
 
 class loginHeader extends Component {
     constructor(props) {
@@ -26,7 +20,6 @@ class loginHeader extends Component {
 
     }
     handleLogout=(props)=> {
-        console.log("handlelogout",props)
         localStorage.removeItem("accessToken");
         localStorage.removeItem("userInfo");
         localStorage.removeItem("email");
@@ -35,8 +28,6 @@ class loginHeader extends Component {
         localStorage.setItem("loggedIn",false);
         this.props.dispatch(setLogin("LOGOUT"))
         console.log(props)
-        // const {history} = this.props;
-        // history.push('/sign-in')
         alert("Your session is expired")
         window.location = '/sign-in'
 

@@ -41,29 +41,6 @@ class App extends Component {
             status:props.isLoggedIn
         }
     }
-    handleLogout=(props)=> {
-        console.log("handlelogout",props)
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("userInfo");
-        localStorage.removeItem("email");
-        localStorage.removeItem("role");
-        localStorage.removeItem("name");
-        localStorage.setItem("loggedIn",false);
-        this.props.dispatch(setLogin("LOGOUT"))
-        console.log(props)
-        // const {history} = this.props;
-        // history.push('/sign-in')
-        alert("Your session is expired")
-        window.location = '/sign-in'
-
-        let deleteToken={"token":localStorage.getItem("accessToken")}
-        fetch('http://localhost:3000/logout', {
-            method: 'DELETE',
-            body: JSON.stringify(deleteToken)
-        })
-            .then(res => res.json()) // or res.json()
-            .then(res => console.log(res))
-    };
 
     componentDidMount() {
         // it remembers to subscribe to the store so it doesn't miss updates
