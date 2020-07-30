@@ -28,7 +28,6 @@ class TestResultStats extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success1",data)
                 var formateDate =[];
                 for(var i=0;i<data.length;i++){
                     let date =new Date(data[i]['Date'])

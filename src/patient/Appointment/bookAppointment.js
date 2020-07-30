@@ -40,7 +40,7 @@ class BookAppointment extends Component {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log("dataaa",data)
                 if(data.message==="You have already booked one appointment. If you want to rebook one, please cancel the existing one first"){
                     alert(data.message)
                 }
@@ -48,7 +48,7 @@ class BookAppointment extends Component {
                     alert(data.message)
 
                 }
-                else{
+                else if(!data.message){
                     alert("You have successfully booked the appointment.")
                 }
 
@@ -87,7 +87,7 @@ class BookAppointment extends Component {
                     dateFormat="MMMM d, yyyy h:mm aa"
                     inputProps={{readOnly: true}}
                 />
-                <button className="btn btn-primary" >Book Appointment</button>
+                <button type="submit" className="btn btn-primary" >Book Appointment</button>
             </div>
         </form>
     )

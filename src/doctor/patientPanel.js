@@ -88,7 +88,7 @@ class PatientPanel extends Component {
         }]
         console.log(data)
         return (
-            <div>
+            <div style={{padding:100}}>
                 <Grid
                     container
                     spacing={4}

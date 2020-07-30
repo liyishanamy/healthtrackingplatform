@@ -35,8 +35,10 @@ import store from "./store/store";
 class App extends Component {
     constructor(props) {
         super(props);
-        console.log("app",props,store)
-        props.dispatch(setLogin("LOGOUT"))
+        var initialState = localStorage.getItem("loggedIn")
+        if(!initialState){
+            props.dispatch(setLogin("LOGOUT"))
+        }else {props.dispatch(setLogin(initialState))}
         this.state={
             status:props.isLoggedIn
         }
@@ -60,10 +62,13 @@ class App extends Component {
 
     render() {
         let head;
+        console.log("rerender",store.getState())
         if(store.getState()==="LOGIN"){
             head=<LoginHeader/>
         }else if(store.getState()==="LOGOUT"){
             head=<LogoutHeader/>
+        }else if(store.getState()==="SIGNUP"){
+            head =null
         }
         return (
             <ThemeProvider theme={theme}>
@@ -92,7 +97,7 @@ class App extends Component {
                                 <Route path='/healthStatus' component={HealthStatus}/>
                                 <Route path='/myStats' component={MyStats}/>
                                 <Route path='/patientChatbox' component={PatientChatbox}/>
-
+                                <Route path='/userProfile' component={UserProfile}/>
                                 <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
                                 <Route path='/updateResult/:email' component={SpecificAppointment}/>
                                 <Route path='/bookAppointment' component={PatientAppointment}/>

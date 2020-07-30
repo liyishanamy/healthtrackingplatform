@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Select from 'react-select';
 import {Button} from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 //import { useAlert } from 'react-alert'
 
 const useStyles = makeStyles((theme) => ({
@@ -95,55 +97,67 @@ export default function DiscreteSlider() {
 
 
     return (
-        <div className={classes.root}>
-            <div>{new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate()}</div>
+
+        <Card  variant="outlined" style={{padding:170}}>
+            <h1>My Daily Update</h1>
+            <CardContent>
 
 
-            <Typography id="discrete-slider-custom" gutterBottom>
-                Today's Temperature
-            </Typography>
-            <Slider
-                defaultValue={20}
-                getAriaValueText={valuetext}
-                aria-labelledby="discrete-slider-custom"
-                step={0.1}
-                valueLabelDisplay="auto"
-                marks={marks}
-                min={35}
-                max={40}
-                value={temp}
-                // onChange={(value) => setTemp(value)}
-                onChange={(event, value) => setTemp(value)}
-            />
-            <label>Symptoms</label>
-
-            <Select
-                isMulti
-                name="symptom"
-                options={options}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                isClearable={true}
-                value={symptoms}
-                onChange={(event, value) => {
-
-                    console.log(value)
-                    if (value.action === "select-option") {
-                        symptom = symptom.concat(value.option)
-                        console.log(symptoms)
-                        setSymptoms(symptom)
-                    } else if (value.action === "remove-value") {
-                        symptom = symptom.filter(item => item !== value.removedValue.value);
-                        setSymptoms(symptom)
-
-                    }
+                <div className={classes.root}>
+                    <div>{new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate()}</div>
 
 
-                }}
-            />
+                    <Typography id="discrete-slider-custom" gutterBottom>
+                        Today's Temperature
+                    </Typography>
+                    <Slider
+                        defaultValue={20}
+                        getAriaValueText={valuetext}
+                        aria-labelledby="discrete-slider-custom"
+                        step={0.1}
+                        valueLabelDisplay="auto"
+                        marks={marks}
+                        min={35}
+                        max={40}
+                        value={temp}
+                        // onChange={(value) => setTemp(value)}
+                        onChange={(event, value) => setTemp(value)}
+                    />
+                    <label>Symptoms</label>
 
-            <Button onClick={() => handleSubmit(temp, symptoms)}>Submit</Button>
+                    <Select
+                        isMulti
+                        name="symptom"
+                        options={options}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        isClearable={true}
+                        value={symptoms}
+                        onChange={(event, value) => {
 
-        </div>
+                            console.log(value)
+                            if (value.action === "select-option") {
+                                symptom = symptom.concat(value.option)
+                                console.log(symptoms)
+                                setSymptoms(symptom)
+                            } else if (value.action === "remove-value") {
+                                symptom = symptom.filter(item => item !== value.removedValue.value);
+                                setSymptoms(symptom)
+
+                            }
+
+
+                        }}
+                    />
+
+                    <Button onClick={() => handleSubmit(temp, symptoms)}>Submit</Button>
+
+                </div>
+            </CardContent>
+
+
+        </Card>
+
+
     );
 }

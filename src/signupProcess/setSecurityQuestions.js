@@ -2,10 +2,16 @@ import React, {Component} from 'react';
 import { Multiselect } from 'multiselect-react-dropdown';
 import Select from 'react-select';
 import Input from "@material-ui/core/Input";
+import {setLogin} from "../login_Actions";
+import {connect} from "react-redux";
+const mapStateToProps = state => {
+
+    return {isLoggedIn: state}
+}
 class SetSecurityQuestions extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        props.dispatch(setLogin("SIGNUP"))
         this.state={
             email:props.location.state.detail.email,
             question1:"",
@@ -81,14 +87,16 @@ class SetSecurityQuestions extends Component {
                 console.log('Success:', data);
                 if (this.state.userInfo.role === "patient") {
                     const {history} = this.props
-                    localStorage.setItem("loggedIn", true)
+                    localStorage.setItem("loggedIn", "LOGIN")
+                    this.props.dispatch(setLogin("LOGIN"))
                     localStorage.setItem("role", "patient")
                     localStorage.setItem('email',this.state.email)
                     history.push('/dashboard/patient')
 
                 } else if (this.state.userInfo.role === "doctor") {
                     const {history} = this.props
-                    localStorage.setItem("loggedIn", true)
+                    localStorage.setItem("loggedIn", "LOGIN")
+                    this.props.dispatch(setLogin("LOGIN"))
                     localStorage.setItem("role", "doctor")
                     localStorage.setItem('email',this.state.email)
                     history.push('/dashboard/doctor')
@@ -169,4 +177,5 @@ class SetSecurityQuestions extends Component {
     }
 }
 
-export default SetSecurityQuestions;
+const SetQuestions = connect(mapStateToProps)(SetSecurityQuestions);
+export default SetQuestions;

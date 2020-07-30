@@ -111,7 +111,7 @@ class LoginPage extends Component {
                     console.log('Success:', data);
                     localStorage.setItem("accessToken",data.accessToken)
                     localStorage.setItem("userInfo",data)
-                    localStorage.setItem("loggedIn",true)
+                    localStorage.setItem("loggedIn","LOGIN")
                     this.props.dispatch(setLogin("LOGIN"))
                     console.log("already login",this.props)
                     if(data.role==="doctor"){

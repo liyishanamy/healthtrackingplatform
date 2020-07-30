@@ -6,11 +6,18 @@ import Radio from "@material-ui/core/Radio";
 import {Button,FormControl,FormLabel,RadioGroup,FormControlLabel} from "@material-ui/core";
 import Input from '@material-ui/core/Input';
 import MuiPhoneNumber from '@material-ui/core/TextField';
+import {setLogin} from "../login_Actions";
+import {connect} from "react-redux";
 
+const mapStateToProps = state => {
 
+    return {isLoggedIn: state}
+}
 class SignupPage extends Component {
     constructor(props) {
         super(props);
+        console.log("signup",props)
+        props.dispatch(setLogin("SIGNUP"))
         this.state={
             firstname:"",
             lastname:"",
@@ -185,6 +192,7 @@ class SignupPage extends Component {
                             })
                             const {history} = this.props
                             localStorage.setItem("accessToken",data.accessToken)
+
                             //history.push(`/setSecurityQuestions`)
                             history.push({
                                 pathname: '/setSecurityQuestions',
@@ -314,4 +322,7 @@ class SignupPage extends Component {
     }
 }
 
-export default SignupPage;
+
+const Signup = connect(mapStateToProps)(SignupPage);
+
+export default Signup;

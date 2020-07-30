@@ -66,17 +66,17 @@ const useStyles = makeStyles({
         width: '100%',
     },
     container: {
-        maxHeight: 440,
+        maxHeight: 600,
     },
 });
 
 export default function PatientList() {
 
-
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [rows, setRows] = React.useState([])
+    const [totalRows,setTotalRows] = React.useState(0)
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -86,32 +86,39 @@ export default function PatientList() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    useEffect(()=>{
+        fetch("http://localhost:3000/users/totalPatients", {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
+        },
+    }).then(response => response.json())
+        .then(data => {
+            setTotalRows(data.totalPatients)
+    })
+    })
 
     useEffect(() => {
-        const fetchData = async (page, rowsPerPage) => {
-            fetch(`http://localhost:3000/users?page=` + page + `&limit=` + rowsPerPage, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
-                },
-            }).then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    for (var i = 0; i < data.length; i++) {
-                        console.log(i, data[i])
-                        setRows(rows => [...rows,
-                            createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
-                        ]);
-                    }
-                    console.log("after", rows)
-                    console.log(page, rowsPerPage)
-                })
-        }
-
-        fetchData()
-
-
-    }, [page, rowsPerPage])
+        // const fetchData = async (page, rowsPerPage) => {
+        console.log("page", page, "rowsPerPage", rowsPerPage)
+        fetch(`http://localhost:3000/users?page=` + (page+1) + `&limit=` + rowsPerPage, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log("hello data", data)
+                setRows([])
+                for (var i = 0; i < data.length; i++) {
+                    console.log(i, data[i])
+                    setRows(rows => [...rows,
+                        createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
+                    ]);
+                }
+                console.log("after", rows)
+            })
+     }, [page, rowsPerPage])
 
     return (
         <div>
@@ -138,7 +145,7 @@ export default function PatientList() {
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.Email}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
-                                            console.log(column.id, value)
+
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {column.format ? column.format(value) : value}
@@ -154,7 +161,7 @@ export default function PatientList() {
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={rows.length}
+                    count={totalRows}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

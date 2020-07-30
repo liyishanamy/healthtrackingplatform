@@ -14,7 +14,8 @@ class ViewAppointment extends Component {
             appointmentStart:null,
             appointmentEnd:null,
             testDone:false,
-            appointment:false
+            appointment:false,
+
         }
     }
 
@@ -85,6 +86,7 @@ class ViewAppointment extends Component {
 
 
     render() {
+
         console.log("isAppointment",this.state.appointment)
         let testDone;
         if (this.state.testDone){
@@ -93,7 +95,10 @@ class ViewAppointment extends Component {
         }else {
             testDone= "Not Done"
         }
-
+        let buttonDisableFlag=false
+        if(new Date(this.state.appointmentStart).getTime()< Date.now()){
+            buttonDisableFlag=true
+        }
         let minute1;
 
         if(new Date(this.state.appointmentStart).getMinutes()===0){
@@ -142,10 +147,10 @@ class ViewAppointment extends Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button onClick={this.cancelAppointment} size="small" color="primary">
+                    <Button disabled={buttonDisableFlag} onClick={this.cancelAppointment} size="small" color="primary">
                         Cancel Appointment
                     </Button>
-                    <Button onClick={this.bookAppointment} size="small" color="primary">
+                    <Button  onClick={this.bookAppointment} size="small" color="primary">
                         <Link to={`/bookAppointment/`}> Rebook Appointment
                         </Link>
 
@@ -172,7 +177,7 @@ class ViewAppointment extends Component {
 
         }
         return (
-            <div>{isAppointment}</div>
+            <div style={{padding:100}}>{isAppointment}</div>
 
 
 

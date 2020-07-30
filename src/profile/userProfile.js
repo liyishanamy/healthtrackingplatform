@@ -6,7 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 import {render} from 'react-dom';
 import AvatarUploader from "react-avatar-uploader"
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-
+import "../App.css"
 class UserProfile extends Component {
     constructor(props) {
         super(props);
@@ -24,9 +24,9 @@ class UserProfile extends Component {
             address: "",
 
             value: "",
-            copied: false
+            copied: false,
+            displayMode:"ReadOnly"
         }
-        //this.onDrop = this.onDrop.bind(this);
     }
 
     fileUploadHandler = (e) => {
@@ -71,9 +71,7 @@ class UserProfile extends Component {
     };
 
     handleImageChange = (e) => {
-        console.log(e.target.files[0])
         let image_as_base64 = URL.createObjectURL(e.target.files[0])
-        console.log("image_as_base64", image_as_base64)
         this.setState({
             image: e.target.files[0],
             image_preview: image_as_base64
@@ -131,7 +129,7 @@ class UserProfile extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{padding:100}}>
                 <div>User profile</div>
                 <input style={{display: 'none'}} type="file"
                        id="image"
@@ -139,7 +137,7 @@ class UserProfile extends Component {
                        ref={fileInput => this.fileInput = fileInput}
                        required/>
                 <Button onClick={this.fileUploadHandler}>Upload</Button>
-                <Button onClick={() => this.fileInput.click()}><Avatar alt="Remy Sharp" src={this.state.image_preview}/></Button>
+                <Button onClick={() => this.fileInput.click()}><Avatar alt="" src={this.state.image_preview}/></Button>
 
                 <div>Firstname:{this.state.firstname}</div>
                 <div>Lastname:{this.state.lastname}</div>

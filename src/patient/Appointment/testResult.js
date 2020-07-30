@@ -27,9 +27,17 @@ class TestResult extends Component {
         })
             .then(response => response.json())
             .then(data => {
-                this.setState({
-                    testResult:data[0]['testResult']
-                })
+                if(data.message==="You do not have a booked appointment yet."){
+                    this.setState({
+                        testResult:data.message
+                    })
+                }else{
+                    this.setState({
+                        testResult:data[0]['testResult']
+                    })
+                }
+
+
             })
     }
 
