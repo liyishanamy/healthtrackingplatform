@@ -6,61 +6,6 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
-/*
-const TotalUsers = props => {
-
-
-    return (
-        <Card
-
-        >
-            <CardContent>
-                <Grid
-                    container
-                    justify="space-between"
-                >
-                    <Grid item>
-                        <Typography
-
-                            color="textSecondary"
-                            gutterBottom
-                            variant="body2"
-                        >
-                            TOTAL USERS
-                        </Typography>
-                        <Typography variant="h3">1,600</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Avatar >
-                            <PeopleIcon/>
-                        </Avatar>
-                    </Grid>
-                </Grid>
-                <div>
-                    <ArrowUpwardIcon />
-                    <Typography
-
-                        variant="body2"
-                    >
-                        16%
-                    </Typography>
-                    <Typography
-
-                        variant="caption"
-                    >
-                        Since last month
-                    </Typography>
-                </div>
-            </CardContent>
-        </Card>
-    );
-};
-
-TotalUsers.propTypes = {
-    className: PropTypes.string
-};
-
-export default TotalUsers;*/
 
 
 const useStyles = makeStyles(theme => ({
@@ -101,8 +46,29 @@ const TotalPatients= props => {
     const { className, ...rest } = props;
     const [totalPatients,setTotalPatients]=useState(0)
     const [error,setError]=useState("")
+    const [todayGrowth,setTodayGrowth] = useState(0)
 
     const classes = useStyles();
+    useEffect(()=>{
+        var today = Date.now()
+        var queryDate = ""+new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getUTCDate()
+        console.log("querydate",queryDate,today)
+        console.log("request:http://localhost:3000/users/totalJoinPatients?queryDate="+queryDate)
+        fetch(`http://localhost:3000/users/totalJoinPatients?queryDate=`+queryDate,{
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("totaljoinpatient",data)
+                setTodayGrowth(data['totalJoinPatients'])
+
+            })
+            .catch(err => setError(err))
+
+    })
     useEffect(()=>{
         fetch('http://localhost:3000/users/totalPatients',{
             method: 'GET',
@@ -112,7 +78,7 @@ const TotalPatients= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log("totalpatient",data)
                 setTotalPatients(data['totalPatients'])
             })
             .catch(err => setError(err))
@@ -152,13 +118,13 @@ const TotalPatients= props => {
                         className={classes.differenceValue}
                         variant="body2"
                     >
-                        16%
+                        {todayGrowth}
                     </Typography>
                     <Typography
                         className={classes.caption}
                         variant="caption"
                     >
-                        Since last month
+                        Since yesterday
                     </Typography>
                 </div>
             </CardContent>

@@ -115,6 +115,8 @@ export default function ManageAppointment() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [rows, setRows] = React.useState([])
+    const [totalRows,setTotalRows] = React.useState(0)
+
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate()+1)
@@ -135,6 +137,18 @@ export default function ManageAppointment() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    useEffect(()=>{
+        fetch(`http://localhost:3000/appointment/allPatients?from=` + startDate + `&to=` + endDate, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
+            },
+        }).then(response => response.json())
+            .then(data => {
+                setTotalRows(data.length)
+
+            })
+    },[startDate, endDate])
 
     useEffect(() => {
         console.log("fetch data between",startDate, endDate)
@@ -150,7 +164,7 @@ export default function ManageAppointment() {
 
 
         }
-        fetch(`http://localhost:3000/appointment/allPatients?from=` + startDate + `&to=` + endDate, {
+        fetch(`http://localhost:3000/appointment/allPatients?from=` + startDate + `&to=` + endDate+`&page=`+(page+1)+`&limit=`+rowsPerPage, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
@@ -158,7 +172,7 @@ export default function ManageAppointment() {
         }).then(response => response.json())
             .then(data => {
                 let value;
-                value = data['findPatients']
+                value = data
                 setRows([]);
                 for (var i = 0; i < value.length; i++) {
                     console.log(i, value[i])
@@ -171,11 +185,10 @@ export default function ManageAppointment() {
 
                 }
                 console.log("after", rows)
-                console.log(page, rowsPerPage)
             })
 
 
-    }, [startDate, endDate])
+    }, [startDate, endDate,page,rowsPerPage])
     const selectionRange = {
         startDate: new Date(),
         endDate: new Date(),
@@ -227,9 +240,9 @@ export default function ManageAppointment() {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
+                    rowsPerPageOptions={[5,10]}
                     component="div"
-                    count={rows.length}
+                    count={totalRows}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

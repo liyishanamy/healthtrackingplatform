@@ -165,6 +165,12 @@ const PatientAppointment= props => {
                             <br/>
                             {new Date(appointmentStart).getHours()+":"+minute1} to {new Date(appointmentEnd).getHours()+":"+minute2}
                         </Typography>
+                        <Typography variant="body2" component="p">
+
+                            <br/><Link>Update the Test Result</Link>
+
+                        </Typography>
+
 
 
                     </Grid>
