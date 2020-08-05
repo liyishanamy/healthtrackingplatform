@@ -3,9 +3,11 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Select from 'react-select';
-import {Button} from "@material-ui/core";
+import {Button, FormControl, FormControlLabel, FormLabel, RadioGroup} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Input from "@material-ui/core/Input";
+import Radio from "@material-ui/core/Radio";
 //import { useAlert } from 'react-alert'
 
 const useStyles = makeStyles((theme) => ({
@@ -63,19 +65,46 @@ export default function DiscreteSlider() {
     ]
     const [temp, setTemp] = useState(35);
     const [symptoms, setSymptoms] = useState([])
+
+    const [from, setFrom] = useState("")
+    const [to, setTo] = useState("")
+    const [mask, setMask] = useState(false)
+
+
     let symptom = symptoms
 
-    function handleSubmit(temp, symptoms) {
-        console.log(temp)
-        console.log(symptoms)
+    function handleMask(e) {
+        if (e.target.value === "Yes") {
+            setMask(true)
+        } else if (e.target.value === "No") {
+            setMask(false)
+        }
+
+
+    }
+
+    function handleFrom(e) {
+        setFrom(e.target.value)
+    }
+
+    function handleTo(e) {
+        setTo(e.target.value)
+
+    }
+
+    function handleSubmit(temp, symptoms, placesFrom, placesTo, mask) {
+
         let symptom = []
-        for(var i=0;i<symptoms.length;i++){
+        for (var i = 0; i < symptoms.length; i++) {
             symptom = symptom.concat(symptoms[i].value)
         }
         const data = {
             email: localStorage.getItem("email"),
             temperature: temp,
-            symptom: symptom
+            symptom: symptom,
+            placesFrom: placesFrom,
+            placesTo: placesTo,
+            mask: mask
         }
         console.log(data)
         fetch("http://localhost:3000/healthStatus", {
@@ -88,17 +117,22 @@ export default function DiscreteSlider() {
         }).then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                setSymptoms([])
-                setTemp(35);
 
-            })
+                console.log(symptoms, temp, from, to, mask)
+            }).finally(() => {
+            setSymptoms([])
+            setTemp(35);
+            setFrom("")
+            setTo("")
+            setMask(false)
+        })
 
     }
 
 
     return (
 
-        <Card  variant="outlined" style={{padding:170}}>
+        <Card variant="outlined" style={{padding: 170}}>
             <h1>My Daily Update</h1>
             <CardContent>
 
@@ -150,7 +184,25 @@ export default function DiscreteSlider() {
                         }}
                     />
 
-                    <Button onClick={() => handleSubmit(temp, symptoms)}>Submit</Button>
+                    <div className="form-group">
+                        <label>Report the places you have traveled. If any. If not, leave it empty</label><br/>
+                        From <Input type="text" className="form-control" placeholder="From" value={from}
+                                    onChange={handleFrom} required/>
+                        To <Input type="text" className="form-control" placeholder="To" value={to} onChange={handleTo}
+                                  required/>
+                    </div>
+                    <div className="form-group">
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">If you went somewhere, whether you wear mask?</FormLabel>
+                            <RadioGroup aria-label="mask" name="mask" onChange={handleMask}>
+                                <FormControlLabel value="Yes" control={<Radio required={true}/>} label="I did"/>
+                                <FormControlLabel value="No" control={<Radio required={true}/>} label="I did not"/>
+                            </RadioGroup>
+                        </FormControl>
+
+                    </div>
+
+                    <Button onClick={() => handleSubmit(temp, symptoms, from, to, mask)}>Submit</Button>
 
                 </div>
             </CardContent>
