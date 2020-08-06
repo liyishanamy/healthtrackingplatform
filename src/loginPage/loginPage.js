@@ -3,7 +3,8 @@ import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
-import {setLogin} from "../login_Actions";
+import {setLogin, setEmail, setRole} from "../login_Actions";
+
 
 const mapStateToProps = state => {
     console.log("loginpage",state)
@@ -112,20 +113,27 @@ class LoginPage extends Component {
                     localStorage.setItem("accessToken",data.accessToken)
                     localStorage.setItem("userInfo",data)
                     localStorage.setItem("loggedIn","LOGIN")
+                    this.props.dispatch(setEmail(data.email))
                     this.props.dispatch(setLogin("LOGIN"))
+
+
                     console.log("already login",this.props)
                     if(data.role==="doctor"){
                         console.log("doctor")
                         const {history} = this.props
                         localStorage.setItem("email",data.email)
+                        this.props.dispatch(setRole("DOCTOR"))
                         localStorage.setItem('role',"doctor")
-                        history.push('/dashboard/doctor')
+                        history.push(`/dashboard/doctor`)
                     }else if(data.role==="patient"){
                         console.log("patient")
                         const {history} = this.props
                         localStorage.setItem("email",data.email)
                         localStorage.setItem('role',"patient")
-                        history.push('/dashboard/patient')
+                        this.props.dispatch(setRole("PATIENT"))
+
+                        //history.push(`/dashboard/patient`)
+                        history.push(`/dashboard/patient`)
 
                     }
 

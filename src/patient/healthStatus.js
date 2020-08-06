@@ -66,9 +66,9 @@ export default function DiscreteSlider() {
     const [temp, setTemp] = useState(35);
     const [symptoms, setSymptoms] = useState([])
 
-    const [from, setFrom] = useState("")
-    const [to, setTo] = useState("")
-    const [mask, setMask] = useState(false)
+    const [from, setFrom] = useState(null)
+    const [to, setTo] = useState(null)
+    const [mask, setMask] = useState(null)
 
 
     let symptom = symptoms
@@ -122,9 +122,9 @@ export default function DiscreteSlider() {
             }).finally(() => {
             setSymptoms([])
             setTemp(35);
-            setFrom("")
-            setTo("")
-            setMask(false)
+            setFrom(null)
+            setTo(null)
+            setMask(null)
         })
 
     }

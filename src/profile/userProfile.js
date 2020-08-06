@@ -7,6 +7,13 @@ import {render} from 'react-dom';
 import AvatarUploader from "react-avatar-uploader"
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import "../App.css"
+import Input from "@material-ui/core/Input";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import DatePicker from 'react-date-picker';
+import MuiPhoneNumber from "@material-ui/core/TextField";
+
 class UserProfile extends Component {
     constructor(props) {
         super(props);
@@ -17,58 +24,143 @@ class UserProfile extends Component {
             image: null,
             firstname: "",
             lastname: "",
-            birthday: "",
+            birthday: new Date(),
             role: "",
             gender: "",
             invitationCode: "",
             address: "",
+            street: "",
+            city: "",
+            state: "",
+            zip_code: "",
+            phone: "",
+
 
             value: "",
             copied: false,
-            displayMode:"ReadOnly"
+            displayMode: "ReadOnly",
+            flag: true,
+            saveMsg:""
         }
     }
+
+    handleFirstName = (e) => {
+        this.setState({
+            firstname: e.target.value
+        })
+    }
+    handleLastName = (e) => {
+        this.setState({
+            lastname: e.target.value
+        })
+    }
+    handleEmail = (e) => {
+        this.setState({
+            email: e.target.value
+        })
+    }
+
+    handleStreet = (e) => {
+        this.setState({
+            street: e.target.value
+        })
+    }
+    handleCity = (e) => {
+        this.setState({
+            city: e.target.value
+        })
+    }
+    handleState = (e) => {
+        this.setState({
+            state: e.target.value
+        })
+    }
+    handleZipcode = (e) => {
+        this.setState({
+            zip_code: e.target.value
+        })
+    }
+
+
+    handlePhone = (e) => {
+        this.setState({
+            phone: e.target.value
+        })
+    }
+
+
 
     fileUploadHandler = (e) => {
         e.preventDefault()
         let formData = new FormData()
         let pic = this.state.image;
         let email = this.state.email;
-        let url = "http://localhost:3000/user/profileImage"
-        formData.append('image', pic)
-        formData.append('email', email)
-        console.log(formData)
-        for (var key of formData.entries()) {
-            console.log(key[0] + ', ' + key[1])
+        let url;
+        console.log("pic",this.state.image_preview)
+        if(this.state.image_preview){
+            url = "http://localhost:3000/user/changeProfileImage"
+            formData.append('image', pic)
 
+
+        }else{
+            url = "http://localhost:3000/user/profileImage"
+            formData.append('image', pic)
+            formData.append('email', email)
         }
-        axios.post(url, formData, {
-            //method: 'post',
-            //url: url,
-            headers:
-                {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                }
-        }).then(res => {
-            console.log(res);
 
-        })
-            .then(function (response) {
-                //handle success
-                console.log(response);
+            axios.post(url, formData, {
+                headers:
+                    {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                    }
+            }).then(res => {
+                console.log(res);
+
             })
-            .catch(function (response) {
-                //handle error
-                console.log(response);
-            });
+                .then(function (response) {
+                    //handle success
+                    console.log(response);
+                })
+                .catch(function (response) {
+                    //handle error
+                    console.log(response);
+                });
+
+
+        // Other profile info change
+        const body = {"email":this.state.email,"update":{
+                firstname: this.state.firstname,
+                lastname: this.state.lastname,
+                birthday: new Date(this.state.birthday),
+                street: this.state.street,
+                city: this.state.city,
+                state: this.state.state,
+                zip_code: this.state.zip_code,
+                phone: this.state.phone
+            }
+        }
+
+        fetch("http://localhost:3000/user", {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        }).then(response => response.json())
+            .then(data => {
+                if(data.message==="update user profile successfully!"){
+                    alert(data.message)
+                }else{
+                    alert(data.message)
+                }
+
+            })
+
+
 
     }
-    handleChange = (e) => {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-    };
 
     handleImageChange = (e) => {
         let image_as_base64 = URL.createObjectURL(e.target.files[0])
@@ -77,6 +169,22 @@ class UserProfile extends Component {
             image_preview: image_as_base64
         })
     };
+    toggleChecked = (e) => {
+        console.log(this.state.flag)
+        if (this.state.flag) {
+            this.setState({
+                displayMode: "Edit Mode",
+                flag: !this.state.flag
+            })
+        }
+        if (!this.state.flag) {
+            this.setState({
+                displayMode: "Read Mode",
+                flag: !this.state.flag
+            })
+        }
+
+    }
 
     componentDidMount() {
         fetch("http://localhost:3000/user", {
@@ -95,13 +203,19 @@ class UserProfile extends Component {
                     window.location = '/sign-in'
 
                 } else {
+                    console.log(data)
                     this.setState({
                         firstname: data.firstname,
                         lastname: data.lastname,
-                        birthday: data.birthday,
+                        birthday: new Date(data.birthday),
                         role: data.role,
                         gender: data.gender,
                         invitationCode: data.invitationCode,
+                        street: data.street,
+                        city: data.city,
+                        state: data.state,
+                        zip_code: data.postcode,
+                        phone: data.phone,
                         address: data.street.concat(" " + data.city + " " + data.state)
 
                     })
@@ -121,6 +235,7 @@ class UserProfile extends Component {
 
         }).then(response => response.json())
             .then(data => {
+
                 this.setState({
                     image_preview: data.url
                 })
@@ -129,23 +244,43 @@ class UserProfile extends Component {
 
     render() {
         return (
-            <div style={{padding:100}}>
+            <div style={{padding: 100}}>
                 <div>User profile</div>
+                <FormGroup>
+                    <FormControlLabel
+                        control={<Switch onChange={this.toggleChecked}/>}
+                        label={this.state.displayMode}
+                    />
+                </FormGroup>
                 <input style={{display: 'none'}} type="file"
                        id="image"
                        accept="image/png, image/jpeg" onChange={this.handleImageChange}
                        ref={fileInput => this.fileInput = fileInput}
-                       required/>
-                <Button onClick={this.fileUploadHandler}>Upload</Button>
+                       disabled={this.state.flag}/>
+
                 <Button onClick={() => this.fileInput.click()}><Avatar alt="" src={this.state.image_preview}/></Button>
 
-                <div>Firstname:{this.state.firstname}</div>
-                <div>Lastname:{this.state.lastname}</div>
-                <div>Email:{this.state.email}</div>
+                <div className="form-group">
+                    <label>Firstname</label>
+                    <Input type="firstname" className="form-control" placeholder="Enter Firstname"
+                           value={this.state.firstname} onChange={this.handleFirstName} disabled={this.state.flag}/>
+                </div>
+                <div className="form-group">
+                    <label>Lastname</label>
+                    <Input type="lastname" className="form-control" placeholder="Enter Lastname"
+                           value={this.state.lastname} onChange={this.handleLastName} disabled={this.state.flag}/>
+                </div>
+
+                <div className="form-group">
+                    <label>Email</label>
+                    <Input type="email" className="form-control" placeholder="Enter Email" value={this.state.email}
+                           onChange={this.handleEmail} disabled={true}/>
+                </div>
+
+
                 {this.state.role === "doctor" ? <div>Code:
                     <div>
                         <input value={this.state.invitationCode} disabled={true}/>
-
 
                         <CopyToClipboard text={this.state.invitationCode}
                                          onCopy={() => this.setState({copied: true})}>
@@ -156,10 +291,50 @@ class UserProfile extends Component {
                     </div>
                 </div> : ""}
 
-                <div>birthday:{this.state.birthday}</div>
-                <div>address:{this.state.address}</div>
+                <div className="form-group">
+                    <label>Birthday </label><br/>
+                    <DatePicker  onChange={e=>this.setState({birthday: e})} value={this.state.birthday} maxDate={new Date()} disabled={this.state.flag}/>
+                </div>
+                <div>
+                    <label>Phone</label><br/>
+                    <MuiPhoneNumber defaultCountry={'us'} onChange={this.handlePhone} value={this.state.phone}
+                                    disabled={this.state.flag}/>
+                </div>
 
 
+                <div className="form-group">
+                    <label>Address</label><br/>
+                    <Input
+                        type="text"
+                        value={this.state.street}
+                        placeholder="Street Address"
+                        onChange={this.handleStreet}
+                        disabled={this.state.flag}
+                    />
+                    <Input
+                        type="text"
+                        value={this.state.city}
+                        placeholder="City"
+                        onChange={this.handleCity}
+                        disabled={this.state.flag}
+                    />
+                    <Input
+                        type="text"
+                        value={this.state.state}
+                        placeholder="State"
+                        onChange={this.handleState}
+                        disabled={this.state.flag}
+                    />
+                    <Input
+                        type="text"
+                        value={this.state.zip_code}
+                        placeholder="Zipcode"
+                        onChange={this.handleZipcode}
+                        disabled={this.state.flag}
+                    />
+                </div>
+
+                <Button onClick={this.fileUploadHandler} disabled={this.state.flag}>Save</Button>
             </div>
         );
     }

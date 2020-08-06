@@ -1,19 +1,23 @@
 import {Link} from "react-router-dom";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {setLogin} from "../login_Actions";
+import {setLogin, setRole} from "../login_Actions";
+import { useLocation } from "react-router-dom";
 
 import store from "../store/store"
 import Avatar from "@material-ui/core/Avatar";
 
 const mapStateToProps = state => {
+    console.log("state",state)
 
-    return {isLoggedIn: state}
+    return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer}
 }
 
 class loginHeader extends Component {
     constructor(props) {
         super(props);
+        console.log(props)
+        console.log("props",this.props)
 
         this.state={
             email: localStorage.getItem("email"),
@@ -23,34 +27,27 @@ class loginHeader extends Component {
         console.log("initial header",localStorage.getItem("image"))
     }
     componentDidMount() {
-        fetch('http://localhost:3000/user/getImage', {
+
+        const userEmail = this.props.userEmail
+        console.log("useremaik",userEmail)
+
+         fetch('http://localhost:3000/user/getImage', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
                 'Content-Type': 'application/json',
-
             },
-            body: JSON.stringify({userEmail: localStorage.getItem("email")}),
+            body: JSON.stringify({userEmail: userEmail}),
 
         }).then(response => response.json())
             .then(data => {
-                console.log("data",data)
+                console.log("image",data)
                 if(data.url){
-                    // this.setState({
-                    //     image_preview: data.url
-                    // },()=>{
-                    //     localStorage.setItem("image",this.state.image_preview)
-                    // })
-                    localStorage.setItem("image",data.url)
-
-
+                    this.setState({
+                        image_preview:data.url
+                    })
                 }
                 if(data.message==="Cannot find the profile image"){
-                    // this.setState({
-                    //     image_preview: "./defaultProfileImage.jpg"
-                    // },()=>{
-                    //     localStorage.setItem("image",this.state.image_preview)
-                    // })
                     localStorage.setItem("image","./defaultProfileImage.jpg")
                 }
 
@@ -66,7 +63,7 @@ class loginHeader extends Component {
         localStorage.removeItem("image")
         localStorage.setItem("loggedIn","LOGOUT");
         this.props.dispatch(setLogin("LOGOUT"))
-        console.log(props)
+        this.props.dispatch(setRole("NOT_LOGGED_IN"))
         alert("Your session is expired")
         window.location = '/sign-in'
 
@@ -82,11 +79,14 @@ class loginHeader extends Component {
 
     render() {
         let healthRedirect;
-        if(localStorage.getItem("role")==="doctor"){
+        console.log("myrole",this.props.role)
+        if(this.props.role==="DOCTOR"){
             healthRedirect = "/dashboard/doctor"
         }
-        if(localStorage.getItem("role")==="patient"){
+        if(this.props.role==="PATIENT"){
             healthRedirect = "/dashboard/patient"
+        }if(this.props.role==="NOT_LOGGED_IN"){
+            healthRedirect="/"
         }
         return (
             <nav className="navbar navbar-expand-lg navbar-light fixed-top">
@@ -99,7 +99,7 @@ class loginHeader extends Component {
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-link">Hi {localStorage.getItem("name")}</li>
                             <li className="nav-item">
-                                <Link className="nav-link"  to={"/userProfile"}><Avatar  sizes="small" src={localStorage.getItem("image")}/></Link>
+                                <Link className="nav-link"  to={"/userProfile"}><Avatar  sizes="small" src={this.state.image_preview}/></Link>
                             </li>
                             <li className="nav-item">
                                  <Link className="nav-link" onClick={this.handleLogout} to={"/sign-in"}>Logout</Link>

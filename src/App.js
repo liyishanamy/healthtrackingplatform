@@ -26,12 +26,14 @@ import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import {isLoggedInOptions, setLogin} from "./login_Actions";
 import loginReducer from "./login_Reducers/reducers";
+
 import LoginHeader from './headers/loginHeader'
 import LogoutHeader from './headers/logoutHeader'
 import {connect} from "react-redux";
 
 import {Component} from 'react';
 import store from "./store/store";
+import DatePicker from "react-date-picker";
 class App extends Component {
     constructor(props) {
         super(props);
@@ -62,12 +64,12 @@ class App extends Component {
 
     render() {
         let head;
-        console.log("rerender",store.getState())
-        if(store.getState()==="LOGIN"){
+        console.log("rerender",store.getState()["loginReducer"])
+        if(store.getState()["loginReducer"]==="LOGIN"){
             head=<LoginHeader/>
-        }else if(store.getState()==="LOGOUT"){
+        }else if(store.getState()["loginReducer"]==="LOGOUT"){
             head=<LogoutHeader/>
-        }else if(store.getState()==="SIGNUP"){
+        }else if(store.getState()["loginReducer"]==="SIGNUP"){
             head =null
         }
         return (
