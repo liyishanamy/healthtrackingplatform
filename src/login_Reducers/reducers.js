@@ -1,4 +1,4 @@
-import {isLoggedInOptions, roleOptions, SET_EMAIL, SET_LOG_IN, SET_ROLE} from "../login_Actions";
+import {isLoggedInOptions, roleOptions, SET_EMAIL, SET_IMAGE, SET_LOG_IN, SET_ROLE} from "../login_Actions";
 import { combineReducers } from 'redux'
 
 const {LOGOUT} = isLoggedInOptions
@@ -30,9 +30,18 @@ function emailReducer(state = "", action) {
             return state
     }
 }
+function imageReducer(state = "", action) {
+    switch (action.type) {
+        case SET_IMAGE:
+            return action.url
+        default:
+            return state
+    }
+}
  const rootReducer = combineReducers({
      loginReducer,
      emailReducer,
-     roleReducer
+     roleReducer,
+     imageReducer
  })
 export default rootReducer

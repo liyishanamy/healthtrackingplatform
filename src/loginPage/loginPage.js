@@ -3,8 +3,8 @@ import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
-import {setLogin, setEmail, setRole} from "../login_Actions";
-
+import {setLogin, setEmail, setRole, setProfileImage} from "../login_Actions";
+import store from "../store/store"
 
 const mapStateToProps = state => {
     console.log("loginpage",state)
@@ -20,6 +20,9 @@ class LoginPage extends Component {
             errMsg:"",
             rememberedVal:false
         }
+        this.props.dispatch(setLogin("LOGOUT"))
+        this.props.dispatch(setRole("NOT_LOGGED_IN"))
+        this.props.dispatch(setProfileImage(""))
     }
     rememberUser = async () =>{
         try {
@@ -102,52 +105,93 @@ class LoginPage extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("data",data)
-                if(data.message==="Authentication failed"){
+                console.log("data", data)
+                if (data.message === "Authentication failed") {
                     this.setState({
-                        errMsg:data.message
+                        errMsg: data.message
                     })
 
-                }else{
-                    console.log('Success:', data);
-                    localStorage.setItem("accessToken",data.accessToken)
-                    localStorage.setItem("userInfo",data)
-                    localStorage.setItem("loggedIn","LOGIN")
+                } else {
+                    const userEmail = data.email
+                    console.log('Success:', data.refreshToken);
+                    localStorage.setItem("accessToken", data.accessToken)
+                    localStorage.setItem("userInfo", data)
+                    localStorage.setItem("loggedIn", "LOGIN")
+                    localStorage.setItem("refreshToken", data.refreshToken)
                     this.props.dispatch(setEmail(data.email))
                     this.props.dispatch(setLogin("LOGIN"))
+                    console.log("requ", data.accessToken, userEmail)
+                    fetch('http://localhost:3000/user/getImage', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + data.accessToken,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({userEmail: data.email}),
+
+                    }).then(response => response.json())
+                        .then(data => {
+                            console.log("url", data)
+
+                            if (data.message === "Cannot find the profile image") {
+                                localStorage.setItem("image", "./defaultProfileImage.jpg")
+                                this.props.dispatch(setProfileImage("./defaultProfileImage.jpg"))
+                            } else {
+
+                                this.props.dispatch(setProfileImage(data.url))
+                                console.log("1", new Date())
+                            }
+
+                        }).then(()=>{
+                            console.log("promisedata",data)
+                        if(data.role==="doctor"){
+                            console.log("doctor",store.getState(),store.getState().imageReducer)
 
 
-                    console.log("already login",this.props)
-                    if(data.role==="doctor"){
-                        console.log("doctor")
-                        const {history} = this.props
-                        localStorage.setItem("email",data.email)
-                        this.props.dispatch(setRole("DOCTOR"))
-                        localStorage.setItem('role',"doctor")
-                        history.push(`/dashboard/doctor`)
-                    }else if(data.role==="patient"){
-                        console.log("patient")
-                        const {history} = this.props
-                        localStorage.setItem("email",data.email)
-                        localStorage.setItem('role',"patient")
-                        this.props.dispatch(setRole("PATIENT"))
+                            const {history} = this.props
+                            localStorage.setItem("email",data.email)
+                            this.props.dispatch(setRole("DOCTOR"))
+                            localStorage.setItem('role',"doctor")
 
-                        //history.push(`/dashboard/patient`)
-                        history.push(`/dashboard/patient`)
+                            history.push(`/dashboard/doctor`)
+                        }else if(data.role==="patient"){
+                            console.log("patient")
+                            const {history} = this.props
+                            localStorage.setItem("email",data.email)
+                            localStorage.setItem('role',"patient")
+                            this.props.dispatch(setRole("PATIENT"))
 
-                    }
+                            //history.push(`/dashboard/patient`)
+                            history.push(`/dashboard/patient`)
 
-                }
+                        }
+                    })
+                        .catch((error) => {
+                                this.setState({
+                                    errMsg:error.toString()
+                                })
+                                console.error('Error:', error);
+                            });
 
 
-            })
-            .catch((error) => {
-                this.setState({
-                    errMsg:error.toString()
-                })
-                console.error('Error:', error);
-            });
-    }
+
+
+
+
+
+
+                        }
+
+
+                    })
+                    .catch((error) => {
+                        this.setState({
+                            errMsg:error.toString()
+                        })
+                        console.error('Error:', error);
+                    });
+
+            }
 
 
     render() {

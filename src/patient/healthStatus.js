@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {Component, useCallback, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
@@ -8,6 +8,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Input from "@material-ui/core/Input";
 import Radio from "@material-ui/core/Radio";
+import {setLogin, setRole} from "../login_Actions";
+import {connect} from "react-redux";
 //import { useAlert } from 'react-alert'
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +53,8 @@ const marks = [
 function valuetext(value) {
     return `${value}°C`;
 }
+
+
 
 
 export default function DiscreteSlider() {
@@ -106,7 +110,7 @@ export default function DiscreteSlider() {
             placesTo: placesTo,
             mask: mask
         }
-        console.log(data)
+
         fetch("http://localhost:3000/healthStatus", {
             method: 'POST',
             headers: {
@@ -116,10 +120,32 @@ export default function DiscreteSlider() {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
+                if (data.message!=="the token is invalid") {
+                    console.log('Success:', data);
 
-                console.log(symptoms, temp, from, to, mask)
-            }).finally(() => {
+                    console.log(symptoms, temp, from, to, mask)
+                }else{
+                    throw data
+                }
+            }).catch(err=> {
+            //handle error
+            console.log("response",err);
+            if(err.message==="the token is invalid"){
+
+
+                localStorage.removeItem("userInfo");
+                localStorage.removeItem("email");
+                localStorage.removeItem("role");
+                localStorage.removeItem("name");
+                localStorage.removeItem("image")
+                localStorage.removeItem("accessToken");
+                localStorage.setItem("loggedIn","LOGOUT");
+
+                alert("Your session is expired")
+                window.location = '/sign-in'
+            }
+
+        }).finally(() => {
             setSymptoms([])
             setTemp(35);
             setFrom(null)
@@ -213,3 +239,5 @@ export default function DiscreteSlider() {
 
     );
 }
+
+

@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {setLogin, setRole} from "../login_Actions";
+import {setLogin, setProfileImage, setRole} from "../login_Actions";
 import { useLocation } from "react-router-dom";
 
 import store from "../store/store"
@@ -9,15 +9,17 @@ import Avatar from "@material-ui/core/Avatar";
 
 const mapStateToProps = state => {
     console.log("state",state)
+    console.log("imageReducer",state.imageReducer)
+    //return {state}
 
-    return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer}
+    return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer,url:state.imageReducer}
 }
 
 class loginHeader extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
-        console.log("props",this.props)
+        console.log("store",store.getState())
+        //console.log("props",this.props)
 
         this.state={
             email: localStorage.getItem("email"),
@@ -26,32 +28,46 @@ class loginHeader extends Component {
         }
         console.log("initial header",localStorage.getItem("image"))
     }
+
+
+    componentWillUnmount() {
+        // and unsubscribe later
+        this.unsubscribe()
+    }
+
+    handleChange() {
+        // and whenever the store state changes, it re-renders.
+        this.forceUpdate()
+    }
     componentDidMount() {
 
-        const userEmail = this.props.userEmail
-        console.log("useremaik",userEmail)
+        this.unsubscribe = store.subscribe(this.handleChange.bind(this))
 
-         fetch('http://localhost:3000/user/getImage', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({userEmail: userEmail}),
-
-        }).then(response => response.json())
-            .then(data => {
-                console.log("image",data)
-                if(data.url){
-                    this.setState({
-                        image_preview:data.url
-                    })
-                }
-                if(data.message==="Cannot find the profile image"){
-                    localStorage.setItem("image","./defaultProfileImage.jpg")
-                }
-
-            })
+        // const userEmail = this.props.userEmail
+        //
+        //  fetch('http://localhost:3000/user/getImage', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({userEmail: userEmail}),
+        //
+        // }).then(response => response.json())
+        //     .then(data => {
+        //         console.log("image",data)
+        //         if(data.url){
+        //             this.setState({
+        //                 image_preview:data.url
+        //             },()=>{
+        //                 this.props.dispatch(setProfileImage(data.url))
+        //             })
+        //         }
+        //         if(data.message==="Cannot find the profile image"){
+        //             localStorage.setItem("image","./defaultProfileImage.jpg")
+        //         }
+        //
+        //     })
     }
 
     handleLogout=(props)=> {
@@ -64,6 +80,7 @@ class loginHeader extends Component {
         localStorage.setItem("loggedIn","LOGOUT");
         this.props.dispatch(setLogin("LOGOUT"))
         this.props.dispatch(setRole("NOT_LOGGED_IN"))
+        this.props.dispatch(setProfileImage(""))
         alert("Your session is expired")
         window.location = '/sign-in'
 
@@ -78,6 +95,14 @@ class loginHeader extends Component {
 
 
     render() {
+        console.log("props",this.props)
+        let image = this.props.url
+        console.log("image",image)
+        let image_preview;
+        if(image!==""){
+            image_preview = image
+
+        }
         let healthRedirect;
         console.log("myrole",this.props.role)
         if(this.props.role==="DOCTOR"){
@@ -99,7 +124,7 @@ class loginHeader extends Component {
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-link">Hi {localStorage.getItem("name")}</li>
                             <li className="nav-item">
-                                <Link className="nav-link"  to={"/userProfile"}><Avatar  sizes="small" src={this.state.image_preview}/></Link>
+                                <Link className="nav-link"  to={"/userProfile"}><Avatar  sizes="small" src={image_preview}/></Link>
                             </li>
                             <li className="nav-item">
                                  <Link className="nav-link" onClick={this.handleLogout} to={"/sign-in"}>Logout</Link>
