@@ -3,9 +3,21 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {setLogin, setProfileImage, setRole} from "../login_Actions";
 import { useLocation } from "react-router-dom";
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import store from "../store/store"
 import Avatar from "@material-ui/core/Avatar";
+
+
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
 
 const mapStateToProps = state => {
     console.log("state",state)
@@ -14,6 +26,36 @@ const mapStateToProps = state => {
 
     return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer,url:state.imageReducer}
 }
+const StyledMenu = withStyles({
+    paper: {
+        border: '1px solid #d3d4d5',
+    },
+})((props) => (
+    <Menu
+        elevation={0}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+        }}
+        {...props}
+    />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+    root: {
+        '&:focus': {
+            backgroundColor: theme.palette.primary.main,
+            '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                color: theme.palette.common.white,
+            },
+        },
+    },
+}))(MenuItem);
 
 class loginHeader extends Component {
     constructor(props) {
@@ -24,7 +66,8 @@ class loginHeader extends Component {
         this.state={
             email: localStorage.getItem("email"),
             isLoggedIn:this.props.isLoggedIn,
-            image_preview:localStorage.getItem("image")
+            image_preview:localStorage.getItem("image"),
+            anchorEl:null
         }
         console.log("initial header",localStorage.getItem("image"))
     }
@@ -42,33 +85,8 @@ class loginHeader extends Component {
     componentDidMount() {
 
         this.unsubscribe = store.subscribe(this.handleChange.bind(this))
-
-        // const userEmail = this.props.userEmail
-        //
-        //  fetch('http://localhost:3000/user/getImage', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({userEmail: userEmail}),
-        //
-        // }).then(response => response.json())
-        //     .then(data => {
-        //         console.log("image",data)
-        //         if(data.url){
-        //             this.setState({
-        //                 image_preview:data.url
-        //             },()=>{
-        //                 this.props.dispatch(setProfileImage(data.url))
-        //             })
-        //         }
-        //         if(data.message==="Cannot find the profile image"){
-        //             localStorage.setItem("image","./defaultProfileImage.jpg")
-        //         }
-        //
-        //     })
     }
+
 
     handleLogout=(props)=> {
         localStorage.removeItem("accessToken");
@@ -94,6 +112,8 @@ class loginHeader extends Component {
     };
 
 
+
+
     render() {
         console.log("props",this.props)
         let image = this.props.url
@@ -113,6 +133,19 @@ class loginHeader extends Component {
         }if(this.props.role==="NOT_LOGGED_IN"){
             healthRedirect="/"
         }
+
+
+        const handleClick = (event) => {
+            this.setState({
+                anchorEl:event.currentTarget
+            });
+        };
+
+        const handleClose = (event) => {
+            this.setState({
+                anchorEl: null
+            });
+        };
         return (
             <nav className="navbar navbar-expand-lg navbar-light fixed-top">
 
@@ -132,6 +165,40 @@ class loginHeader extends Component {
                         </ul>
 
 
+                    </div>
+                    <div>
+                        <Button
+                            aria-controls="customized-menu"
+                            aria-haspopup="true"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleClick}
+                        >
+                            Open Menu
+                        </Button>
+                        <StyledMenu
+                            id="customized-menu"
+                            anchorEl={this.state.anchorEl}
+                            keepMounted
+                            open={Boolean(this.state.anchorEl)}
+                            onClose={handleClose}
+                        >
+
+                            <StyledMenuItem>
+                                <ListItemIcon>
+                                    <DraftsIcon fontSize="small" />
+                                </ListItemIcon>
+                                <Link className="nav-link"  to={"/userProfile"}><ListItemText primary="Profile" /></Link>
+                            </StyledMenuItem>
+                            <StyledMenuItem>
+                                <ListItemIcon>
+                                    <InboxIcon fontSize="small" />
+                                </ListItemIcon>
+
+                                <Link className="nav-link"  to={"/privacy"}><ListItemText primary="Privacy" /></Link>
+
+                            </StyledMenuItem>
+                        </StyledMenu>
                     </div>
                 </div>
             </nav>

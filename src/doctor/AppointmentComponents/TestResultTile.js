@@ -9,6 +9,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Button from "@material-ui/core/Button";
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -77,14 +78,18 @@ const TestResult= props => {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                if(data.message==="Test has been updated."){
-                    setFinalResult(testResult)
-                    alert(data.message)
+                if(data.message==="the token is invalid"){
+                    throw data
                 }else{
-                    alert("Update unsuccessfully")
+                    if(data.message==="Test has been updated."){
+                        setFinalResult(testResult)
+                        alert(data.message)
+                    }else{
+                        alert("Update unsuccessfully")
+                    }
                 }
 
-            })
+            }).catch( e=> errorHandling(e) );
     }
     useEffect(()=>{
         const data = {
@@ -101,9 +106,14 @@ const TestResult= props => {
         })
             .then(response => response.json())
             .then(data => {
-                setFinalResult(data[0]['testResult'])
+                if(data.message!=="the token is invalid"){
+                    setFinalResult(data[0]['testResult'])
+                }else{
+                    throw data
+                }
+
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
     })
 
     return (

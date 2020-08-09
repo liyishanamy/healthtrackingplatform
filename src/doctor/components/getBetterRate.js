@@ -6,6 +6,7 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -63,12 +64,15 @@ const GetBetterRate= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const getBetterRate = (data['gettingBetter']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
-                console.log(getBetterRate)
-                setGettingBetterRate(getBetterRate)
+                if(data.message!=="the token is invalid"){
+                    const getBetterRate = (data['gettingBetter']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
+                    setGettingBetterRate(getBetterRate)
+                }else{
+                    throw data
+                }
+
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
 
     })
 

@@ -7,6 +7,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PageviewIcon from '@material-ui/icons/Pageview';
 
 import FolderIcon from '@material-ui/icons/Folder';
+import {errorHandling} from "../../errorHandling";
 
 
 const useStyles = makeStyles(theme => ({
@@ -59,10 +60,13 @@ const FullyRecovered= props => {
         })
             .then(response => response.json())
             .then(data => {
-                setNegative(data['negative'])
-
+                if(data.message!=="the token is invalid"){
+                    setNegative(data['negative'])
+                }else{
+                    throw data
+                }
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
 
     })
 

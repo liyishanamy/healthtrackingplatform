@@ -8,6 +8,7 @@ import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import FolderIcon from '@material-ui/icons/Folder';
+import {errorHandling} from "../../errorHandling";
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,12 +65,14 @@ const GetWorseRate= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const getBetterRate = (data['gettingWorse']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
-                console.log(getBetterRate)
-                setGettingWorseRate(getBetterRate)
+                if(data.message!=="the token is invalid"){
+                    const getBetterRate = (data['gettingWorse']/(data['forgetReporting']+data['gettingBetter']+data['gettingWorse'])).toFixed(2)
+                    setGettingWorseRate(getBetterRate)
+                }else{
+                    throw data
+                }
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
 
     })
 

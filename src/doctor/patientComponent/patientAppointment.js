@@ -6,6 +6,7 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {Link} from "react-router-dom";
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -72,21 +73,25 @@ const PatientAppointment= props => {
         })
             .then(response => response.json())
             .then(data => {
-                setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
-
-
-                //Change the val to 14 once done
-                if(daysHavingNoSymptoms>=2){
-                    setUseMsg("You can now book a retesting appointment")
-
+                if(data.message==="the token is invalid"){
+                    throw data
                 }else{
-                    setUseMsg("You have at least "+(14-parseInt(daysHavingNoSymptoms))+" to go to book an appointment")
+                    setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
 
+                    //Change the val to 14 once done
+                    if(daysHavingNoSymptoms>=2){
+                        setUseMsg("You can now book a retesting appointment")
+
+                    }else{
+                        setUseMsg("You have at least "+(14-parseInt(daysHavingNoSymptoms))+" to go to book an appointment")
+
+
+                    }
 
                 }
 
             })
-            .catch(err => setError(err))
+           .catch( e=> errorHandling(e) );
     })
     useEffect(()=>{
         const data = {
@@ -101,17 +106,21 @@ const PatientAppointment= props => {
             body:JSON.stringify(data)
         }).then(response => response.json())
             .then(data => {
-                console.log("get",data)
-                if(data.message==="You do not have a booked appointment yet."){
-                    setAppointment(false)
+                if(data.message==="the token is invalid"){
+                    throw data
+                }else{
+                    if(data.message==="You do not have a booked appointment yet."){
+                        setAppointment(false)
+                    }
+                    if(data.message!=="You do not have a booked appointment yet." && data.length!==0){
+                        setAppointment(true)
+                        setAppointmentStart(data[0].appointmentTime.startTime)
+                        setAppointmentEnd(data[0].appointmentTime.endTime)
+                        setAppointmentDate(new Date(data[0].appointmentTime.startTime).getFullYear()+"/"+(new Date(data[0].appointmentTime.startTime).getMonth()+1)+"/"+new Date(data[0].appointmentTime.startTime).getDate())
+                    }
                 }
-                if(data.message!=="You do not have a booked appointment yet." && data.length!==0){
-                    setAppointment(true)
-                    setAppointmentStart(data[0].appointmentTime.startTime)
-                    setAppointmentEnd(data[0].appointmentTime.endTime)
-                    setAppointmentDate(new Date(data[0].appointmentTime.startTime).getFullYear()+"/"+(new Date(data[0].appointmentTime.startTime).getMonth()+1)+"/"+new Date(data[0].appointmentTime.startTime).getDate())
-                }
-            })
+
+            }).catch( e=> errorHandling(e) );
     })
     let minute1;
 

@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -62,11 +63,15 @@ const TotalPatients= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("totaljoinpatient",data)
-                setTodayGrowth(data['totalJoinPatients'])
+                if(data.message!=="the token is invalid"){
+                    setTodayGrowth(data['totalJoinPatients'])
+
+                }else{
+                    throw data
+                }
 
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
 
     })
     useEffect(()=>{
@@ -78,10 +83,13 @@ const TotalPatients= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("totalpatient",data)
-                setTotalPatients(data['totalPatients'])
+                if(data.message!=="the token is invalid"){
+                    setTotalPatients(data['totalPatients'])
+                }else {
+                    throw data
+                }
             })
-            .catch(err => setError(err))
+            .catch( e=> errorHandling(e) );
 
 })
 

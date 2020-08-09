@@ -9,6 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
+import {errorHandling} from "../errorHandling";
 
 const columns = [
     {id: 'name', label: 'Name', minWidth: 170},
@@ -94,8 +95,14 @@ export default function PatientList() {
         },
     }).then(response => response.json())
         .then(data => {
-            setTotalRows(data.totalPatients)
-    })
+            if(data.message!=="the token is invalid"){
+                setTotalRows(data.totalPatients)
+            }else{
+                console.log("throw data1",localStorage.getItem("errorHandle"))
+                throw data
+            }
+
+    }).catch( e=> errorHandling(e) );
     })
 
     useEffect(() => {
@@ -109,15 +116,22 @@ export default function PatientList() {
         }).then(response => response.json())
             .then(data => {
                 console.log("hello data", data)
-                setRows([])
-                for (var i = 0; i < data.length; i++) {
-                    console.log(i, data[i])
-                    setRows(rows => [...rows,
-                        createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
-                    ]);
+                if(data.message!=="the token is invalid"){
+                    setRows([])
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(i, data[i])
+                        setRows(rows => [...rows,
+                            createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
+                        ]);
+                    }
+                    console.log("after", rows)}
+                else{
+                    console.log("throw data2",localStorage.getItem("errorHandle"))
+
+                    throw data
                 }
-                console.log("after", rows)
-            })
+
+            }).catch( e=> errorHandling(e) );
      }, [page, rowsPerPage])
 
     return (

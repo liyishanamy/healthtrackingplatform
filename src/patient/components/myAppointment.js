@@ -6,6 +6,7 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {Link} from "react-router-dom";
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -72,6 +73,10 @@ const MyAppointment= props => {
         })
             .then(response => response.json())
             .then(data => {
+                if(data.message==="the token is invalid"){
+                    throw data
+
+                }
                 setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
 
 
@@ -81,12 +86,10 @@ const MyAppointment= props => {
 
                 }else{
                     setUseMsg("You have at least "+(14-parseInt(daysHavingNoSymptoms))+" to go to book an appointment")
-
-
                 }
 
-            })
-            .catch(err => setError(err))
+            }).catch( e=> errorHandling(e) );
+
     })
     useEffect(()=>{
         const data = {
@@ -111,8 +114,11 @@ const MyAppointment= props => {
                     setAppointmentStart(data[0].appointmentTime.startTime)
                     setAppointmentEnd(data[0].appointmentTime.endTime)
                     setAppointmentDate(new Date(data[0].appointmentTime.startTime).getFullYear()+"/"+(new Date(data[0].appointmentTime.startTime).getMonth()+1)+"/"+new Date(data[0].appointmentTime.startTime).getDate())
+                }if(data.message==="the token is invalid"){
+                    throw data
+
                 }
-            })
+            }).catch( e=> errorHandling(e) );
     })
 
     let renderDate;

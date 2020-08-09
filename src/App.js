@@ -26,7 +26,7 @@ import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import {isLoggedInOptions, setLogin} from "./login_Actions";
 import loginReducer from "./login_Reducers/reducers";
-
+import Privacy from './profile/privacy'
 import LoginHeader from './headers/loginHeader'
 import LogoutHeader from './headers/logoutHeader'
 import {connect} from "react-redux";
@@ -34,6 +34,7 @@ import {connect} from "react-redux";
 import {Component} from 'react';
 import store from "./store/store";
 import DatePicker from "react-date-picker";
+import ErrorBoundary from "./ErrorBoundary";
 class App extends Component {
     constructor(props) {
         super(props);
@@ -73,6 +74,7 @@ class App extends Component {
             head =null
         }
         return (
+            <ErrorBoundary>
             <ThemeProvider theme={theme}>
 
                 <BrowserRouter>
@@ -95,6 +97,7 @@ class App extends Component {
                                 <Route path="/resetPassword" component={ForgetPasswordPage}/>
                                 <Route path='/authenticate' component={AuthenticateUser}/>
                                 <Route path='/userProfile' component={UserProfile}/>
+                                <Route path='/privacy' component={Privacy}/>
                                 <Route path="/patientList" component={PatientList}/>
                                 <Route path='/healthStatus' component={HealthStatus}/>
                                 <Route path='/myStats' component={MyStats}/>
@@ -114,6 +117,7 @@ class App extends Component {
                 </BrowserRouter>
 
             </ThemeProvider>
+            </ErrorBoundary>
         );
     }
 }

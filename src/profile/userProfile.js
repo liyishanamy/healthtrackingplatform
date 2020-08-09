@@ -15,6 +15,7 @@ import DatePicker from 'react-date-picker';
 import MuiPhoneNumber from "@material-ui/core/TextField";
 import {setLogin, setProfileImage, setRole} from "../login_Actions";
 import {connect} from "react-redux";
+import {errorHandling} from "../errorHandling";
 const mapStateToProps = state => {
     console.log("state",state)
 
@@ -189,46 +190,7 @@ class UserProfile extends Component {
                     throw data
                 }
 
-            }) .catch(function (response) {
-            //Access token expires
-            console.log("access token expires",response,new Date().toLocaleString());
-            if(response.message==="the token is invalid"){
-                // Fetch New token
-                const body={
-                    "token":localStorage.getItem("refreshToken")
-                }
-                fetch("http://localhost:3000/token",{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body),
-                }).then(response => response.json())
-                    .then(data => {
-                        if(data.message==="The refresh token expires"){
-                            throw data
-                        }else{
-                            console.log("save new accesstoken",new Date().toLocaleString())
-                            localStorage.setItem("accessToken",data.accessToken)
-                            console.log("new token",data.accessToken)
-                        }
-                        // Refresh token expires
-                }).catch(function (response) {
-                    console.log("refresh token expires",new Date().toLocaleString())
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("userInfo");
-                    localStorage.removeItem("email");
-                    localStorage.removeItem("role");
-                    localStorage.removeItem("name");
-                    localStorage.removeItem("image")
-                    localStorage.setItem("loggedIn","LOGOUT");
-                    alert("Your session is expired")
-                    window.location = '/sign-in'
-                })
-
-            }
-
-        });
+            }).catch( e=> errorHandling(e) );
 
 
 
@@ -282,52 +244,12 @@ class UserProfile extends Component {
                         state: data.state,
                         zip_code: data.postcode,
                         phone: data.phone,
-                        //address: data.street.concat(" " + data.city + " " + data.state)
-
                     } )
                 }else{
                     throw data
                 }
 
-
-            }).catch(function (response) {
-            //Access token expires
-            console.log("access token expires",response,new Date().toLocaleString());
-            if(response.message==="the token is invalid"){
-                // Fetch New token
-                const body={
-                    "token":localStorage.getItem("refreshToken")
-                }
-                fetch("http://localhost:3000/token",{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body),
-                }).then(response => response.json())
-                    .then(data => {
-                        if(data.message==="The refresh token expires"){
-                            throw data
-                        }else{
-                            console.log("save new accesstoken",new Date().toLocaleString())
-                            localStorage.setItem("accessToken",data.accessToken)
-                            console.log("new token",data.accessToken)
-                        }
-                        // Refresh token expires
-                    }).catch(function (response) {
-                    console.log("refresh token expires",new Date().toLocaleString())
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("userInfo");
-                    localStorage.removeItem("email");
-                    localStorage.removeItem("role");
-                    localStorage.removeItem("name");
-                    localStorage.removeItem("image")
-                    localStorage.setItem("loggedIn","LOGOUT");
-                    alert("Your session is expired")
-                    window.location = '/sign-in'
-                }) }
-
-        });
+            }).catch( e=> errorHandling(e) );
 
 
 
@@ -348,50 +270,13 @@ class UserProfile extends Component {
                 this.setState({
                     image_preview: data.url
                 })
-            }).catch(function (response) {
-            //Access token expires
-            console.log("access token expires",response,new Date().toLocaleString());
-            if(response.message==="the token is invalid"){
-                // Fetch New token
-                const body={
-                    "token":localStorage.getItem("refreshToken")
-                }
-                fetch("http://localhost:3000/token",{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body),
-                }).then(response => response.json())
-                    .then(data => {
-                        if(data.message==="The refresh token expires"){
-                            throw data
-                        }else{
-                            console.log("save new accesstoken",new Date().toLocaleString())
-                            localStorage.setItem("accessToken",data.accessToken)
-                            console.log("new token",data.accessToken)
-                        }
-                        // Refresh token expires
-                    }).catch(function (response) {
-                    console.log("refresh token expires",new Date().toLocaleString())
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("userInfo");
-                    localStorage.removeItem("email");
-                    localStorage.removeItem("role");
-                    localStorage.removeItem("name");
-                    localStorage.removeItem("image")
-                    localStorage.setItem("loggedIn","LOGOUT");
-                    alert("Your session is expired")
-                    window.location = '/sign-in'
-                }) }
-
-        });
+            }).catch( e=> errorHandling(e) );
     }
 
 
     render() {
         return (
-            <div style={{padding: 100}}>
+            <div style={{padding: 150}}>
                 <div>User profile</div>
                 <FormGroup>
                     <FormControlLabel

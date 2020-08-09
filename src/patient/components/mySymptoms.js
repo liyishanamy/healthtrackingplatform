@@ -34,15 +34,21 @@ class MySymptoms extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success",data)
-                this.setState({
-                    headache:data.headache,
-                    cough:data.cough,
-                    runningNose:data.runningNose,
-                    diarrhea:data.diarrhea,
-                    breatheHard:data.breatheHard
-                })
-            })
+                if(data.message!=="the token is invalid") {
+                    console.log("Success", data)
+                    this.setState({
+                        headache: data.headache,
+                        cough: data.cough,
+                        runningNose: data.runningNose,
+                        diarrhea: data.diarrhea,
+                        breatheHard: data.breatheHard
+                    })
+                }else{
+                    throw data
+                }
+            }).catch(e=>{
+            throw e
+        })
     }
     render() {
         const data = [{

@@ -6,7 +6,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 import "./site.css"
 import {ScatterplotOverlay} from 'react-map-gl';
-import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+import mapboxgl from 'mapbox-gl';
+import {errorHandling} from "../../errorHandling"; // or "const mapboxgl = require('mapbox-gl');"
 mapboxgl.accessToken = "pk.eyJ1IjoieWlzaGFubGkiLCJhIjoiY2tkNG9yMWsxMXpibzMzcXlyYWIwNGp2OCJ9.5GYFPjS8WcatlnIS_S3OrQ";
 const fs = require('browserify-fs');
 class Heatmap extends Component {
@@ -29,46 +30,48 @@ class Heatmap extends Component {
         }).then(response => response.json())
             .then(data => {
                 console.log(data)
-                this.setState({
-                    userAddress:data
-                },()=>{
-                    for(var i=0;i<data.length;i++){
-                        console.log(data[i])
-                        console.log()
+                if(data.message==="the token is invalid"){
+                    throw data
+                }
+                else{
+                    this.setState({
+                        userAddress:data
+                    },()=>{
+                        for(var i=0;i<data.length;i++){
+                            console.log(data[i])
+                            console.log()
 
-                        var searchQuery =encodeURIComponent(data[i]['street']+" "+data[i]['city']+" "+data[i]['state'])
+                            var searchQuery =encodeURIComponent(data[i]['street']+" "+data[i]['city']+" "+data[i]['state'])
 
-                        fetch(`http://api.mapbox.com/geocoding/v5/mapbox.places/`+searchQuery+`.json?limit=1&country=CA&access_token=`+mapboxgl.accessToken, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
-                            },
-                        }).then(response => response.json())
-                            .then(data1 => {
-                                console.log(data1)
-                                var temp = data1["features"][0]["center"]
-                                var jsonContent = JSON.stringify(data1)
-                                //var email=data[i]["email"]
-                                this.setState(previousState=>({
-                                    userCordinate:[...previousState.userCordinate,temp]
-                                }),()=>{
-                                    console.log(this.state.userCordinate)
-                                    fs.writeFile("/public/cordinate.geojson", jsonContent, 'utf8', function (err) {
-                                        if (err) {
-                                            console.log("An error occured while writing JSON Object to File.");
-                                            return console.log(err);
-                                        }
+                            fetch(`http://api.mapbox.com/geocoding/v5/mapbox.places/`+searchQuery+`.json?limit=1&country=CA&access_token=`+mapboxgl.accessToken, {
+                                method: 'GET',
 
-                                        console.log("JSON file has been saved.");
-                                    });
+                            }).then(response => response.json())
+                                .then(data1 => {
+                                    console.log(data1)
+                                    var temp = data1["features"][0]["center"]
+                                    var jsonContent = JSON.stringify(data1)
+                                    //var email=data[i]["email"]
+                                    this.setState(previousState=>({
+                                        userCordinate:[...previousState.userCordinate,temp]
+                                    }),()=>{
+                                        console.log(this.state.userCordinate)
+                                        fs.writeFile("/public/cordinate.geojson", jsonContent, 'utf8', function (err) {
+                                            if (err) {
+                                                console.log("An error occured while writing JSON Object to File.");
+                                                return console.log(err);
+                                            }
+
+                                            console.log("JSON file has been saved.");
+                                        });
+                                    })
+
                                 })
 
-                            })
-                    }
+                }
 
-
-
-            })
+                    })
+                }
         const map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/mapbox/dark-v10',
@@ -124,7 +127,7 @@ class Heatmap extends Component {
 
 
 
-    })}
+    }).catch( e=> errorHandling(e) );}
 
 
 

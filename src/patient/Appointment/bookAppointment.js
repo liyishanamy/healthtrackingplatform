@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {errorHandling} from "../../errorHandling";
 class BookAppointment extends Component {
 
     constructor (props) {
@@ -50,9 +51,12 @@ class BookAppointment extends Component {
                 }
                 else if(!data.message){
                     alert("You have successfully booked the appointment.")
+                }else if(data.message==="the token is invalid"){
+                    throw data
                 }
 
-            })
+            }).catch( e=> errorHandling(e) );
+
     }
 
 

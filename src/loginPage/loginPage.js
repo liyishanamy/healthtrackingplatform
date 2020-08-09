@@ -5,6 +5,7 @@ import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import {setLogin, setEmail, setRole, setProfileImage} from "../login_Actions";
 import store from "../store/store"
+import {errorHandling} from "../errorHandling";
 
 const mapStateToProps = state => {
     console.log("loginpage",state)
@@ -139,11 +140,11 @@ class LoginPage extends Component {
                             } else {
 
                                 this.props.dispatch(setProfileImage(data.url))
-                                console.log("1", new Date())
+
                             }
 
                         }).then(()=>{
-                            console.log("promisedata",data)
+                        localStorage.setItem("errorHandle","1")
                         if(data.role==="doctor"){
                             console.log("doctor",store.getState(),store.getState().imageReducer)
 

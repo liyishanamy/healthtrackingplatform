@@ -6,6 +6,7 @@ import Legend from "recharts/lib/component/Legend";
 import BarChart from "recharts/lib/chart/BarChart";
 import {CardContent, CardHeader, Divider, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import {errorHandling} from "../../errorHandling";
 
 class ReportUpdateStats extends Component {
     constructor(props) {
@@ -65,8 +66,13 @@ class ReportUpdateStats extends Component {
             })
 
                 .then(response => {
-                    return response.json()
-                });
+                    console.log("AMY",response)
+                    if(response){
+                        return response.json()
+                    }else if(response.message==="the token is invalid"){
+                        throw response
+                    }
+                }).catch( e=> errorHandling(e) );;
 
         });
 

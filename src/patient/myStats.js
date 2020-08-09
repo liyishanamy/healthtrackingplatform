@@ -19,19 +19,21 @@ import GetWorseRate from "../doctor/components/getWorseRate";
 import FullyRecovered from "../doctor/components/fullyRecovered";
 import DaysHaveNoSymptoms from "./components/daysHaveNoSymptoms";
 import MyAppointment from "./components/myAppointment"
+import ErrorBoundary from "../ErrorBoundary";
 
 class MyStats extends Component {
     constructor(props) {
         super(props);
         this.state={
-            userTemp:null
+            userTemp:null,
+
         }
     }
 
 
+
     render() {
-        //const data = [{Date: 'Page A', temperature: 37, pv: 2400, amt: 2400},{Date: 'Page b', temperature: 35.6, pv: 2000, amt: 3400}];
-        const data = []
+
         return (
             <div>
                 <Grid
@@ -85,6 +87,7 @@ class MyStats extends Component {
 
 
             </div>
+
 
 
 

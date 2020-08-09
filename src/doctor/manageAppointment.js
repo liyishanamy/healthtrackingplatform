@@ -11,7 +11,8 @@ import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {DateRangePicker} from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
+import 'react-date-range/dist/theme/default.css';
+import {errorHandling} from "../errorHandling"; // theme css file
 const columns = [
     {id: 'name', label: 'name', minWidth: 170},
     {id: 'email', label: 'email', minWidth: 170},
@@ -147,7 +148,7 @@ export default function ManageAppointment() {
             .then(data => {
                 setTotalRows(data.length)
 
-            })
+            }).catch( e=> errorHandling(e) );
     },[startDate, endDate])
 
     useEffect(() => {
@@ -185,7 +186,7 @@ export default function ManageAppointment() {
 
                 }
                 console.log("after", rows)
-            })
+            }).catch( e=> errorHandling(e) );
 
 
     }, [startDate, endDate,page,rowsPerPage])

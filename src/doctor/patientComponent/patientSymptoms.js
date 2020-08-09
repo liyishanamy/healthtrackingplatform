@@ -10,6 +10,7 @@ import PolarRadiusAxis from "recharts/lib/polar/PolarRadiusAxis";
 import Radar from "recharts/lib/polar/Radar";
 import Legend from "recharts/lib/component/Legend";
 import RadarChart from "recharts/lib/chart/RadarChart";
+import {errorHandling} from "../../errorHandling";
 
 
 class PatientSymptoms extends Component {
@@ -38,15 +39,19 @@ class PatientSymptoms extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success",data)
-                this.setState({
-                    headache:data.headache,
-                    cough:data.cough,
-                    runningNose:data.runningNose,
-                    diarrhea:data.diarrhea,
-                    breatheHard:data.breatheHard
-                })
-            })
+                if(data.message!=="the token is invalid"){
+                    this.setState({
+                        headache:data.headache,
+                        cough:data.cough,
+                        runningNose:data.runningNose,
+                        diarrhea:data.diarrhea,
+                        breatheHard:data.breatheHard
+                    })
+                }else{
+                    throw data
+                }
+
+            }).catch( e=> errorHandling(e) );
 
     }
     render() {

@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import {Link} from "react-router-dom";
+import {errorHandling} from "../../errorHandling";
 
 class ViewAppointment extends Component {
     constructor(props) {
@@ -46,12 +47,11 @@ class ViewAppointment extends Component {
                     testDone:data[0].testDone,
                     appointment:true
                 })
+            }if(data.message==="the token is invalid"){
+                throw data
             }
 
-
-
-
-        })
+        }).catch( e=> errorHandling(e) );
     }
     cancelAppointment=(e)=>{
         fetch('http://localhost:3000/appointment/',{
@@ -71,18 +71,15 @@ class ViewAppointment extends Component {
                     this.setState({
                         appointment:false
                     })
-                }else{
+                }else if(data.message==="the token is invalid"){
+                    throw data
+                }
+                else{
                     console.log("something went wrong")
                 }
 
-
-
-            })
+            }).catch( e=> errorHandling(e) );
     }
-    bookAppointment=(e)=>{
-
-    }
-
 
 
     render() {

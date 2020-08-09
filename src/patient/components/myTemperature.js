@@ -4,6 +4,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import CardContent from "@material-ui/core/CardContent";
 import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 import ReferenceLine from "recharts/lib/cartesian/ReferenceLine";
+import {errorHandling} from "../../errorHandling";
 
 class MyTemperature extends Component {
     constructor(props) {
@@ -25,18 +26,24 @@ class MyTemperature extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success",data)
-                var formateDate =[];
-                for(var i=0;i<data.length;i++){
-                    let date =new Date(data[i]['Date'])
-                    formateDate = formateDate.concat({temperature:data[i]['temperature'],Date:(date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate())})
+                if (data.message !== "the token is invalid") {
+                    console.log("Success", data)
+                    var formateDate = [];
+                    for (var i = 0; i < data.length; i++) {
+                        let date = new Date(data[i]['Date'])
+                        formateDate = formateDate.concat({
+                            temperature: data[i]['temperature'],
+                            Date: (date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate())
+                        })
+                    }
+                    this.setState({
+                        userTemp: formateDate
+                    })
 
+                }else{
+                    throw data
                 }
-                this.setState({
-                    userTemp:formateDate
-                })
-
-            })
+            }).catch( e=> errorHandling(e) );
 
     }
     render() {

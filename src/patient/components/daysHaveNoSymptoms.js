@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -64,9 +65,13 @@ const DaysHaveNoSymptoms= props => {
         })
             .then(response => response.json())
             .then(data => {
-                setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
-            })
-            .catch(err => setError(err))
+                if(data.message!=="the token is invalid"){
+                    setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
+                }
+                else{
+                    throw data
+                }
+            }).catch( e=> errorHandling(e) );
 })
 
     return (

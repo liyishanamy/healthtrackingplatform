@@ -10,6 +10,7 @@ import Input from "@material-ui/core/Input";
 import Radio from "@material-ui/core/Radio";
 import {setLogin, setRole} from "../login_Actions";
 import {connect} from "react-redux";
+import {errorHandling} from "../errorHandling";
 //import { useAlert } from 'react-alert'
 
 const useStyles = makeStyles((theme) => ({
@@ -127,25 +128,8 @@ export default function DiscreteSlider() {
                 }else{
                     throw data
                 }
-            }).catch(err=> {
-            //handle error
-            console.log("response",err);
-            if(err.message==="the token is invalid"){
-
-
-                localStorage.removeItem("userInfo");
-                localStorage.removeItem("email");
-                localStorage.removeItem("role");
-                localStorage.removeItem("name");
-                localStorage.removeItem("image")
-                localStorage.removeItem("accessToken");
-                localStorage.setItem("loggedIn","LOGOUT");
-
-                alert("Your session is expired")
-                window.location = '/sign-in'
-            }
-
-        }).finally(() => {
+            }).catch( e=> errorHandling(e) )
+            .finally(() => {
             setSymptoms([])
             setTemp(35);
             setFrom(null)

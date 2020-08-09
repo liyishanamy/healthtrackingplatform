@@ -8,6 +8,7 @@ import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
+import {errorHandling} from "../../errorHandling";
 
 
 
@@ -79,7 +80,7 @@ const TestDone= props => {
                     alert("Update unsuccessfully")
                 }
 
-            })
+            }).catch( e=> errorHandling(e) );
     }
 
 
@@ -108,15 +109,15 @@ const TestDone= props => {
             body:JSON.stringify(body)
         }).then(response => response.json())
             .then(data => {
+                if(data.message!=="the token is invalid"){
+                    console.log(data[0]['testDone'])
+                    setDoneResult(data[0]['testDone'])
+                }else{
+                    throw data
+                }
 
-                console.log(data[0]['testDone'])
-                setDoneResult(data[0]['testDone'])
 
-
-
-                
-
-            })
+            }).catch( e=> errorHandling(e) );
 
 
     })

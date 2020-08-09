@@ -13,6 +13,7 @@ import Legend from "recharts/lib/component/Legend";
 import RadialBar from "recharts/lib/polar/RadialBar";
 import RadialBarChart from "recharts/lib/chart/RadialBarChart";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import {errorHandling} from "../../errorHandling";
 
 class AgeDistribution extends Component {
     constructor(props) {
@@ -41,8 +42,13 @@ class AgeDistribution extends Component {
                 })
 
                     .then(response => {
-                        return response.json()
-                    });
+                        if(response){
+                            return response.json()
+                        }else if(response.message==="the token is invalid"){
+
+                            throw response.data
+                        }
+                    }).catch( e=> errorHandling(e) );;
             });
 
             Promise.all(promises).then(results => {

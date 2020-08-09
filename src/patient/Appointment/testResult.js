@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
+import {errorHandling} from "../../errorHandling";
 class TestResult extends Component {
     constructor(props) {
         super(props);
@@ -31,14 +32,17 @@ class TestResult extends Component {
                     this.setState({
                         testResult:data.message
                     })
-                }else{
+                }else if(data.message==="the token is invalid"){
+                    throw data
+                }
+                else{
                     this.setState({
                         testResult:data[0]['testResult']
                     })
                 }
 
 
-            })
+            }).catch( e=> errorHandling(e) );
     }
 
     render() {

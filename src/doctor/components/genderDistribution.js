@@ -10,6 +10,7 @@ import Pie from "recharts/lib/polar/Pie";
 import {Card, CardHeader, Divider, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CardContent from "@material-ui/core/CardContent";
+import {errorHandling} from "../../errorHandling";
 
 class GenderDistribution extends Component {
     constructor(props) {
@@ -30,14 +31,17 @@ class GenderDistribution extends Component {
             }
         }).then(response => response.json())
             .then(data => {
-                console.log("success",data)
-               this.setState({
-                   female:data.female,
-                   male:data.male,
-                   other:data.other,
+                if(data.message!=="the token is invalid"){
+                    this.setState({
+                        female:data.female,
+                        male:data.male,
+                        other:data.other,
 
-               })
-            });
+                    })
+                }else{
+                    throw data
+                }
+            }).catch( e=> errorHandling(e) );;
 
 
 
