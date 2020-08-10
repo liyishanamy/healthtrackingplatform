@@ -46,9 +46,11 @@ class ChangePassword extends Component {
                 this.setState({
                     passwordErrorMsg:"The password should have at least 8 digits,and it must contain at least one digit, lower case letter, and one uppercase letter and one special char"
                 })
-            }else {
+            } else {
                 this.setState({
-                    passwordErrorMsg: ""
+                    passwordErrorMsg: "",
+                    newPassword: "",
+                    confirmedPassword: "",
                 })
 
 
@@ -59,14 +61,24 @@ class ChangePassword extends Component {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data),
-                }).then(response => response.json())
+                }).then(response => {
+                    console.log("response1",response)
+                    if(!response.ok) {
+                        this.setState({
+                            passwordErrorMsg: "You can only change your password once a day"
+                        })
+                    }
+                    else return response.json();
+                })
+
                     .then(data => {
+                        console.log("response",data,data.status)
                         if (data.message === "The password does not match up") {
                             this.setState({
                                 passwordErrorMsg: data.message
                             })
-                        } else if (data.message === "Your password has been updated!") {
-                            console.log("Your password has been updated")
+                        }
+                        else if (data.message === "Your password has been updated!") {
                             alert(data.message)
                             this.setState({
                                 newPassword: "",

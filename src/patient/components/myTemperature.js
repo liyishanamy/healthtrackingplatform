@@ -5,12 +5,13 @@ import CardContent from "@material-ui/core/CardContent";
 import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 import ReferenceLine from "recharts/lib/cartesian/ReferenceLine";
 import {errorHandling} from "../../errorHandling";
+import {CSVLink} from "react-csv";
 
 class MyTemperature extends Component {
     constructor(props) {
         super(props);
         this.state={
-            userTemp:null
+            userTemp:[]
         }
     }
     componentDidMount() {
@@ -32,30 +33,42 @@ class MyTemperature extends Component {
                     for (var i = 0; i < data.length; i++) {
                         let date = new Date(data[i]['Date'])
                         formateDate = formateDate.concat({
-                            temperature: data[i]['temperature'],
-                            Date: (date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate())
+                            Date: (date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()),
+                            temperature: data[i]['temperature']
                         })
                     }
-                    this.setState({
-                        userTemp: formateDate
-                    })
+                    return formateDate
+
 
                 }else{
                     throw data
                 }
-            }).catch( e=> errorHandling(e) );
+            }).then(res=>{
+                console.log("res",res)
+            this.setState({
+                userTemp: res
+            })
+
+        }).catch( e=> errorHandling(e) );
 
     }
     render() {
         const data = this.state.userTemp
+        console.log("temp",this.state.userTemp)
         return (
             <div>
                 <card>
                     <CardHeader
                         action={
-                            <IconButton size="small">
-                                <RefreshIcon />
-                            </IconButton>
+                            <CSVLink
+                                data={this.state.userTemp}
+                                filename={"my-temperature.csv"}
+                                className="btn btn-primary"
+                                target="_blank"
+                            >
+                                Export
+                            </CSVLink>
+
                         }
                         title="My daily temperature"
                     />

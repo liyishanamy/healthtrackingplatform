@@ -14,6 +14,7 @@ import RadialBar from "recharts/lib/polar/RadialBar";
 import RadialBarChart from "recharts/lib/chart/RadialBarChart";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {errorHandling} from "../../errorHandling";
+import {CSVLink} from "react-csv";
 
 class AgeDistribution extends Component {
     constructor(props) {
@@ -69,17 +70,30 @@ class AgeDistribution extends Component {
 
     render() {
         const data = this.state.bundle
+        const data1= [{name:this.state.age_020.name,number:this.state.age_020.number},
+            {name:this.state.age_2040.name,number:this.state.age_2040.number},
+            {name:this.state.age_4060.name,number:this.state.age_4060.number},
+            {name:this.state.age_6080.name,number:this.state.age_6080.number},
+            {name:this.state.age_80100.name,number:this.state.age_80100.number}]
+
+        console.log("bundle",data)
         return (
             <card>
                 <CardHeader
                     action={
-                        <IconButton size="small">
-                            <RefreshIcon />
-                        </IconButton>
+                        <CSVLink
+                            data={data1}
+                            filename={"ageDistribution.csv"}
+                            className="btn btn-primary"
+                            target="_blank"
+                        >
+                            Export
+                        </CSVLink>
                     }
-                    title="Gender Distribution"
+                    title="Age Distribution"
                 />
                 <Divider />
+
                 <CardContent>
             <div>
                 <div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import '@progress/kendo-theme-default/dist/all.css';
 import './App.css';
 import {BrowserRouter as Router, BrowserRouter, Link, Route, Switch} from "react-router-dom";
 import LoginPage from "./loginPage/loginPage";

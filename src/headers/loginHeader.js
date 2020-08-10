@@ -7,7 +7,7 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import store from "../store/store"
 import Avatar from "@material-ui/core/Avatar";
-
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -115,7 +115,7 @@ class loginHeader extends Component {
 
 
     render() {
-        console.log("props",this.props)
+        console.log("name",localStorage,localStorage.getItem("name"))
         let image = this.props.url
         console.log("image",image)
         let image_preview;
@@ -155,10 +155,16 @@ class loginHeader extends Component {
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
 
                         <ul className="navbar-nav ml-auto">
-                            <li className="nav-link">Hi {localStorage.getItem("name")}</li>
-                            <li className="nav-item">
-                                <Link className="nav-link"  to={"/userProfile"}><Avatar  sizes="small" src={image_preview}/></Link>
+
+                            <li className="nav-link"><Link  to={"/userProfile"}><Avatar  sizes="small" src={image_preview}/></Link></li>
+                            <li className="nav-link">Hi {localStorage.getItem("name")} </li>
+                            <li className="nav-link">   <KeyboardArrowDownIcon aria-controls="customized-menu"
+                                                                               aria-haspopup="true"
+                                                                               variant="contained"
+                                                                               color="primary" onClick={handleClick}/>
                             </li>
+
+
                             <li className="nav-item">
                                  <Link className="nav-link" onClick={this.handleLogout} to={"/sign-in"}>Logout</Link>
                              </li>
@@ -167,15 +173,7 @@ class loginHeader extends Component {
 
                     </div>
                     <div>
-                        <Button
-                            aria-controls="customized-menu"
-                            aria-haspopup="true"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleClick}
-                        >
-                            Open Menu
-                        </Button>
+
                         <StyledMenu
                             id="customized-menu"
                             anchorEl={this.state.anchorEl}

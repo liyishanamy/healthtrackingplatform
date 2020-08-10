@@ -145,6 +145,7 @@ class LoginPage extends Component {
 
                         }).then(()=>{
                         localStorage.setItem("errorHandle","1")
+                        localStorage.setItem("name",data.firstname)
                         if(data.role==="doctor"){
                             console.log("doctor",store.getState(),store.getState().imageReducer)
 

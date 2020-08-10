@@ -63,7 +63,7 @@ class AllStats extends Component {
 
                 <AgeDistribution/>
                 <GenderDistribution/>
-                <TestResultStats/>
+
 
 
 

@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {errorHandling} from "../errorHandling";
-
+import { CSVLink } from "react-csv";
 const columns = [
     {id: 'name', label: 'Name', minWidth: 170},
     {id: 'age', label: 'Age', minWidth: 50},
@@ -40,9 +40,9 @@ const columns = [
         minWidth: 100,
         align: "right",
         format: value => {
-            console.log(value)
             return usersList(value)
         }
+
     }
 
 ];
@@ -51,14 +51,15 @@ const columns = [
 function usersList(email) {
     return <div key={email} ><Link to={`/patientHealthStatus/${email}`}>See
         Details</Link></div>
+
 }
 
 function createData(name, age, Phone, Email, CreatedDate, Details) {
     const illDays = new Date().getTime() - new Date(CreatedDate).getTime();
     const totalIllDays = Math.floor(illDays / (1000 * 60 * 60 * 24))
-    console.log(Details)
 
-    return {name, age, Phone, totalIllDays, Email, Details};
+
+    return {name, age, Phone, totalIllDays, Email,Details };
 }
 
 
@@ -119,14 +120,12 @@ export default function PatientList() {
                 if(data.message!=="the token is invalid"){
                     setRows([])
                     for (var i = 0; i < data.length; i++) {
-                        console.log(i, data[i])
                         setRows(rows => [...rows,
                             createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
                         ]);
                     }
                     console.log("after", rows)}
                 else{
-                    console.log("throw data2",localStorage.getItem("errorHandle"))
 
                     throw data
                 }
@@ -134,9 +133,18 @@ export default function PatientList() {
             }).catch( e=> errorHandling(e) );
      }, [page, rowsPerPage])
 
+
     return (
         <div>
-            <div>patientsList:</div>
+            <div>patientsList:<CSVLink
+                data={rows}
+                filename={"my-patients.csv"}
+                className="btn btn-primary"
+                target="_blank"
+            >
+                Export
+            </CSVLink></div>
+
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
                     <Table stickyHeader aria-label="sticky table">

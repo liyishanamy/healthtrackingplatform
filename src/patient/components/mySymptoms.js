@@ -8,6 +8,7 @@ import Radar from "recharts/lib/polar/Radar";
 import Legend from "recharts/lib/component/Legend";
 import {CardHeader, Divider, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import {CSVLink} from "react-csv";
 
 class MySymptoms extends Component {
     constructor(props) {
@@ -73,6 +74,23 @@ class MySymptoms extends Component {
             "fullMark":30
         }
         ]
+        const data1 = [{
+            symptom:"headache",
+            frequency:this.state.headache,
+        },{
+            symptom:"cough",
+            frequency:this.state.cough,
+        },{
+            symptom:"runningNose",
+            frequency:this.state.runningNose,
+        },{
+            symptom:"diarrhea",
+            frequency:this.state.diarrhea,
+        },{
+            symptom:"breatheHard",
+            frequency:this.state.breatheHard,
+        }
+        ]
         console.log(data)
         return (
             <div>
@@ -80,9 +98,15 @@ class MySymptoms extends Component {
                     <CardContent>
                         <CardHeader
                             action={
-                                <IconButton size="small">
-                                    <RefreshIcon />
-                                </IconButton>
+                                <CSVLink
+                                    data={data1}
+                                    filename={"my-symptoms.csv"}
+                                    className="btn btn-primary"
+                                    target="_blank"
+                                >
+                                    Export
+                                </CSVLink>
+
                             }
                             title="My daily symptom"
                         />

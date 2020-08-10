@@ -8,11 +8,15 @@ import {CardContent, CardHeader, Divider, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {errorHandling} from "../../errorHandling";
 
+import { CSVLink, CSVDownload } from "react-csv";
+
+
 class ReportUpdateStats extends Component {
     constructor(props) {
         super(props);
         console.log(props)
         this.state={
+            _chart:"",
             date1:null,
             gettingBetter1:0,
             gettingWorse1:0,
@@ -66,7 +70,6 @@ class ReportUpdateStats extends Component {
             })
 
                 .then(response => {
-                    console.log("AMY",response)
                     if(response){
                         return response.json()
                     }else if(response.message==="the token is invalid"){
@@ -118,7 +121,7 @@ class ReportUpdateStats extends Component {
 
     }
     render() {
-        console.log(this.state.date1)
+
         const data = [
             {"name": new Date(this.state.date1).getFullYear()+"/"+(new Date(this.state.date1).getMonth()+1)+"/"+new Date(this.state.date1).getDate(),
                 "gettingBetter":this.state.gettingBetter1,
@@ -161,9 +164,15 @@ class ReportUpdateStats extends Component {
             <card>
                 <CardHeader
                     action={
-                        <IconButton size="small">
-                            <RefreshIcon />
-                        </IconButton>
+                        <CSVLink
+                            data={data}
+                            filename={"dailyReports.csv"}
+                            className="btn btn-primary"
+                            target="_blank"
+                        >
+                            Export
+                        </CSVLink>
+
                     }
                     title="Report Health Status"
                 />
@@ -171,7 +180,9 @@ class ReportUpdateStats extends Component {
                 <CardContent>
             <div>
                 <div>
-                    <label>Reporting Updates</label>
+                    <label>Reporting Updates</label><divider/>
+
+
                     <BarChart width={730} height={250} data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
