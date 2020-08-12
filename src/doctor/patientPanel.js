@@ -2,13 +2,25 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import React, {Component} from 'react';
 import ReferenceLine from "recharts/lib/cartesian/ReferenceLine";
-import {CardHeader, Divider, Grid, IconButton} from "@material-ui/core";
+import {CardHeader, Divider, Grid, IconButton, Typography} from "@material-ui/core";
 
 import DaysHaveNoSymptoms from "./patientComponent/daysHaveNoSymptoms";
 import PatientSymptoms from "./patientComponent/patientSymptoms";
 import PatientTemperature from "./patientComponent/patientTemperature";
 import PatientAppointment from "./patientComponent/patientAppointment";
+import PatientsProfile from "./patientComponent/PatientsProfile";
+import Link from "@material-ui/core/Link";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
+}));
 class PatientPanel extends Component {
     constructor(props) {
         super(props);
@@ -87,13 +99,34 @@ class PatientPanel extends Component {
             "fullMark":30
         }]
         console.log(data)
+        function handleClick(event) {
+            event.preventDefault();
+            console.info('You clicked a breadcrumb.');
+        }
+
         return (
             <div style={{padding:100}}>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Link color="inherit" href='/dashboard/doctor#patient_list' >
+                        PatientList
+                    </Link>
+                    <Typography color="textPrimary">{this.state.patientEmail}</Typography>
+                </Breadcrumbs>
+                <br/>
                 <Grid
                     container
                     spacing={4}
                 >
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+                        <PatientsProfile patientEmail={this.state.patientEmail}/>
 
+                    </Grid>
                     <Grid
                         item
                         lg={3}
@@ -112,14 +145,7 @@ class PatientPanel extends Component {
                     >
                         <PatientAppointment patientEmail={this.state.patientEmail}/>
                     </Grid>
-                    <Grid
-                        item
-                        lg={3}
-                        sm={6}
-                        xl={3}
-                        xs={12}
-                    >
-                    </Grid>
+
                     <Grid
                         item
                         lg={3}

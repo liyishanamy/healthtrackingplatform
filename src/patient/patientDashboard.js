@@ -57,7 +57,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleTabs() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    // const [value, setValue] = React.useState(0);
+    const hash = window.location.hash
+    const tabs = ["my_stats", "health_status", "my_appointment", "patient_chat"].map(item => "#" + item)
+    const index = tabs.findIndex(item => item === hash)
+    const [value, setValue] = React.useState(index > 0 ? index : 0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);

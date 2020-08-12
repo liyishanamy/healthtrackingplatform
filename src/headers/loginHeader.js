@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
+import {errorHandling} from "../errorHandling";
 
 const mapStateToProps = state => {
     console.log("state",state)
@@ -83,8 +84,43 @@ class loginHeader extends Component {
         this.forceUpdate()
     }
     componentDidMount() {
-
         this.unsubscribe = store.subscribe(this.handleChange.bind(this))
+        const data= {userEmail: this.state.email}
+        console.log("data",data)
+        fetch('http://localhost:3000/user/getImage', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type': 'application/json',
+
+            },
+            body: JSON.stringify(data),
+        }).then(response => {
+            if(!response.ok){
+                this.setState({
+                    image_preview:"./defaultProfileImage"
+                })
+
+            }
+            return response.json()
+        })
+            .then(data => {
+                this.setState({
+                    image_preview:data.url
+                })
+            }).then(()=>{
+            console.log("refresh",store.getState())
+            this.props.dispatch(setRole(localStorage.getItem("role")))
+            this.props.dispatch(setProfileImage(this.state.image_preview))
+            console.log("after refresh",store.getState())
+
+
+        }).catch( e=> errorHandling(e) );
+
+
+
+
+
     }
 
 
@@ -156,7 +192,7 @@ class loginHeader extends Component {
 
                         <ul className="navbar-nav ml-auto">
 
-                            <li className="nav-link"><Link  to={"/userProfile"}><Avatar  sizes="small" src={image_preview}/></Link></li>
+                            <li className="nav-link"><Link  to={"/userProfile"}><Avatar  sizes="small" src={this.state.image_preview}/></Link></li>
                             <li className="nav-link">Hi {localStorage.getItem("name")} </li>
                             <li className="nav-link">   <KeyboardArrowDownIcon aria-controls="customized-menu"
                                                                                aria-haspopup="true"

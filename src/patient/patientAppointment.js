@@ -8,6 +8,9 @@ import Box from '@material-ui/core/Box';
 import BookAppointment from './Appointment/bookAppointment';
 import ViewAppointment from './Appointment/viewAppointment';
 import TestResult from "./Appointment/testResult";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Link from "@material-ui/core/Link";
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -64,6 +67,7 @@ export default function VerticalTabs() {
 
     return (
         <div className={classes.root} >
+
             <Tabs
                 orientation="vertical"
                 variant="scrollable"

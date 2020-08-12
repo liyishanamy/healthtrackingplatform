@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import TestDone from "./TestDoneTile";
 import TestResult from "./TestResultTile"
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Link from "@material-ui/core/Link";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 function TabPanel(props) {
     console.log("props",props)
     const { children, value, index, ...other } = props;
@@ -62,7 +65,13 @@ export default function SpecificAppointment(props) {
     };
 
     return (
-        <div className={classes.root} style={{padding:"50px"}}>
+        <div className={classes.root} style={{padding:"100px"}}>
+            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                <Link color="inherit" href='/dashboard/doctor#manage_appointment' >
+                    Appointment
+                </Link>
+                <Typography color="textPrimary">{patientEmail}</Typography>
+            </Breadcrumbs>
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="Test Done" {...a11yProps(0)} />

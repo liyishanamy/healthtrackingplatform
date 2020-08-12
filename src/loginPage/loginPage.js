@@ -116,12 +116,14 @@ class LoginPage extends Component {
                     const userEmail = data.email
                     console.log('Success:', data.refreshToken);
                     localStorage.setItem("accessToken", data.accessToken)
-                    localStorage.setItem("userInfo", data)
+                    // localStorage.setItem("userInfo", data)
                     localStorage.setItem("loggedIn", "LOGIN")
                     localStorage.setItem("refreshToken", data.refreshToken)
+                    localStorage.setItem("email",data.email)
+
+
                     this.props.dispatch(setEmail(data.email))
                     this.props.dispatch(setLogin("LOGIN"))
-                    console.log("requ", data.accessToken, userEmail)
                     fetch('http://localhost:3000/user/getImage', {
                         method: 'POST',
                         headers: {
@@ -138,6 +140,7 @@ class LoginPage extends Component {
                                 localStorage.setItem("image", "./defaultProfileImage.jpg")
                                 this.props.dispatch(setProfileImage("./defaultProfileImage.jpg"))
                             } else {
+                                localStorage.setItem("image", data.url)
 
                                 this.props.dispatch(setProfileImage(data.url))
 
@@ -148,19 +151,17 @@ class LoginPage extends Component {
                         localStorage.setItem("name",data.firstname)
                         if(data.role==="doctor"){
                             console.log("doctor",store.getState(),store.getState().imageReducer)
-
-
                             const {history} = this.props
-                            localStorage.setItem("email",data.email)
+
                             this.props.dispatch(setRole("DOCTOR"))
-                            localStorage.setItem('role',"doctor")
+                            localStorage.setItem('role',"DOCTOR")
 
                             history.push(`/dashboard/doctor`)
                         }else if(data.role==="patient"){
                             console.log("patient")
                             const {history} = this.props
-                            localStorage.setItem("email",data.email)
-                            localStorage.setItem('role',"patient")
+
+                            localStorage.setItem('role',"PATIENT")
                             this.props.dispatch(setRole("PATIENT"))
 
                             //history.push(`/dashboard/patient`)
