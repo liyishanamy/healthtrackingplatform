@@ -11,6 +11,9 @@ import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {errorHandling} from "../errorHandling";
 import { CSVLink } from "react-csv";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 
 const columns = [
     {id: 'name', label: 'Name', minWidth: 170},
@@ -73,6 +76,8 @@ const useStyles = makeStyles({
     },
 });
 
+
+
 export default function PatientList() {
 
     const classes = useStyles();
@@ -80,10 +85,25 @@ export default function PatientList() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [rows, setRows] = React.useState([])
     const [totalRows,setTotalRows] = React.useState(0)
+    const [displayMode,setDisplayMode]=React.useState("Active")
+    const [flag,setFlag]=React.useState(true)
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+    const toggleChecked=(e)=> {
+
+        if (flag) {
+            setDisplayMode("Inactive")
+            setFlag(false)
+        }
+        if (!flag) {
+            setDisplayMode("Active")
+            setFlag(true)
+        }
+
+    }
+
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -110,7 +130,7 @@ export default function PatientList() {
     useEffect(() => {
         // const fetchData = async (page, rowsPerPage) => {
         console.log("page", page, "rowsPerPage", rowsPerPage)
-        fetch(`http://localhost:3000/users?page=` + (page+1) + `&limit=` + rowsPerPage, {
+        fetch(`http://localhost:3000/users?active=`+flag+`&page=` + (page+1) + `&limit=` + rowsPerPage, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
@@ -132,11 +152,17 @@ export default function PatientList() {
                 }
 
             }).catch( e=> errorHandling(e) );
-     }, [page, rowsPerPage])
+     }, [page, rowsPerPage,flag])
 
 
     return (
         <div>
+            <FormGroup>
+                <FormControlLabel
+                    control={<Switch onChange={toggleChecked}/>}
+                    label={displayMode}
+                />
+            </FormGroup>
             <div>patientsList:<CSVLink
                 data={rows}
                 filename={"my-patients.csv"}

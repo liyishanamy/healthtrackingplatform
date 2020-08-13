@@ -112,7 +112,13 @@ class LoginPage extends Component {
                         errMsg: data.message
                     })
 
-                } else {
+
+                }if(data.message === "You have been archived, Please contact your doctor or admin to activate you."){
+                    this.setState({
+                        errMsg: data.message
+                    })
+                }
+                else {
                     const userEmail = data.email
                     console.log('Success:', data.refreshToken);
                     localStorage.setItem("accessToken", data.accessToken)

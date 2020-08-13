@@ -104,7 +104,7 @@ const DaysHaveNoSymptoms= props => {
                         className={classes.caption}
                         variant="caption"
                     >
-                        Since last month
+                        Since the first-day join
                     </Typography>
                 </div>
             </CardContent>

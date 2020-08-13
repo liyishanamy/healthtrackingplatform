@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -56,7 +56,6 @@ const PatientsProfile= props => {
     const [address,setAddress]=useState("")
     const [result,setResult]=useState("")
     const [image,setImage]=useState("")
-
     const [error,setError]=useState("")
     console.log("email",props.patientEmail)
     const classes = useStyles();
@@ -92,7 +91,7 @@ const PatientsProfile= props => {
 
 
 
-    })
+    }, [])
     useEffect(()=>{
         const data= {userEmail: email}
         console.log("data",data)
@@ -113,7 +112,8 @@ const PatientsProfile= props => {
             .then(data => {
                 setImage(data.url)
             }).catch( e=> errorHandling(e) );
-    })
+    }, [])
+
 
     return (
 
