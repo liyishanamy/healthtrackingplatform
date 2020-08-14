@@ -11,6 +11,7 @@ import TestResult from "./Appointment/testResult";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "@material-ui/core/Link";
+import AppBar from "@material-ui/core/AppBar";
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -18,8 +19,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
             {value === index && (
@@ -39,8 +40,8 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
     return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
     };
 }
 
@@ -48,18 +49,18 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        height: 500,
-        padding:100
-    },
-    tabs: {
-        borderRight: `1px solid ${theme.palette.divider}`,
+
     },
 }));
 
 export default function VerticalTabs() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+
+    // const [value, setValue] = React.useState(0);
+    const hash = window.location.hash
+    const tabs = ["book_appintment", "view_appointment", "view_result"].map(item => "#" + item)
+    const index = tabs.findIndex(item => item === hash)
+    const [value, setValue] = React.useState(index > 0 ? index : 0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -67,20 +68,17 @@ export default function VerticalTabs() {
 
     return (
         <div className={classes.root} >
+            <AppBar position="static">
 
-            <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={value}
-                onChange={handleChange}
-                aria-label="Vertical tabs example"
-                className={classes.tabs}
-            >
+            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+
                 <Tab label="Book Appointment" {...a11yProps(0)} />
                 <Tab label="View Appointment" {...a11yProps(1)} />
                 <Tab label="Test Result" {...a11yProps(2)} />
 
             </Tabs>
+            </AppBar>
+
             <TabPanel value={value} index={0}>
 
                 <BookAppointment/>

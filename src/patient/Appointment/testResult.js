@@ -9,7 +9,8 @@ class TestResult extends Component {
     constructor(props) {
         super(props);
         this.state={
-            testResult:""
+            testResult:"",
+            testNote:""
         }
     }
 
@@ -37,7 +38,8 @@ class TestResult extends Component {
                 }
                 else{
                     this.setState({
-                        testResult:data[0]['testResult']
+                        testResult:data[0]['testResult'],
+                        testNote:data[0]['testNote']
                     })
                 }
 
@@ -48,14 +50,19 @@ class TestResult extends Component {
     render() {
         return (
 
-            <Card  variant="outlined">
-                <CardContent>
+            <Card  variant="outlined" >
+                <CardContent >
                     <Typography  color="textSecondary" gutterBottom>
                         See My Test Result
                     </Typography>
 
                     <Typography variant="body2" component="p">
-                        Test Result:{this.state.testResult}
+                        <strong>Test Result: </strong>{this.state.testResult}
+
+
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        <strong>Test Note from doctor: </strong>{this.state.testNote}
 
 
                     </Typography>

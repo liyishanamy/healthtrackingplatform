@@ -21,8 +21,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            id={`vertical-tabpanel-${index}`}
+            aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
             {value === index && (
@@ -42,8 +42,8 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
     return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
 
@@ -51,7 +51,12 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
-        padding:100
+        padding:100,
+        display: 'flex',
+        height: 500,
+    },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
     },
 }));
 
@@ -69,8 +74,14 @@ export default function SimpleTabs() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                <Tabs
+                    orientation="vertical"
+                    variant="scrollable"
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="Vertical tabs example"
+                    className={classes.tabs}
+                >
 
                     <Tab label="My Health" {...a11yProps(0)} />
                     <Tab label="Daily Health Updates" {...a11yProps(1)} />
@@ -78,7 +89,7 @@ export default function SimpleTabs() {
                     <Tab label="Chat" {...a11yProps(3)} />
 
                 </Tabs>
-            </AppBar>
+
             <TabPanel value={value} index={0}>
                 <MyStats />
             </TabPanel>

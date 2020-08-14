@@ -11,6 +11,7 @@ import TestResult from "./TestResultTile"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "@material-ui/core/Link";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import TestNote from "./testNote";
 function TabPanel(props) {
     console.log("props",props)
     const { children, value, index, ...other } = props;
@@ -90,6 +91,7 @@ export default function SpecificAppointment(props) {
             </TabPanel>
             <TabPanel value={value} index={2}>
                 Extra Information
+                <TestNote patientEmail={patientEmail}/>
             </TabPanel>
         </div>
     );

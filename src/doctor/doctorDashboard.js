@@ -15,7 +15,6 @@ import ManageAppointment from './manageAppointment'
 import AllStats from './AllStats';
 import Layout from "../components/Layout";
 import Heatmap from "./mapVisualization/heatmap";
-
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
 
@@ -23,8 +22,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            id={`vertical-tabpanel-${index}`}
+            aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
             {value === index && (
@@ -44,8 +43,8 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
     return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
 
@@ -53,8 +52,19 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
-        padding: 100
+        padding: 100,
+        display: 'flex',
+        position:'fixed',
+        height: 500,
+
+
+
+
     },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
+    },
+
 }));
 
 export default function SimpleTabs() {
@@ -73,16 +83,21 @@ export default function SimpleTabs() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={value}
+                onChange={handleChange}
+                aria-label="Vertical tabs example"
+                className={classes.tabs}
+            >
                     <Tab label="All Stats" {...a11yProps(0)} />
                     <Tab label="Patient List" {...a11yProps(1)} />
                     <Tab label="Manage Appointment" {...a11yProps(2)} />
                     <Tab label="City Heat Map" {...a11yProps(3)} />
                     <Tab label="Doctor chats" {...a11yProps(4)} />
 
-                </Tabs>
-            </AppBar>
+            </Tabs>
             <TabPanel value={value} index={0}>
                 <AllStats/>
             </TabPanel>
@@ -102,6 +117,3 @@ export default function SimpleTabs() {
         </div>
     );
 }
-
-
-//export default DoctorDashboard;

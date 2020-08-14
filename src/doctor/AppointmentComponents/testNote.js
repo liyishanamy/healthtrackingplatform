@@ -5,8 +5,12 @@ import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
-import {Link} from "react-router-dom";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import Button from "@material-ui/core/Button";
 import {errorHandling} from "../../errorHandling";
+import TextField from "@material-ui/core/TextField";
 
 
 
@@ -45,24 +49,54 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const MyAppointment= props => {
+const TestNote= props => {
     const { className, ...rest } = props;
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
-    const [appointmentDate, setAppointmentDate] = useState(null)
-    const [userMsg,setUseMsg] = useState("")
     const [error,setError]=useState("")
-    const [appointmentStart,setAppointmentStart]=useState(null)
-    const [appointmentEnd,setAppointmentEnd]=useState(null)
-    const [appointment,setAppointment]=useState(false)
+    const [patientEmail,setPatientEmail]=useState(props.patientEmail)
+    const [testNote,setTestNote]=useState("")
+    const [finalTestNote,setFinalTestNote]=useState("")
 
 
+    const handleTsetTestNoteChange = (event) => {
+        setTestNote(event.target.value);
+    };
 
     const classes = useStyles();
+    const updateTestNote=(e)=>{
+        const data = {
+            "patientEmail":patientEmail,
+            "testNote":testNote
+        }
+        console.log(data)
+
+        fetch('http://localhost:3000/appointment/testNote',{
+            method:"PUT",
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(data => {
+                if(data.message==="the token is invalid"){
+                    throw data
+                }else{
+                    if(data.message==="Test has been already updated."){
+                        alert(data.message)
+                    }else{
+                        setFinalTestNote("")
+                        alert("Update unsuccessfully")
+                    }
+                }
+
+            }).catch( e=> errorHandling(e) );
+    }
     useEffect(()=>{
         const data = {
-            email:localStorage.getItem("email")
+            email:props.patientEmail
         }
-        fetch('http://localhost:3000/healthStatus/daysHavingNoSymptoms',{
+        fetch('http://localhost:3000/appointment/myAppointment',{
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
@@ -73,83 +107,38 @@ const MyAppointment= props => {
         })
             .then(response => response.json())
             .then(data => {
-                if(data.message==="the token is invalid"){
-                    throw data
-
-                }
-                setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
-
-
-                //Change the val to 14 once done
-                if(daysHavingNoSymptoms>=2){
-                    setUseMsg("You can now book a retesting appointment")
-
+                if(data.message!=="the token is invalid"){
+                    setFinalTestNote(data[0]['testNote'])
                 }else{
-                    setUseMsg("You have at least "+(14-parseInt(daysHavingNoSymptoms))+" to go to book an appointment")
-                }
-
-            }).catch( e=> errorHandling(e) );
-
-    })
-    useEffect(()=>{
-        const data = {
-            email:localStorage.getItem("email")
-        }
-        fetch('http://localhost:3000/appointment/myAppointment',{
-            method: 'POST',
-            headers:{
-                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                'Content-Type':'application/json',
-
-            },
-            body: JSON.stringify(data),
-        }).then(response => response.json())
-            .then(data => {
-                console.log("get",data)
-                if(data.message==="You do not have a booked appointment yet."){
-                   setAppointment(false)
-                }
-                if(data.message!=="You do not have a booked appointment yet." && data.length!==0){
-                    setAppointment(true)
-                    setAppointmentStart(data[0].appointmentTime.startTime)
-                    setAppointmentEnd(data[0].appointmentTime.endTime)
-                    setAppointmentDate(new Date(data[0].appointmentTime.startTime).getFullYear()+"/"+(new Date(data[0].appointmentTime.startTime).getMonth()+1)+"/"+new Date(data[0].appointmentTime.startTime).getDate())
-                }if(data.message==="the token is invalid"){
                     throw data
-
                 }
-            }).catch( e=> errorHandling(e) );
+
+            })
+            .catch( e=> errorHandling(e) );
     })
-
-    let renderDate;
-    let bookAppointment;
-    if (appointment){
-        renderDate = appointmentDate
-        bookAppointment=
-            <Typography variant="h6"><Link to={`/viewAppointment/`}>View Appointment
-        </Link></Typography>
-
-    }else{
-        renderDate=
-        bookAppointment=<Typography variant="h6"><Link to={`/bookAppointment/`}>Book Appointment
-        </Link></Typography>
-
-    }
-
-
-
-
 
     return (
         <Card
             {...rest}
             className={clsx(classes.root, className)}
         >
+            <TextField
+                id="outlined-multiline-flexible"
+                label="Message to Patient"
+                multiline
+                rowsMax={4}
+                onChange={handleTsetTestNoteChange}
+                variant="outlined"
+            />
+            <Button onClick={updateTestNote}>Save</Button>
+
             <CardContent>
+
                 <Grid
                     container
                     justify="space-between"
                 >
+
                     <Grid item>
                         <Typography
                             className={classes.title}
@@ -157,25 +146,13 @@ const MyAppointment= props => {
                             gutterBottom
                             variant="body2"
                         >
-                           Your appointment is on:
-
+                            Test Note
                         </Typography>
-
-                        <Typography variant="h3">{renderDate}</Typography>
-
+                        <Typography variant="h3">{finalTestNote}</Typography>
                     </Grid>
 
                 </Grid>
                 <div className={classes.difference}>
-
-                    <Typography
-                        className={classes.caption}
-                        variant="caption"
-                    >
-                        {userMsg}
-                    </Typography>
-                    <br/>
-                    {bookAppointment}
 
 
                 </div>
@@ -184,9 +161,9 @@ const MyAppointment= props => {
     );
 };
 
-MyAppointment.propTypes = {
+TestNote.propTypes = {
     className: PropTypes.string
 };
 
-export default MyAppointment;
+export default TestNote;
 

@@ -105,6 +105,9 @@ function createData(name, email, date, time_start, time_end, testDone, testResul
 const useStyles = makeStyles({
     root: {
         width: '100%',
+        flexGrow:1
+
+
     },
     container: {
         maxHeight: 440,
