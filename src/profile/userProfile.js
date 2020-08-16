@@ -28,7 +28,7 @@ class UserProfile extends Component {
         this.state = {
             email: localStorage.getItem("email"),
             pictures: null,
-            image_preview: null,
+            image_preview:null,
             image: null,
             firstname: "",
             lastname: "",
@@ -48,7 +48,8 @@ class UserProfile extends Component {
             copied: false,
             displayMode: "ReadOnly",
             flag: true,
-            saveMsg:""
+            saveMsg:"",
+            existImage:false
         }
     }
 
@@ -104,8 +105,9 @@ class UserProfile extends Component {
         let pic = this.state.image;
         let email = this.state.email;
         let url;
-        console.log("pic",this.state.image_preview)
-        if(this.state.image_preview){
+        console.log("pic",this.state.image_preview,this.state.image)
+        if(this.state.existImage){
+            console.log("1")
             // Already exist a profile pic
             url = "http://localhost:3000/user/changeProfileImage"
             formData.append('image', pic)
@@ -116,15 +118,13 @@ class UserProfile extends Component {
                         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
                     }
             }).then(res => {
-                console.log(res);
+                console.log("already have a image",res);
                 const url = res.data.request.url
                 this.props.dispatch(setProfileImage(url))
+                localStorage.setItem("image",url)
 
             })
-                .then(function (response) {
-                    //handle success
-                    console.log(response);
-                })
+
                 .catch(function (response) {
                     //handle error
                     console.log(response);
@@ -132,6 +132,7 @@ class UserProfile extends Component {
 
 
         }else{
+            console.log("2")
             url = "http://localhost:3000/user/profileImage"
             formData.append('image', pic)
             formData.append('email', email)
@@ -142,16 +143,14 @@ class UserProfile extends Component {
                         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
                     }
             }).then(res => {
-                console.log(res);
+                console.log("have no image yet",res);
                 const url = res.data.createdProfileImage.request.url
                 this.props.dispatch(setProfileImage(url))
+                localStorage.setItem("image",url)
+
 
 
             })
-                .then(function (response) {
-                    //handle success
-                    console.log(response);
-                })
                 .catch(function (response) {
                     //handle error
                     console.log(response);
@@ -186,6 +185,7 @@ class UserProfile extends Component {
                 if(data.message==="update user profile successfully!"){
                     alert(data.message)
                     console.log("Making post request with token",localStorage.getItem("accessToken"))
+                    localStorage.setItem("name", this.state.firstname)
                 }else{
                     throw data
                 }
@@ -266,10 +266,22 @@ class UserProfile extends Component {
 
         }).then(response => response.json())
             .then(data => {
+                if (data.message!=="the token is invalid") {
+                    console.log("image?", data)
+                    if(data.message==="Cannot find the profile image"){
+                        this.setState({
+                            image_preview: "./defaultProfileImage.jpg"
+                        })
+                    }else{
+                        this.setState({
+                            image_preview: data.url,
+                            existImage:true
+                        })
+                    }
 
-                this.setState({
-                    image_preview: data.url
-                })
+                }else{
+                    throw data
+                }
             }).catch( e=> errorHandling(e) );
     }
 

@@ -1,7 +1,7 @@
 
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import React, {Component} from 'react';
-import {CardHeader, Divider, Grid, IconButton} from "@material-ui/core";
+import {CardHeader, Divider, Grid,Card, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CardContent from "@material-ui/core/CardContent";
 import PolarGrid from "recharts/lib/polar/PolarGrid";
@@ -19,11 +19,11 @@ class PatientSymptoms extends Component {
         console.log("props",props)
         this.state={
             patientEmail:props.patientEmail,
-            headache:"",
-            cough:"",
-            runningNose:"",
-            diarrhea:"",
-            breatheHard:"",
+            headache:0,
+            cough:0,
+            runningNose:0,
+            diarrhea:0,
+            breatheHard:0,
         }
     }
     componentDidMount() {
@@ -40,6 +40,7 @@ class PatientSymptoms extends Component {
         }).then(response => response.json())
             .then(data => {
                 if(data.message!=="the token is invalid"){
+                    console.log("symptom".data)
                     this.setState({
                         headache:data.headache,
                         cough:data.cough,
@@ -76,10 +77,11 @@ class PatientSymptoms extends Component {
             "frequency":this.state.breatheHard,
             "fullMark":30
         }]
+        console.log("symptom",symptom)
 
         return (
                 <div>
-                    <card>
+                    <Card>
                         <CardContent>
                             <CardHeader
                                 action={
@@ -99,7 +101,7 @@ class PatientSymptoms extends Component {
                                 <Legend />
                             </RadarChart>
                         </CardContent>
-                    </card>
+                    </Card>
 
                 </div>
 

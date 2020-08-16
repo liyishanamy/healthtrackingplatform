@@ -1,8 +1,9 @@
 
 export const SET_LOG_IN = "SET_LOG_IN";
 export const SET_EMAIL = "SET_EMAIL";
-export const SET_ROLE = "SET_ROLE"
-export const SET_IMAGE="SET_IMAGE"
+export const SET_ROLE = "SET_ROLE";
+export const SET_IMAGE="SET_IMAGE";
+export const SET_NO_SYMPTOM_DAY="SET_NO_SYMPTOM_DAY";
 // Constants
 export const isLoggedInOptions = {
     LOGIN: 'LOGIN',
@@ -39,4 +40,11 @@ export function setEmail(email) {
 
 export function setProfileImage(url) {
     return { type: SET_IMAGE, url }
+}
+
+/*
+set no symptom days
+ */
+export function setNoSymptomDays(day) {
+    return { type: SET_NO_SYMPTOM_DAY, day }
 }

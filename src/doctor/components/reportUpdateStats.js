@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Bar from "recharts/lib/cartesian/Bar";
 import Legend from "recharts/lib/component/Legend";
 import BarChart from "recharts/lib/chart/BarChart";
-import {CardContent, CardHeader, Divider, IconButton} from "@material-ui/core";
+import {Card,CardContent, CardHeader, Divider, IconButton} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {errorHandling} from "../../errorHandling";
 
@@ -61,7 +61,6 @@ class ReportUpdateStats extends Component {
             let tomorrow_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate();
             today.setDate(today.getDate()-1)
             let today_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate()
-            console.log(tomorrow_format,today_format)
 
             return fetch(`http://localhost:3000/healthStatus/stats?from=${today_format}&to=${tomorrow_format}`,{
                 headers:{
@@ -161,7 +160,7 @@ class ReportUpdateStats extends Component {
         ]
 
         return (
-            <card>
+            <Card>
                 <CardHeader
                     action={
                         <CSVLink
@@ -180,9 +179,7 @@ class ReportUpdateStats extends Component {
                 <CardContent>
             <div>
                 <div>
-                    <label>Reporting Updates</label><divider/>
-
-
+                    <label>Reporting Updates</label>
                     <BarChart width={730} height={250} data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
@@ -195,7 +192,7 @@ class ReportUpdateStats extends Component {
                     </BarChart>
                 </div>
 
-            </div></CardContent></card>
+            </div></CardContent></Card>
         );
     }
 }

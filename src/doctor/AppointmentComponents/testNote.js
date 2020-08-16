@@ -58,7 +58,7 @@ const TestNote= props => {
     const [finalTestNote,setFinalTestNote]=useState("")
 
 
-    const handleTsetTestNoteChange = (event) => {
+    const handleTestNoteChange = (event) => {
         setTestNote(event.target.value);
     };
 
@@ -124,10 +124,10 @@ const TestNote= props => {
         >
             <TextField
                 id="outlined-multiline-flexible"
-                label="Message to Patient"
+                label="Message to Patient "
                 multiline
                 rowsMax={4}
-                onChange={handleTsetTestNoteChange}
+                onChange={handleTestNoteChange}
                 variant="outlined"
             />
             <Button onClick={updateTestNote}>Save</Button>

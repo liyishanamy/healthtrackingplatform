@@ -2,7 +2,7 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import React, {Component} from 'react';
 import ReferenceLine from "recharts/lib/cartesian/ReferenceLine";
-import {CardHeader, Divider, Grid, IconButton} from "@material-ui/core";
+import {CardHeader, Divider, Grid, IconButton,Card} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CardContent from "@material-ui/core/CardContent";
 import {errorHandling} from "../../errorHandling";
@@ -55,7 +55,7 @@ class PatientTemperature extends Component {
         return (
             <div>
 
-                <card>
+                <Card>
                     <CardHeader
                         action={
                             <IconButton size="small">
@@ -78,7 +78,7 @@ class PatientTemperature extends Component {
                             </LineChart>
                         </div>
                     </CardContent>
-                </card>
+                </Card>
                 <br/>
 
 

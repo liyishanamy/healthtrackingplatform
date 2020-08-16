@@ -12,7 +12,10 @@ import {Link} from "react-router-dom";
 import {DateRangePicker} from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
-import {errorHandling} from "../errorHandling"; // theme css file
+import {errorHandling} from "../errorHandling";
+import Button from "@material-ui/core/Button";
+import Drawer from "@material-ui/core/Drawer"; // theme css file
+
 const columns = [
     {id: 'name', label: 'name', minWidth: 170},
     {id: 'email', label: 'email', minWidth: 170},
@@ -112,6 +115,13 @@ const useStyles = makeStyles({
     container: {
         maxHeight: 440,
     },
+    list: {
+        width: 250,
+    },
+    fullList: {
+        width: 'auto',
+    },
+
 });
 
 export default function ManageAppointment() {
@@ -120,6 +130,12 @@ export default function ManageAppointment() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [rows, setRows] = React.useState([])
     const [totalRows,setTotalRows] = React.useState(0)
+    const [state, setState] = React.useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    })
 
     const today = new Date()
     const tomorrow = new Date(today)
@@ -199,13 +215,26 @@ export default function ManageAppointment() {
         key: 'selection',
     }
 
+    const toggleDrawer = (anchor, open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setState({ ...state, [anchor]: open });
+    };
+
     return (
         <div>
-            <div>patientsList:</div>
-            <DateRangePicker
-                ranges={[selectionRange]}
-                onChange={handleSelect}
-            />
+            <React.Fragment key={'right'}>
+                <Button onClick={toggleDrawer('right', true)} color="primary" >Filter Date</Button>
+                <Drawer anchor={'right'} open={state['right']} onClose={toggleDrawer('right', false)}>
+                    <DateRangePicker
+                        ranges={[selectionRange]}
+                        onChange={handleSelect}
+                    />
+                </Drawer>
+            </React.Fragment>
+
             <div>range:<span>{startDate}</span> to <span>{endDate} </span></div>
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>

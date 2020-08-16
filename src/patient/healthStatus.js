@@ -145,8 +145,6 @@ export default function DiscreteSlider() {
         <Card variant="outlined" style={{padding: 170}}>
             <h1>My Daily Update</h1>
             <CardContent>
-
-
                 <div className={classes.root}>
                     <div>{new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate()}</div>
 
@@ -196,9 +194,9 @@ export default function DiscreteSlider() {
 
                     <div className="form-group">
                         <label>Report the places you have traveled. If any. If not, leave it empty</label><br/>
-                        From <Input type="text" className="form-control" placeholder="From" value={from}
+                        From <Input type="text" className="form-control" placeholder="From"
                                     onChange={handleFrom} required/>
-                        To <Input type="text" className="form-control" placeholder="To" value={to} onChange={handleTo}
+                        To <Input type="text" className="form-control" placeholder="To"  onChange={handleTo}
                                   required/>
                     </div>
                     <div className="form-group">

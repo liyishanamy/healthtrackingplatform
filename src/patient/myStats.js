@@ -20,18 +20,27 @@ import FullyRecovered from "../doctor/components/fullyRecovered";
 import DaysHaveNoSymptoms from "./components/daysHaveNoSymptoms";
 import MyAppointment from "./components/myAppointment"
 import ErrorBoundary from "../ErrorBoundary";
+import {errorHandling} from "../errorHandling";
+import {setNoSymptomDays, setProfileImage} from "../login_Actions";
+import {connect} from "react-redux";
 
+const mapStateToProps = state => {
+    //console.log("mystats",state)
+    if(state.daysReducer){
+        return {daysHavingNoSymptom: state}
+    }
+
+}
 class MyStats extends Component {
     constructor(props) {
         super(props);
         this.state={
             userTemp:null,
+            daysHavingNoSymptom:0,
+
 
         }
     }
-
-
-
     render() {
 
         return (
@@ -40,7 +49,6 @@ class MyStats extends Component {
                     container
                     spacing={4}
                 >
-
                     <Grid
                         item
                         lg={3}
@@ -95,4 +103,7 @@ class MyStats extends Component {
     }
 }
 
-export default MyStats;
+const Stats = connect(mapStateToProps)(MyStats)
+
+
+export default Stats;

@@ -6,10 +6,18 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {errorHandling} from "../../errorHandling";
+import {setNoSymptomDays} from "../../login_Actions";
+import {connect} from "react-redux";
+import store from "../../store/store"
 
 
+const mapStateToProps = state => {
+    console.log("mystats",state)
+    if(state.daysReducer){
+        return {daysHavingNoSymptom: state}
+    }
 
-
+}
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%'
@@ -44,11 +52,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+
 const DaysHaveNoSymptoms= props => {
     const { className, ...rest } = props;
+    console.log("props",props)
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
-    const [error,setError]=useState("")
-
     const classes = useStyles();
     useEffect(()=>{
         const data = {
@@ -67,11 +75,13 @@ const DaysHaveNoSymptoms= props => {
             .then(data => {
                 if(data.message!=="the token is invalid"){
                     setDaysHavingNoSymptoms(data['daysOfNoSymptom'])
+                    props.dispatch(setNoSymptomDays(data['daysOfNoSymptom']))
                 }
                 else{
                     throw data
                 }
             }).catch( e=> errorHandling(e) );
+
 })
 
     return (
@@ -107,5 +117,13 @@ DaysHaveNoSymptoms.propTypes = {
     className: PropTypes.string
 };
 
-export default DaysHaveNoSymptoms;
+
+const DaysHaveNoSymptom = connect(mapStateToProps)(DaysHaveNoSymptoms)
+
+
+export default DaysHaveNoSymptom;
+
+
+//export default DaysHaveNoSymptoms;
+
 

@@ -84,10 +84,7 @@ class App extends Component {
 
 
                         {head}
-                        <divider/>
                         <div className="auth-inner">
-
-
                             <Switch>
                                 <Route exact path='/' component={LoginPage}/>
                                 <Route path="/sign-in" component={LoginPage}/>

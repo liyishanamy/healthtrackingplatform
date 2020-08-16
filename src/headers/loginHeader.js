@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {setLogin, setProfileImage, setRole} from "../login_Actions";
+import {setEmail, setLogin, setNoSymptomDays, setProfileImage, setRole} from "../login_Actions";
 import { useLocation } from "react-router-dom";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
@@ -61,17 +61,19 @@ const StyledMenuItem = withStyles((theme) => ({
 class loginHeader extends Component {
     constructor(props) {
         super(props);
-        console.log("store",store.getState())
-        //console.log("props",this.props)
+
 
         this.state={
             email: localStorage.getItem("email"),
             isLoggedIn:this.props.isLoggedIn,
             image_preview:localStorage.getItem("image"),
-            anchorEl:null
+            anchorEl:null,
+
         }
         console.log("initial header",localStorage.getItem("image"))
     }
+
+
 
 
     componentWillUnmount() {
@@ -85,40 +87,17 @@ class loginHeader extends Component {
     }
     componentDidMount() {
         this.unsubscribe = store.subscribe(this.handleChange.bind(this))
-        const data= {userEmail: this.state.email}
-        console.log("data",data)
-        fetch('http://localhost:3000/user/getImage', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
-                'Content-Type': 'application/json',
+        this.props.dispatch(setRole(localStorage.getItem(("role"))))
+        this.props.dispatch(setProfileImage(localStorage.getItem(("image"))))
+        this.props.dispatch(setEmail(localStorage.getItem(("email"))))
+        this.props.dispatch(setNoSymptomDays(localStorage.getItem(("daysOfNoSymptom"))))
 
-            },
-            body: JSON.stringify(data),
-        }).then(response => {
-            if(!response.ok){
-                this.setState({
-                    image_preview:"./defaultProfileImage"
-                })
 
-            }
-            return response.json()
+        this.setState({
+            image_preview:localStorage.getItem("image")
+
+
         })
-            .then(data => {
-                this.setState({
-                    image_preview:data.url
-                })
-            }).then(()=>{
-            console.log("refresh",store.getState())
-            this.props.dispatch(setRole(localStorage.getItem("role")))
-            this.props.dispatch(setProfileImage(this.state.image_preview))
-            console.log("after refresh",store.getState())
-
-
-        }).catch( e=> errorHandling(e) );
-
-
-
 
 
     }
@@ -153,22 +132,29 @@ class loginHeader extends Component {
     render() {
         console.log("name",localStorage,localStorage.getItem("name"))
         let image = this.props.url
+
         console.log("image",image)
         let image_preview;
         if(image!==""){
             image_preview = image
+            localStorage.setItem("image",image)
 
         }
         let healthRedirect;
-        console.log("myrole",this.props.role)
-        if(this.props.role==="DOCTOR"){
+        console.log("myrole",localStorage,this.props)
+
+        if(localStorage.getItem("role")==="DOCTOR"){
             healthRedirect = "/dashboard/doctor"
         }
-        if(this.props.role==="PATIENT"){
-            healthRedirect = "/dashboard/patient"
-        }if(this.props.role==="NOT_LOGGED_IN"){
+        if(localStorage.getItem("role")==="PATIENT"){
+            healthRedirect = "/dashboard/patient"}
+
+        if(this.props.role==="NOT_LOGGED_IN"){
             healthRedirect="/"
         }
+
+
+        localStorage.setItem("healthRedirect",healthRedirect)
 
 
         const handleClick = (event) => {
@@ -187,12 +173,12 @@ class loginHeader extends Component {
 
 
                 <div className="container">
-                    <Link className="navbar-brand" to={healthRedirect}>HealthTrack</Link>
+                    <Link className="navbar-brand" to={localStorage.getItem("healthRedirect")}>HealthTrack</Link>
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
 
                         <ul className="navbar-nav ml-auto">
 
-                            <li className="nav-link"><Link  to={"/userProfile"}><Avatar  sizes="small" src={this.state.image_preview}/></Link></li>
+                            <li className="nav-link"><Link  to={"/userProfile"}><Avatar  sizes="small" src={localStorage.getItem("image")}/></Link></li>
                             <li className="nav-link">Hi {localStorage.getItem("name")} </li>
                             <li className="nav-link">   <KeyboardArrowDownIcon aria-controls="customized-menu"
                                                                                aria-haspopup="true"

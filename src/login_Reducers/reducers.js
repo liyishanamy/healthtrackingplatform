@@ -1,4 +1,12 @@
-import {isLoggedInOptions, roleOptions, SET_EMAIL, SET_IMAGE, SET_LOG_IN, SET_ROLE} from "../login_Actions";
+import {
+    isLoggedInOptions,
+    roleOptions,
+    SET_EMAIL,
+    SET_IMAGE,
+    SET_LOG_IN,
+    SET_NO_SYMPTOM_DAY,
+    SET_ROLE
+} from "../login_Actions";
 import { combineReducers } from 'redux'
 
 const {LOGOUT} = isLoggedInOptions
@@ -38,10 +46,20 @@ function imageReducer(state = "", action) {
             return state
     }
 }
+
+function daysReducer(state = null, action) {
+    switch (action.type) {
+        case SET_NO_SYMPTOM_DAY:
+            return action.day
+        default:
+            return state
+    }
+}
  const rootReducer = combineReducers({
      loginReducer,
      emailReducer,
      roleReducer,
-     imageReducer
+     imageReducer,
+     daysReducer
  })
 export default rootReducer

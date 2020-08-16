@@ -53,7 +53,7 @@ class GenderDistribution extends Component {
         const data = [{name:"female",value:this.state.female,"fill": "#8884d8"},{name:"male",value: this.state.male,"fill": "#8dd1e1"},{name:"other",value:this.state.other,"fill": "#a4de6c"}]
         const data1 = [{name:"female",value:this.state.female},{name:"male",value: this.state.male,},{name:"other",value:this.state.other}]
         return (
-            <card>
+            <Card>
                 <CardHeader
                     action={
                         <CSVLink
@@ -85,7 +85,7 @@ class GenderDistribution extends Component {
 
                 </div>
 
-            </div></CardContent></card>
+            </div></CardContent></Card>
 
         );
     }

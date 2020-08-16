@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CardHeader, Divider, IconButton} from "@material-ui/core";
+import {CardHeader, Divider, IconButton,Card} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import CardContent from "@material-ui/core/CardContent";
 import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
@@ -54,10 +54,9 @@ class MyTemperature extends Component {
     }
     render() {
         const data = this.state.userTemp
-        console.log("temp",this.state.userTemp)
         return (
             <div>
-                <card>
+                <Card>
                     <CardHeader
                         action={
                             <CSVLink
@@ -85,7 +84,7 @@ class MyTemperature extends Component {
                             <YAxis domain={[dataMin=>35, dataMax => 40]}/>
                             <Tooltip />
                         </LineChart>
-                    </CardContent></card>
+                    </CardContent></Card>
 
             </div>
         );

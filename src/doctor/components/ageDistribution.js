@@ -78,7 +78,7 @@ class AgeDistribution extends Component {
 
         console.log("bundle",data)
         return (
-            <card>
+            <Card>
                 <CardHeader
                     action={
                         <CSVLink
@@ -112,7 +112,7 @@ class AgeDistribution extends Component {
                     </RadialBarChart>
                 </div>
 
-            </div></CardContent></card>
+            </div></CardContent></Card>
         );
     }
 }

@@ -3,7 +3,7 @@ import Input from '@material-ui/core/Input';
 import {Button} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
-import {setLogin, setEmail, setRole, setProfileImage} from "../login_Actions";
+import {setLogin, setEmail, setRole, setProfileImage, setNoSymptomDays} from "../login_Actions";
 import store from "../store/store"
 import {errorHandling} from "../errorHandling";
 
@@ -122,7 +122,6 @@ class LoginPage extends Component {
                     const userEmail = data.email
                     console.log('Success:', data.refreshToken);
                     localStorage.setItem("accessToken", data.accessToken)
-                    // localStorage.setItem("userInfo", data)
                     localStorage.setItem("loggedIn", "LOGIN")
                     localStorage.setItem("refreshToken", data.refreshToken)
                     localStorage.setItem("email",data.email)
@@ -130,6 +129,16 @@ class LoginPage extends Component {
 
                     this.props.dispatch(setEmail(data.email))
                     this.props.dispatch(setLogin("LOGIN"))
+                    console.log("days",data.daysOfNoSymptom)
+                    if(!data.daysOfNoSymptom){
+                        this.props.dispatch(setNoSymptomDays(0))
+                        localStorage.setItem("daysOfNoSymptom",0)
+                    }else{
+                        this.props.dispatch(setNoSymptomDays(data.daysOfNoSymptom))
+                        localStorage.setItem("daysOfNoSymptom",data.daysOfNoSymptom)
+
+                    }
+
                     fetch('http://localhost:3000/user/getImage', {
                         method: 'POST',
                         headers: {
@@ -147,7 +156,6 @@ class LoginPage extends Component {
                                 this.props.dispatch(setProfileImage("./defaultProfileImage.jpg"))
                             } else {
                                 localStorage.setItem("image", data.url)
-
                                 this.props.dispatch(setProfileImage(data.url))
 
                             }
@@ -155,6 +163,7 @@ class LoginPage extends Component {
                         }).then(()=>{
                         localStorage.setItem("errorHandle","1")
                         localStorage.setItem("name",data.firstname)
+
                         if(data.role==="doctor"){
                             console.log("doctor",store.getState(),store.getState().imageReducer)
                             const {history} = this.props
@@ -174,8 +183,7 @@ class LoginPage extends Component {
                             history.push(`/dashboard/patient`)
 
                         }
-                    })
-                        .catch((error) => {
+                    }).catch((error) => {
                                 this.setState({
                                     errMsg:error.toString()
                                 })

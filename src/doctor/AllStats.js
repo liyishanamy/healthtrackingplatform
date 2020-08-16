@@ -20,7 +20,6 @@ class AllStats extends Component {
                     container
                     spacing={4}
                 >
-
                 <Grid
                     item
                     lg={3}
@@ -60,19 +59,8 @@ class AllStats extends Component {
                 </Grid>
                 <br/>
                 <ReportUpdateStats/>
-
                 <AgeDistribution/>
                 <GenderDistribution/>
-
-
-
-
-
-
-
-
-
-
 
             </div>
         );

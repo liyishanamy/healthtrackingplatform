@@ -182,7 +182,7 @@ export default function PatientList() {
     };
 
     useEffect(()=>{
-        fetch("http://localhost:3000/users/totalPatients", {
+        fetch("http://localhost:3000/users/totalPatients?active="+flag, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + (localStorage.getItem("accessToken"))
@@ -192,7 +192,6 @@ export default function PatientList() {
             if(data.message!=="the token is invalid"){
                 setTotalRows(data.totalPatients)
             }else{
-                console.log("throw data1",localStorage.getItem("errorHandle"))
                 throw data
             }
 
@@ -303,9 +302,6 @@ export default function PatientList() {
                 </Toolbar>
             </AppBar>
 
-
-
-
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
                     <Table stickyHeader aria-label="sticky table">
@@ -342,7 +338,7 @@ export default function PatientList() {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
+                    rowsPerPageOptions={[5, 10, 20]}
                     component="div"
                     count={totalRows}
                     rowsPerPage={rowsPerPage}

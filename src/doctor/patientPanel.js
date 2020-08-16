@@ -47,7 +47,6 @@ class PatientPanel extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success1", data)
                 var formateDate = [];
                 for (var i = 0; i < data.length; i++) {
                     let date = new Date(data[i]['Date'])
@@ -195,7 +194,7 @@ class PatientPanel extends Component {
                         xl={3}
                         xs={12}
                     >
-                        <PatientsProfile patientEmail={this.state.patientEmail} status={this.state.isActive}/>
+                        <PatientsProfile patientEmail={this.state.patientEmail}/>
 
                     </Grid>
                     <Grid

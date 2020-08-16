@@ -138,11 +138,6 @@ const PatientAppointment= props => {
         minute2=new Date(appointmentEnd).getMinutes()
     }
 
-
-
-
-
-
     return (
         <Card
             {...rest}
@@ -162,21 +157,21 @@ const PatientAppointment= props => {
                         >
                             Your appointment is on:
                             <br/>
-                            <Typography variant="h3"> {appointmentDate}</Typography>
+                            {appointmentDate}
 
 
 
 
 
                         </Typography>
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" >
                             Appointment Time:
                             <br/>
                             {new Date(appointmentStart).getHours()+":"+minute1} to {new Date(appointmentEnd).getHours()+":"+minute2}
                         </Typography>
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" >
 
-                            <br/><Link>Update the Test Result</Link>
+                            <br/><Link to={"/updateResult/"+props.patientEmail}>Update the Test Result</Link>
 
                         </Typography>
 

@@ -187,6 +187,7 @@ class SignupPage extends Component {
 
 
                         else{
+                            localStorage.setItem("name",data.firstname)
                             this.setState({
                                 passwordErrorMsg:""
                             })

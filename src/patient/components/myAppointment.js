@@ -130,7 +130,7 @@ const MyAppointment= props => {
         </Link></Typography>
 
     }else{
-        renderDate=
+        renderDate=""
         bookAppointment=<Typography variant="h6"><Link to={`/bookAppointment/`}>Book Appointment
         </Link></Typography>
 
@@ -175,7 +175,7 @@ const MyAppointment= props => {
                         {userMsg}
                     </Typography>
                     <br/>
-                    {bookAppointment}
+
 
 
                 </div>

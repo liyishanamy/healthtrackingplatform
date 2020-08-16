@@ -75,7 +75,7 @@ const TotalPatients= props => {
 
     })
     useEffect(()=>{
-        fetch('http://localhost:3000/users/totalPatients',{
+        fetch('http://localhost:3000/users/totalPatients?active=true',{
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),

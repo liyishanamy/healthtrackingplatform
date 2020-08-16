@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {Link,useHistory} from "react-router-dom";
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,9 +13,25 @@ import MyStats from "./myStats";
 import PatientChatbox from './patientChatbox';
 import PatientAppointment from './patientAppointment'
 import Layout from '../components/Layout'
+import {connect} from "react-redux";
+import store from "..";
+import {setNoSymptomDays} from "../login_Actions";
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+
+import {errorHandling} from "../errorHandling";
+const mapStateToProps = state => {
+
+    console.log("store", state)
+    return {daysHavingNoSymptom: state.daysReducer}
+
+
+}
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
+    console.log("props.state",props)
 
     return (
         <div
@@ -60,17 +76,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleTabs() {
+const SimpleTabs= props => {
     const classes = useStyles();
     // const [value, setValue] = React.useState(0);
+    console.log("props.state",props,props.daysHavingNoSymptom)
+
     const hash = window.location.hash
     const tabs = ["my_stats", "health_status", "my_appointment", "patient_chat"].map(item => "#" + item)
     const index = tabs.findIndex(item => item === hash)
     const [value, setValue] = React.useState(index > 0 ? index : 0);
+    const [data,setData]=React.useState(0)
+    //const [checkAppointment,setCheckAppointment] =React.useState(true)
+    let checkAppointment=true
+
+
+
+    //Set to 14 once done testing
+    if(props.daysHavingNoSymptom>=2){
+        //setCheckAppointment(false)
+        checkAppointment=false
+    }
+
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+
 
     return (
         <div className={classes.root}>
@@ -85,7 +118,8 @@ export default function SimpleTabs() {
 
                     <Tab label="My Health" {...a11yProps(0)} />
                     <Tab label="Daily Health Updates" {...a11yProps(1)} />
-                    <Tab label="My Appointment" {...a11yProps(2)} />
+
+                    <Tab label="My Appointment" {...a11yProps(2)} disabled={checkAppointment}/>
                     <Tab label="Chat" {...a11yProps(3)} />
 
                 </Tabs>
@@ -97,15 +131,22 @@ export default function SimpleTabs() {
                 <HealthStatus />
             </TabPanel>
 
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={2} >
+
                 <PatientAppointment/>
+
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <Layout/>
             </TabPanel>
+
         </div>
     );
 }
 
 
-//export default DoctorDashboard;
+
+const patient = connect(mapStateToProps)(SimpleTabs)
+
+
+export default patient;

@@ -6,7 +6,7 @@ import PolarAngleAxis from "recharts/lib/polar/PolarAngleAxis";
 import PolarRadiusAxis from "recharts/lib/polar/PolarRadiusAxis";
 import Radar from "recharts/lib/polar/Radar";
 import Legend from "recharts/lib/component/Legend";
-import {CardHeader, Divider, IconButton} from "@material-ui/core";
+import {CardHeader, Divider, IconButton,Card} from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import {CSVLink} from "react-csv";
 
@@ -94,7 +94,7 @@ class MySymptoms extends Component {
         console.log(data)
         return (
             <div>
-                <card>
+                <Card>
                     <CardContent>
                         <CardHeader
                             action={
@@ -119,7 +119,7 @@ class MySymptoms extends Component {
                             <Radar name="My Symptom" dataKey="frequency" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
                             <Legend />
                         </RadarChart>
-                    </CardContent></card>
+                    </CardContent></Card>
 
             </div>
         );
