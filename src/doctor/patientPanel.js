@@ -13,6 +13,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {makeStyles} from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
+import {setRole} from "../login_Actions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,12 +26,13 @@ const useStyles = makeStyles((theme) => ({
 class PatientPanel extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        console.log("patient detil",props)
         this.state = {
             userTemp: [],
             patientEmail: props.match.params.email,
             isActive: true,
-            loading: false
+            loading: false,
+            isOnline:false
         }
     }
 
@@ -47,6 +49,7 @@ class PatientPanel extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
+                console.log("data",data)
                 var formateDate = [];
                 for (var i = 0; i < data.length; i++) {
                     let date = new Date(data[i]['Date'])
@@ -94,6 +97,27 @@ class PatientPanel extends Component {
                 this.setState({
                     isActive: data.active
                 })
+
+            })
+
+        fetch("http://localhost:3000/online", {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({email: this.state.patientEmail}),
+        }).then(response => response.json())
+            .then(data => {
+                if(data.length!==0){
+                    this.setState({
+                        isOnline: true
+                    })
+                }else{
+                    this.setState({
+                        isOnline: false
+                    })
+                }
 
             })
     }
@@ -161,14 +185,41 @@ class PatientPanel extends Component {
 
         let button;
         let msg;
+        let chat;
+        let chatMsg;
         if (this.state.isActive) {
             button = <Button color={"primary"} onClick={() => this.changeStatus("archive")}>Archive</Button>
-            msg =<Alert severity="success">This user is active </Alert>
+            msg =<Alert severity="success">This user is active  {button}</Alert>
+            //
+            // chat=<Button onClick={()=>{
+            //     const {history} = this.props
+            //     history.push(`/patientChatbox/${this.state.patientEmail}`)
+            // }
+            // }>Chat</Button>
+            if(this.state.isOnline){
+                // chat= <Link href={`/patientChatbox/${this.state.patientEmail}`}>Chat</Link>
+                chat=<Button onClick={()=>{
+                    const {history} = this.props
+                    history.push(`/patientChatbox/${this.state.patientEmail}`)
+                }
+                }>Chat</Button>
+                chatMsg = <Alert severity="success">This user is online </Alert>
+            }else{
+                chat=<Button disabled onClick={()=>{
+                    const {history} = this.props
+                    history.push(`/patientChatbox/${this.state.patientEmail}`)
+                }
+                }>Chat</Button>
+                chatMsg=<Alert severity="error">This user is offline</Alert>
+            }
+
+
+
 
 
         } else {
             button = <Button  color={"primary"}  onClick={() => this.changeStatus("activate")}>Activate</Button>
-            msg =<Alert severity="error">This user is inactive </Alert>
+            msg =<Alert severity="error">This user is inactive  {button}</Alert>
 
         }
 
@@ -215,6 +266,19 @@ class PatientPanel extends Component {
                     >
                         <PatientAppointment patientEmail={this.state.patientEmail}/>
                     </Grid>
+                    <Grid
+                        item
+                        lg={3}
+                        sm={6}
+                        xl={3}
+                        xs={12}
+                    >
+
+                        {chatMsg}
+                        {chat}
+
+                    </Grid>
+
 
 
                 </Grid>
@@ -224,7 +288,6 @@ class PatientPanel extends Component {
                 <PatientTemperature patientEmail={this.state.patientEmail}/>
                 <PatientSymptoms patientEmail={this.state.patientEmail}/><br/>
 
-                {button}
 
             </div>
         );

@@ -10458,7 +10458,7 @@ input, textarea {
 
 #side-bar .heading {
     box-sizing: border-box;
-    height: 12vh;
+    height: 10vh;
     max-height: 65px;
     padding: 18px 16px;
     display: flex;
@@ -10586,7 +10586,9 @@ input, textarea {
     align-items: center;
     justify-content: center
 }
-
+#side-bar{
+    height: 700px;
+}
 #side-bar .current-user {
     align-items: center;
     background: #484d79;
@@ -10607,6 +10609,7 @@ input, textarea {
     justify-content: center;
     font-size: 2em
 }
+
 
 .chat-header {
     background: #5d5d8a;
@@ -10648,8 +10651,9 @@ input, textarea {
 }
 
 .chat-room-container {
-    height: 70%;
-    width: 76.25%
+    height: 100%;
+    width: 76.25%;
+
 }
 
 @media screen and (max-width: 510px) {
@@ -10667,8 +10671,8 @@ input, textarea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
-    width: 100%
+    height: 75%;
+    width: 160%
 }
 
 .chat-room.choose {
@@ -10870,10 +10874,14 @@ input, textarea {
     background: #3e3e5e;
     transition: all .35s ease-out
 }
+#btn{
+    height: 5vh;
+}
 
-.message-input .message-form .send:disabled {
+.message-input .message-form .send:disabled.send:disabled {
     opacity: .2;
     background: #5d5d8a;
+    height: 5vh;
 
 }
 
@@ -10883,10 +10891,10 @@ input, textarea {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    height: 100%;
-    width: 100%
+    height: 1100px;
+    width: 80%;
+    padding:80px;
+
 }
 
-#side-bar {
-    height:100vh;
-}
+

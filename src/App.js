@@ -31,6 +31,7 @@ import Privacy from './profile/privacy'
 import LoginHeader from './headers/loginHeader'
 import LogoutHeader from './headers/logoutHeader'
 import {connect} from "react-redux";
+import Chatbox from './components/Layout'
 
 import {Component} from 'react';
 import store from "./store/store";
@@ -100,7 +101,7 @@ class App extends Component {
                                 <Route path="/patientList" component={PatientList}/>
                                 <Route path='/healthStatus' component={HealthStatus}/>
                                 <Route path='/myStats' component={MyStats}/>
-                                <Route path='/patientChatbox' component={PatientChatbox}/>
+                                <Route path='/patientChatbox/:email' component={Chatbox}/>
                                 <Route path='/userProfile' component={UserProfile}/>
                                 <Route path='/patientHealthStatus/:email' component={PatientHealthStatus}/>
                                 <Route path='/updateResult/:email' component={SpecificAppointment}/>

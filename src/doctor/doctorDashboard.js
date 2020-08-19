@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {Link, useHistory} from "react-router-dom";
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
@@ -15,6 +15,10 @@ import ManageAppointment from './manageAppointment'
 import AllStats from './AllStats';
 import Layout from "../components/Layout";
 import Heatmap from "./mapVisualization/heatmap";
+import io from 'socket.io-client'
+import {VERIFY_USER} from "../Events";
+const socketUrl = "http://localhost:3231"
+
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
 
@@ -54,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: 100,
         display: 'flex',
-        position:'fixed',
         height: 500,
 
 
@@ -76,10 +79,14 @@ export default function SimpleTabs() {
     const [value, setValue] = React.useState(index > 0 ? index : 0);
 
 
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
         window.location.hash = tabs[newValue];
     };
+
+
+
 
     return (
         <div className={classes.root}>

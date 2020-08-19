@@ -34,7 +34,12 @@ export default class Messages extends Component {
                 body: JSON.stringify({userEmail: email}),
             }).then(response => response.json())
                 .then(data => {
-                    this.setState(state => ({userList: {...state.userList, [email]: data.url}}))
+                    if(data.message==="Cannot find the profile image"){
+                        this.setState(state => ({userList: {...state.userList, [email]:"./defaultProfileImage"}}))
+                    }else{
+                        this.setState(state => ({userList: {...state.userList, [email]: data.url}}))
+
+                    }
 
                 })
 
@@ -56,7 +61,7 @@ export default class Messages extends Component {
                     {
                         messages.map((mes, index) => {
                             const url = this.findAvatar(mes.email)
-                            console.log(mes)
+                            console.log("message",mes)
                             return (
                                 <div
                                     key={index}

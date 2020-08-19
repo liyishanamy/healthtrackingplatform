@@ -4,6 +4,7 @@ import { VERIFY_USER } from '../Events'
 export default class LoginForm extends Component {
 	constructor(props) {
 	  super(props);
+	  console.log("hi prop",props)
 	
 	  this.state = {
 	  	nickname:"",
@@ -42,9 +43,6 @@ export default class LoginForm extends Component {
 			<div className="login">
 				<form onSubmit={this.handleSubmit} className="login-form" >
 
-					<label htmlFor="nickname">
-						<h2>Got a nickname?</h2>
-					</label>
 					<input
 						ref={(input)=>{ this.textInput = input }}
 						type="text"

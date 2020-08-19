@@ -20,7 +20,7 @@ export default class MessageInput extends Component {
 	}
 
 	sendMessage = ()=>{
-		//console.log("send msg",this.state.message)
+		console.log("send msg",this.state.message)
 		this.props.sendMessage(this.state.message)
 
 	}
@@ -92,6 +92,7 @@ export default class MessageInput extends Component {
 						disabled = { message.length < 1 }
 						type = "submit"
 						className = "send"
+						id="btn"
 
 
 					> Send </Button>

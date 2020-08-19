@@ -104,19 +104,48 @@ class loginHeader extends Component {
 
 
     handleLogout=(props)=> {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("userInfo");
-        localStorage.removeItem("email");
-        localStorage.removeItem("role");
-        localStorage.removeItem("name");
-        localStorage.removeItem("image")
-        localStorage.setItem("loggedIn","LOGOUT");
-        this.props.dispatch(setLogin("LOGOUT"))
-        this.props.dispatch(setRole("NOT_LOGGED_IN"))
-        this.props.dispatch(setProfileImage(""))
-        alert("Your session is expired")
-        window.location = '/sign-in'
+        const data={
+        email:localStorage.getItem("email")
+        }
+        console.log("email",data)
+        fetch('http://localhost:3000/online', {
+            method: 'DELETE',
+            headers:{'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res =>{res.json()
+                console.log("res",res)
+            } ) // or res.json()
+            .then(data=>{
+                console.log("res",data)
+            }).then(()=>{
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("userInfo");
+                localStorage.removeItem("email");
+                localStorage.removeItem("role");
+                localStorage.removeItem("name");
+                localStorage.removeItem("image")
+                localStorage.setItem("loggedIn","LOGOUT");
+                this.props.dispatch(setLogin("LOGOUT"))
+                this.props.dispatch(setRole("NOT_LOGGED_IN"))
+                this.props.dispatch(setProfileImage(""))
+                alert("Your session is expired")
+                window.location = '/sign-in'
+        }
 
+        )
+        // localStorage.removeItem("accessToken");
+        // localStorage.removeItem("userInfo");
+        // localStorage.removeItem("email");
+        // localStorage.removeItem("role");
+        // localStorage.removeItem("name");
+        // localStorage.removeItem("image")
+        // localStorage.setItem("loggedIn","LOGOUT");
+        // this.props.dispatch(setLogin("LOGOUT"))
+        // this.props.dispatch(setRole("NOT_LOGGED_IN"))
+        // this.props.dispatch(setProfileImage(""))
+        // alert("Your session is expired")
+        // window.location = '/sign-in'
         let deleteToken={"token":localStorage.getItem("accessToken")}
         fetch('http://localhost:3000/logout', {
             method: 'DELETE',
@@ -124,6 +153,8 @@ class loginHeader extends Component {
         })
             .then(res => res.json()) // or res.json()
             .then(res => console.log(res))
+
+
     };
 
 

@@ -36,16 +36,37 @@ export function errorHandling(response) {
                 }).catch(function (response) {
                     console.log("catch data",store.getState().loginReducer)
                     if( store.getState().loginReducer==="LOGIN") {
-                        console.log("refresh token expires", new Date().toLocaleString())
-                        localStorage.removeItem("accessToken");
-                        localStorage.removeItem("userInfo");
-                        localStorage.removeItem("email");
-                        localStorage.removeItem("role");
-                        localStorage.removeItem("name");
-                        localStorage.removeItem("image")
-                        localStorage.setItem("loggedIn", "LOGOUT");
-                        //alert("Your session is expired")
-                        window.location = '/sign-in'
+                        fetch('http://localhost:3000/online', {
+                            method: 'DELETE',
+                            headers:{'Content-Type': 'application/json' },
+                            body: JSON.stringify({email:localStorage.getItem("email")})
+                        })
+                            .then(res => res.json()) // or res.json()
+                            .then(()=>{
+                                console.log("refresh token expires", new Date().toLocaleString())
+                                localStorage.removeItem("accessToken");
+                                localStorage.removeItem("userInfo");
+                                localStorage.removeItem("email");
+                                localStorage.removeItem("role");
+                                localStorage.removeItem("name");
+                                localStorage.removeItem("image")
+                                localStorage.setItem("loggedIn", "LOGOUT");
+                                //alert("Your session is expired")
+                                window.location = '/sign-in'
+                                }
+
+                            ).then(()=>{
+                            let deleteToken={"token":localStorage.getItem("accessToken")}
+                            fetch('http://localhost:3000/logout', {
+                                method: 'DELETE',
+                                body: JSON.stringify(deleteToken)
+                            })
+                                .then(res => res.json()) // or res.json()
+                                .then(res => console.log(res))
+
+                        })
+
+
                     }}) }
 
 

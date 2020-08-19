@@ -6,7 +6,6 @@ import {connect} from "react-redux";
 import {setLogin, setEmail, setRole, setProfileImage, setNoSymptomDays} from "../login_Actions";
 import store from "../store/store"
 import {errorHandling} from "../errorHandling";
-
 const mapStateToProps = state => {
     console.log("loginpage",state)
     return {isLoggedIn: state}
@@ -24,6 +23,7 @@ class LoginPage extends Component {
         this.props.dispatch(setLogin("LOGOUT"))
         this.props.dispatch(setRole("NOT_LOGGED_IN"))
         this.props.dispatch(setProfileImage(""))
+        localStorage.setItem("chat","false")
     }
     rememberUser = async () =>{
         try {

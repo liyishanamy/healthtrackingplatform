@@ -229,6 +229,8 @@ export default function PatientList() {
             }).catch( e=> errorHandling(e) );
      }, [page, rowsPerPage,flag])
 
+
+
     const handleInputVal=(e)=>{
         console.log("inputval",e.target.value)
         setInputVal(e.target.value)
