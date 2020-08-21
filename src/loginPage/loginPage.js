@@ -7,7 +7,6 @@ import {setLogin, setEmail, setRole, setProfileImage, setNoSymptomDays} from "..
 import store from "../store/store"
 import {errorHandling} from "../errorHandling";
 const mapStateToProps = state => {
-    console.log("loginpage",state)
     return {isLoggedIn: state}
 }
 class LoginPage extends Component {
@@ -56,22 +55,18 @@ class LoginPage extends Component {
         }
     };
     toggleRememberMe = (event) =>{
-        console.log(this.state.rememberedVal)
         this.setState({
             rememberedVal:event.target.checked
         })
         if(event.target.checked===true){
             // User wants to be remembered
-            console.log("remember")
             this.rememberUser()
         }else{
-            console.log("forget")
             this.forgetUser()
         }
     }
     async componentDidMount() {
         const username = await this.getRememberedUser()
-        console.log(this.state.rememberedVal)
 
         this.setState({
             email:username || "",
@@ -95,7 +90,6 @@ class LoginPage extends Component {
             email:this.state.email,
             password:this.state.password
         }
-        console.log(data)
         // Check to see if they could authenticate
         fetch("http://localhost:3000/login", {
             method: 'POST',
@@ -106,7 +100,6 @@ class LoginPage extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("data", data)
                 if (data.message === "Authentication failed") {
                     this.setState({
                         errMsg: data.message
@@ -120,7 +113,6 @@ class LoginPage extends Component {
                 }
                 else {
                     const userEmail = data.email
-                    console.log('Success:', data.refreshToken);
                     localStorage.setItem("accessToken", data.accessToken)
                     localStorage.setItem("loggedIn", "LOGIN")
                     localStorage.setItem("refreshToken", data.refreshToken)
@@ -129,7 +121,6 @@ class LoginPage extends Component {
 
                     this.props.dispatch(setEmail(data.email))
                     this.props.dispatch(setLogin("LOGIN"))
-                    console.log("days",data.daysOfNoSymptom)
                     if(!data.daysOfNoSymptom){
                         this.props.dispatch(setNoSymptomDays(0))
                         localStorage.setItem("daysOfNoSymptom",0)
@@ -149,7 +140,6 @@ class LoginPage extends Component {
 
                     }).then(response => response.json())
                         .then(data => {
-                            console.log("url", data)
 
                             if (data.message === "Cannot find the profile image") {
                                 localStorage.setItem("image", "./defaultProfileImage.jpg")
@@ -165,7 +155,6 @@ class LoginPage extends Component {
                         localStorage.setItem("name",data.firstname)
 
                         if(data.role==="doctor"){
-                            console.log("doctor",store.getState(),store.getState().imageReducer)
                             const {history} = this.props
 
                             this.props.dispatch(setRole("DOCTOR"))
@@ -173,7 +162,6 @@ class LoginPage extends Component {
 
                             history.push(`/dashboard/doctor`)
                         }else if(data.role==="patient"){
-                            console.log("patient")
                             const {history} = this.props
 
                             localStorage.setItem('role',"PATIENT")

@@ -19,7 +19,6 @@ import {CSVLink} from "react-csv";
 class AgeDistribution extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state={
             age_020:{number:0,name:"0-20","fill": "#8884d8"},
             age_2040:{number:0,name:"20-40","fill": "#83a6ed"},
@@ -53,7 +52,6 @@ class AgeDistribution extends Component {
             });
 
             Promise.all(promises).then(results => {
-                console.log("results",results)
                 this.state.age_020['number']=results[0]['number']
                 this.state.age_2040['number']=results[1]['number']
                 this.state.age_4060['number']=results[2]['number']
@@ -76,7 +74,6 @@ class AgeDistribution extends Component {
             {name:this.state.age_6080.name,number:this.state.age_6080.number},
             {name:this.state.age_80100.name,number:this.state.age_80100.number}]
 
-        console.log("bundle",data)
         return (
             <Card>
                 <CardHeader

@@ -36,7 +36,6 @@ class MySymptoms extends Component {
         }).then(response => response.json())
             .then(data => {
                 if(data.message!=="the token is invalid") {
-                    console.log("Success", data)
                     this.setState({
                         headache: data.headache,
                         cough: data.cough,
@@ -91,7 +90,6 @@ class MySymptoms extends Component {
             frequency:this.state.breatheHard,
         }
         ]
-        console.log(data)
         return (
             <div>
                 <Card>

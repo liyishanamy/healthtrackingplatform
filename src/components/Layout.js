@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import io from 'socket.io-client'
 import {USER_CONNECTED, LOGOUT, VERIFY_USER} from '../Events'
-import LoginForm from './LoginForm'
 import ChatContainer from './chats/ChatContainer'
 import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
-import {DateRangePicker} from "react-date-range";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import {Link} from "react-router-dom";
 
@@ -19,7 +15,6 @@ export default class Layout extends Component {
 
     constructor(props) {
         super(props);
-        console.log("props",props)
         this.state = {
             socket: null,
             email: localStorage.getItem('email'),
@@ -51,7 +46,6 @@ export default class Layout extends Component {
          socket.on('connect', () => {
              console.log("Connected");
          })
-         //localStorage.setItem("chat","true")
          this.setState({socket})
 
 
@@ -68,25 +62,9 @@ export default class Layout extends Component {
         const {socket} = this.state
         socket.emit(USER_CONNECTED, user);
         this.setState({user})
-        console.log("user",user)
-        // this.setState(previousState=>({
-        //     activeUsers: [...previousState.activeUsers, user]
-        // }),()=> console.log("get active list",this.state.activeUsers));
     }
-
-    /*
-    *	Sets the user property in state to null.
-    */
-    // logout = () => {
-    //     const {socket} = this.state
-    //     socket.emit(LOGOUT)
-    //     this.setState({user: null})
-    //
-    // }
     componentDidMount() {
-
-            console.log("get patient list")
-            fetch('http://localhost:3000/online',{
+         fetch('http://localhost:3000/online',{
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
@@ -94,9 +72,7 @@ export default class Layout extends Component {
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("active",data)
                     for(let i=0;i<data.length;i++){
-                        console.log(i)
                         this.setState(prevState =>({
                             activeUsers:[...prevState.activeUsers,data[i].email]
                         }))
@@ -104,25 +80,13 @@ export default class Layout extends Component {
                             activeUsersName:[...prevState.activeUsersName,data[i].firstname]
                         }))
                     }
-
                 })
-
-
-        // if (localStorage.getItem("role")==="PATIENT"){
-        //     this.setState(previousState=>({
-        //         activeUsers: [...previousState.activeUsers, this.state.user]
-        //     }),()=> console.log("get active list",this.state.activeUsers));
-        //
-        // }
     }
 
 
     render() {
-        const {title} = this.props
-        const {socket, user,email} = this.state
-        console.log("user",user,email)
+        const {socket, user} = this.state
         if(this.props.match){
-            console.log("propppp",this.props.match.params.email)
             this.state.redirectUser=this.props.match.params.email
         }else{
             this.state.redirectUser=null
@@ -146,25 +110,10 @@ export default class Layout extends Component {
         };
 
         return (
-           <div>
-                <React.Fragment key={'right'} >
-                    <Button onClick={toggleDrawer(true)} color="primary" >Check the online users</Button>
-                    <Drawer anchor={'right'} open={this.state.anchor} onClose={toggleDrawer( false)}>
-                        <List>
-                            {this.state.activeUsers.map((item,index) => (
-                                <ListItem button key={item}>
-                                    <Link ><ListItemText primary={this.state.activeUsersName[index]} /></Link> (email:
-                                    <ListItemText primary={item} />
-                                    )
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Drawer>
-                </React.Fragment>
             <div className="container">
                 {chat}
                 </div>
-           </div>
+
         );
     }
 }

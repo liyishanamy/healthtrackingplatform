@@ -16,7 +16,6 @@ import {CSVLink} from "react-csv";
 class GenderDistribution extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state={
             female:0,
             male:0,
@@ -77,7 +76,6 @@ class GenderDistribution extends Component {
                     <div>
                 <div>
                     <PieChart width={730} height={250}>
-                        {/* eslint-disable-next-line react/jsx-no-undef */}
                         <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
                         <Tooltip />
                         <Legend verticalAlign="top" height={36}/>

@@ -3,10 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PageviewIcon from '@material-ui/icons/Pageview';
-
-import FolderIcon from '@material-ui/icons/Folder';
 import {errorHandling} from "../../errorHandling";
 
 

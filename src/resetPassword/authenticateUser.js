@@ -19,12 +19,10 @@ class AuthenticateUser extends Component {
     }
 
     getSecurityQuestion=(e)=>{
-        console.log("here",this.state.email)
         const data={
             "email":this.state.email
         }
 
-        console.log(JSON.stringify(data))
         fetch('http://localhost:3000/security-questions/getQuestions',{
             method:'POST',
             headers:{
@@ -33,7 +31,6 @@ class AuthenticateUser extends Component {
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
                 if(data.message==="The user has not set the security questions yet"){
                     this.setState({
                         cannotFindUserMsg:data.message
@@ -87,7 +84,6 @@ class AuthenticateUser extends Component {
                         errMsg:data.message
                     })
                 }else{
-                    console.log('Success:', data);
                     this.setState({
                         accessToken:data.accessToken
                     },()=>{

@@ -28,7 +28,6 @@ class MyTemperature extends Component {
         }).then(response => response.json())
             .then(data => {
                 if (data.message !== "the token is invalid") {
-                    console.log("Success", data)
                     var formateDate = [];
                     for (var i = 0; i < data.length; i++) {
                         let date = new Date(data[i]['Date'])
@@ -44,7 +43,6 @@ class MyTemperature extends Component {
                     throw data
                 }
             }).then(res=>{
-                console.log("res",res)
             this.setState({
                 userTemp: res
             })

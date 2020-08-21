@@ -49,9 +49,6 @@ const useStyles = makeStyles(theme => ({
 
 const TestDone= props => {
     const { className, ...rest } = props;
-    console.log("testdone",props)
-    const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
-    const [error,setError]=useState("")
     const [patientEmail,setPatientEmail]=useState(props.patientEmail)
     const [done, setDone] = React.useState(false);
     const [doneResult,setDoneResult] = React.useState(false);
@@ -85,7 +82,6 @@ const TestDone= props => {
 
 
     const handleResultDone= (event) => {
-        console.log(event.target.checked)
         setDone(event.target.checked);
     };
     const handleClose = () => {

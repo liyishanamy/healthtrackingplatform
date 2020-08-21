@@ -124,7 +124,6 @@ export default function DiscreteSlider() {
                 if (data.message!=="the token is invalid") {
                     console.log('Success:', data);
 
-                    console.log(symptoms, temp, from, to, mask)
                 }else{
                     throw data
                 }
@@ -177,10 +176,8 @@ export default function DiscreteSlider() {
                         value={symptoms}
                         onChange={(event, value) => {
 
-                            console.log(value)
                             if (value.action === "select-option") {
                                 symptom = symptom.concat(value.option)
-                                console.log(symptoms)
                                 setSymptoms(symptom)
                             } else if (value.action === "remove-value") {
                                 symptom = symptom.filter(item => item !== value.removedValue.value);

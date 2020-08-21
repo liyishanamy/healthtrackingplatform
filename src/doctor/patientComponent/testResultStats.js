@@ -10,7 +10,6 @@ import {errorHandling} from "../../errorHandling";
 class TestResultStats extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state={
             userTemp:[],
             patientEmail:props.patientEmail

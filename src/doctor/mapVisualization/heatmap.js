@@ -29,7 +29,6 @@ class Heatmap extends Component {
             },
         }).then(response => response.json())
             .then(data => {
-                console.log(data)
                 if(data.message==="the token is invalid"){
                     throw data
                 }
@@ -38,31 +37,23 @@ class Heatmap extends Component {
                         userAddress:data
                     },()=>{
                         for(var i=0;i<data.length;i++){
-                            console.log(data[i])
-                            console.log()
-
                             var searchQuery =encodeURIComponent(data[i]['street']+" "+data[i]['city']+" "+data[i]['state'])
-
                             fetch(`http://api.mapbox.com/geocoding/v5/mapbox.places/`+searchQuery+`.json?limit=1&country=CA&access_token=`+mapboxgl.accessToken, {
                                 method: 'GET',
 
                             }).then(response => response.json())
                                 .then(data1 => {
-                                    console.log(data1)
                                     var temp = data1["features"][0]["center"]
                                     var jsonContent = JSON.stringify(data1)
                                     //var email=data[i]["email"]
                                     this.setState(previousState=>({
                                         userCordinate:[...previousState.userCordinate,temp]
                                     }),()=>{
-                                        console.log(this.state.userCordinate)
                                         fs.writeFile("/public/cordinate.geojson", jsonContent, 'utf8', function (err) {
                                             if (err) {
                                                 console.log("An error occured while writing JSON Object to File.");
                                                 return console.log(err);
                                             }
-
-                                            console.log("JSON file has been saved.");
                                         });
                                     })
 
@@ -81,7 +72,6 @@ class Heatmap extends Component {
 
 
         map.on('load', ()=> {
-            console.log(this.state.userCordinate)
             map.addSource('userAddress', {
                 "type": "geojson",
                 //"data":"http://localhost:8000/cordinate.geojson",
@@ -140,9 +130,6 @@ class Heatmap extends Component {
                     </div>
                     <div ref={el => this.mapContainer = el} className='mapContainer' />
                 </div>
-
-
-
 
             </div>
         );

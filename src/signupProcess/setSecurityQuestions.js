@@ -26,7 +26,6 @@ class SetSecurityQuestions extends Component {
         }
     }
     handleQuestion1=(e)=>{
-        console.log(e)
         this.setState({
             question1:e.value
         })
@@ -84,7 +83,6 @@ class SetSecurityQuestions extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
                 if (this.state.userInfo.role === "patient") {
                     const {history} = this.props
                     localStorage.setItem("loggedIn", "LOGIN")

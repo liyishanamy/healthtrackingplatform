@@ -82,7 +82,6 @@ const GetWorseRate= props => {
         const today = new Date()
         const yesterday = new Date(today)
         yesterday.setDate(yesterday.getDate() - 1)
-        console.log("yester",yesterday)
 
         let today_format = new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getDate()
         today.setDate(today.getDate()+1)

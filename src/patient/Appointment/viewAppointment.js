@@ -33,7 +33,6 @@ class ViewAppointment extends Component {
             body:JSON.stringify(data)
         }).then(response => response.json())
         .then(data => {
-            console.log("get",data)
             if(data.message==="You do not have a booked appointment yet."){
                 this.setState({
                     appointment:false
@@ -61,7 +60,6 @@ class ViewAppointment extends Component {
             },
         }).then(response => response.json())
             .then(data => {
-                console.log("delete",data)
                 alert("Your appointment has been cancelled");
                 if(data.message ==="You successfully cancelled the appointment"){
                     this.setState({
@@ -74,17 +72,12 @@ class ViewAppointment extends Component {
                 }else if(data.message==="the token is invalid"){
                     throw data
                 }
-                else{
-                    console.log("something went wrong")
-                }
 
             }).catch( e=> errorHandling(e) );
     }
 
 
     render() {
-
-        console.log("isAppointment",this.state.appointment)
         let testDone;
         if (this.state.testDone){
             testDone= "Done"
@@ -175,10 +168,7 @@ class ViewAppointment extends Component {
         }
         return (
             <div style={{padding:100}}>{isAppointment}</div>
-
-
-
-
+            
         );
     }
 }

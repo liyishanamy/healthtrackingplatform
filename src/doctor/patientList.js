@@ -199,8 +199,6 @@ export default function PatientList() {
     })
 
     useEffect(() => {
-        // const fetchData = async (page, rowsPerPage) => {
-        console.log("page", page, "rowsPerPage", rowsPerPage)
         fetch(`http://localhost:3000/users?active=`+flag+`&page=` + (page+1) + `&limit=` + rowsPerPage, {
             method: 'GET',
             headers: {
@@ -208,7 +206,6 @@ export default function PatientList() {
             },
         }).then(response => response.json())
             .then(data => {
-                console.log("hello data", data)
                 if(data.message!=="the token is invalid"){
                     setRows([])
                     for (var i = 0; i < data.length; i++) {
@@ -219,8 +216,7 @@ export default function PatientList() {
                             createData(data[i]['firstname'] + data[i]['lastname'], data[i]['age'], data[i]['phone'], data[i]['email'], data[i]['createdDate'], data[i]['email'])
                         ]);
                     }
-
-                    console.log("after", temp)}
+}
                 else{
 
                     throw data
@@ -232,7 +228,6 @@ export default function PatientList() {
 
 
     const handleInputVal=(e)=>{
-        console.log("inputval",e.target.value)
         setInputVal(e.target.value)
         if(e.target.value===""){
             setRows(temp)
@@ -241,24 +236,20 @@ export default function PatientList() {
     }
     const enterPressed=(event)=> {
         var code = event.keyCode || event.which;
-        console.log("enter",code)
         if(code === 13) { //13 is the enter keycode
             //Do stuff in here
             findItem(inputVal)
         }
     }
     const findItem=(inputVal)=>{
-        console.log("rows",rows)
         const res =rows.filter(item=>
             item["name"].includes(inputVal)
         )
-        console.log("index",res)
         setTemp(rows)
         setRows(res)
     }
     return (
         <div>
-
             <AppBar  style={{width: '140%'
             }} position="static">
                 <Toolbar>

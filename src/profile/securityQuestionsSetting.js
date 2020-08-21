@@ -17,8 +17,6 @@ import {setLogin, setProfileImage, setRole} from "../login_Actions";
 import {connect} from "react-redux";
 import {errorHandling}  from "../errorHandling"
 const mapStateToProps = state => {
-    console.log("state",state)
-
     return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer,url:state.imageReducer}
 }
 class SecurityQuestionsSetting extends Component {
@@ -97,7 +95,6 @@ class SecurityQuestionsSetting extends Component {
     }
 
     toggleChecked = (e) => {
-        console.log(this.state.flag)
         if (this.state.flag) {
             this.setState({
                 displayMode: "Edit Mode",
@@ -125,7 +122,6 @@ class SecurityQuestionsSetting extends Component {
         }).then(response => response.json())
             .then(data => {
                 if (data.message!=="the token is invalid"){
-                    console.log("get questions",data)
                     this.setState({
                         question1:data.question1,
                         question2:data.question2,
@@ -150,7 +146,6 @@ class SecurityQuestionsSetting extends Component {
             body: JSON.stringify({email: this.state.email}),
         }).then(response => response.json())
             .then(data => {
-                console.log("get answers",data)
                 if (data.message!=="the token is invalid"){
                     this.setState({
                         answer1:data.answer1,

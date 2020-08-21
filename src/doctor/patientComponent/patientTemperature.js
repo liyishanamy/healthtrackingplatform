@@ -10,7 +10,6 @@ import {errorHandling} from "../../errorHandling";
 class PatientTemperature extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state={
             userTemp:[],
             patientEmail:props.patientEmail

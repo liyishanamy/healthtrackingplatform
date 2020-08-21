@@ -50,8 +50,6 @@ const useStyles = makeStyles(theme => ({
 
 const TestResult= props => {
     const { className, ...rest } = props;
-    const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
-    const [error,setError]=useState("")
     const [patientEmail,setPatientEmail]=useState(props.patientEmail)
     const [testResult,setTestResult]=useState("None")
     const [finalResult,setFinalResult]=useState("None")

@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 class PatientPanel extends Component {
     constructor(props) {
         super(props);
-        console.log("patient detil",props)
         this.state = {
             userTemp: [],
             patientEmail: props.match.params.email,
@@ -49,7 +48,6 @@ class PatientPanel extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("data",data)
                 var formateDate = [];
                 for (var i = 0; i < data.length; i++) {
                     let date = new Date(data[i]['Date'])
@@ -73,7 +71,6 @@ class PatientPanel extends Component {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("Success", data)
                 this.setState({
                     headache: data.headache,
                     cough: data.cough,
@@ -93,7 +90,6 @@ class PatientPanel extends Component {
             body: JSON.stringify({patientEmail: this.state.patientEmail}),
         }).then(response => response.json())
             .then(data => {
-                console.log("initial status", data)
                 this.setState({
                     isActive: data.active
                 })
@@ -123,9 +119,7 @@ class PatientPanel extends Component {
     }
 
     changeStatus = action => {
-        console.log("action", action)
         const data = {"patientEmail": this.state.patientEmail}
-        console.log("param", `http://localhost:3000/users/${action}`, data)
         if (!this.state.loading) {
             this.setState({loading: true})
 
@@ -137,7 +131,6 @@ class PatientPanel extends Component {
                 },
                 body: JSON.stringify(data),
             }).then(response => {
-                console.log("response", response)
                 return response.json()
             }).then(data => {
                     if(this.state.isActive!==data.active){
@@ -190,14 +183,7 @@ class PatientPanel extends Component {
         if (this.state.isActive) {
             button = <Button color={"primary"} onClick={() => this.changeStatus("archive")}>Archive</Button>
             msg =<Alert severity="success">This user is active  {button}</Alert>
-            //
-            // chat=<Button onClick={()=>{
-            //     const {history} = this.props
-            //     history.push(`/patientChatbox/${this.state.patientEmail}`)
-            // }
-            // }>Chat</Button>
             if(this.state.isOnline){
-                // chat= <Link href={`/patientChatbox/${this.state.patientEmail}`}>Chat</Link>
                 chat=<Button onClick={()=>{
                     const {history} = this.props
                     history.push(`/patientChatbox/${this.state.patientEmail}`)

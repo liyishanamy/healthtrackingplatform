@@ -14,7 +14,6 @@ import { CSVLink, CSVDownload } from "react-csv";
 class ReportUpdateStats extends Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state={
             _chart:"",
             date1:null,
@@ -54,7 +53,6 @@ class ReportUpdateStats extends Component {
         let tomorrow = new Date(today)
 
         tomorrow.setDate(tomorrow.getDate()+1)
-        console.log(today,tomorrow)
         const promises = num.map(i => {
             tomorrow=today
 
@@ -79,7 +77,6 @@ class ReportUpdateStats extends Component {
         });
 
         Promise.all(promises).then(results => {
-            console.log("results",results)
             this.setState({
                 date1:results[6]['reportDate'],
                 gettingBetter1:results[6]["gettingBetter"],

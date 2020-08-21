@@ -17,8 +17,6 @@ import {setLogin, setProfileImage, setRole} from "../login_Actions";
 import {connect} from "react-redux";
 import {errorHandling} from "../errorHandling";
 const mapStateToProps = state => {
-    console.log("state",state)
-
     return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer,url:state.imageReducer}
 }
 class UserProfile extends Component {
@@ -105,9 +103,7 @@ class UserProfile extends Component {
         let pic = this.state.image;
         let email = this.state.email;
         let url;
-        console.log("pic",this.state.image_preview,this.state.image)
         if(this.state.existImage){
-            console.log("1")
             // Already exist a profile pic
             url = "http://localhost:3000/user/changeProfileImage"
             formData.append('image', pic)
@@ -118,7 +114,6 @@ class UserProfile extends Component {
                         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
                     }
             }).then(res => {
-                console.log("already have a image",res);
                 const url = res.data.request.url
                 this.props.dispatch(setProfileImage(url))
                 localStorage.setItem("image",url)
@@ -132,7 +127,6 @@ class UserProfile extends Component {
 
 
         }else{
-            console.log("2")
             url = "http://localhost:3000/user/profileImage"
             formData.append('image', pic)
             formData.append('email', email)
@@ -143,7 +137,6 @@ class UserProfile extends Component {
                         'Authorization': 'Bearer ' + (localStorage.getItem("accessToken")),
                     }
             }).then(res => {
-                console.log("have no image yet",res);
                 const url = res.data.createdProfileImage.request.url
                 this.props.dispatch(setProfileImage(url))
                 localStorage.setItem("image",url)
@@ -184,7 +177,6 @@ class UserProfile extends Component {
             .then(data => {
                 if(data.message==="update user profile successfully!"){
                     alert(data.message)
-                    console.log("Making post request with token",localStorage.getItem("accessToken"))
                     localStorage.setItem("name", this.state.firstname)
                 }else{
                     throw data
@@ -204,7 +196,6 @@ class UserProfile extends Component {
         })
     };
     toggleChecked = (e) => {
-        console.log(this.state.flag)
         if (this.state.flag) {
             this.setState({
                 displayMode: "Edit Mode",
@@ -267,7 +258,6 @@ class UserProfile extends Component {
         }).then(response => response.json())
             .then(data => {
                 if (data.message!=="the token is invalid") {
-                    console.log("image?", data)
                     if(data.message==="Cannot find the profile image"){
                         this.setState({
                             image_preview: "./defaultProfileImage.jpg"

@@ -13,47 +13,25 @@ export default class SideBar extends Component{
 			receiver:"",
 			flag:1
 		}
-		// if(!props.redirectFrom){
-		// 	console.log("1234")
-		//
-		// 	this.setState({receiver:this.state.redirectFrom},()=> {
-		// 		const {receiver} = this.state
-		// 		const {onSendPrivateMessage} = this.props
-		// 		console.log("handleSubmit")
-		// 		onSendPrivateMessage(receiver)
-		// 	})
-		//
-		// }
-
 	}
 	handleSubmit=(e)=>{
 		e.preventDefault()
 		const {receiver} = this.state
 		const {onSendPrivateMessage} = this.props
-		console.log("handleSubmit")
 		onSendPrivateMessage(receiver)
 	}
 	componentDidMount() {
-
-		const {receiver,redirectUser,setActiveChat,activeChat,chats} = this.state
+		const {receiver} = this.state
 		const {onSendPrivateMessage} = this.props
-
 		onSendPrivateMessage(receiver)
-
-
-
 }
-
-
 	render(){
 		const { chats, activeChat, user, setActiveChat, redirectUser} = this.props
 		const {receiver} = this.state
-
 		return (
 			<div id="side-bar">
 					<div className="heading">
 						<div className="app-name">HealthTrack Chat </div>
-
 					</div>
 					<form onSubmit={this.handleSubmit} className="search">
 						<i className="search-icon"><FaSearch /></i>
@@ -68,9 +46,7 @@ export default class SideBar extends Component{
 						className="users" 
 						ref='users' 
 						onClick={(e)=>{ (e.target === this.refs.user) && setActiveChat(null) }}>
-						
 						{
-
 						chats.map((chat)=>{
 							const {redirectUser} = this.props
 							if(chat.name){
@@ -84,27 +60,17 @@ export default class SideBar extends Component{
 										chatSideName=redirectUser
 										if(this.state.flag===1){
 											setActiveChat(chat)
-											console.log("active chat",activeChat)
 											this.setState({
 												flag:0
 											})
 										}
-
-
 									}
-
-
 								}else{
 									chatSideName = chat.users.find((name)=>{
 										return name !== user.email
 									}) || "Community"
-
 								}
-								console.log("chatSideName",chat,chatSideName)
 								const classNames = (activeChat && activeChat.id === chat.id) ? 'active' : ''
-
-
-
 								return(
 								<div
 									key={chat.id}
@@ -116,11 +82,9 @@ export default class SideBar extends Component{
 										<div className="name">{chatSideName}</div>
 										{lastMessage && <div className="last-message">{lastMessage.message}</div>}
 									</div>
-
 								</div>
 							)
 							}
-
 							return null
 						})	
 						}

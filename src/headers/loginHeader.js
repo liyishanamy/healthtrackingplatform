@@ -21,10 +21,6 @@ import SendIcon from '@material-ui/icons/Send';
 import {errorHandling} from "../errorHandling";
 
 const mapStateToProps = state => {
-    console.log("state",state)
-    console.log("imageReducer",state.imageReducer)
-    //return {state}
-
     return {isLoggedIn: state.loginReducer,userEmail: state.emailReducer,role:state.roleReducer,url:state.imageReducer}
 }
 const StyledMenu = withStyles({
@@ -70,7 +66,6 @@ class loginHeader extends Component {
             anchorEl:null,
 
         }
-        console.log("initial header",localStorage.getItem("image"))
     }
 
 
@@ -107,17 +102,14 @@ class loginHeader extends Component {
         const data={
         email:localStorage.getItem("email")
         }
-        console.log("email",data)
         fetch('http://localhost:3000/online', {
             method: 'DELETE',
             headers:{'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
             .then(res =>{res.json()
-                console.log("res",res)
             } ) // or res.json()
             .then(data=>{
-                console.log("res",data)
             }).then(()=>{
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("userInfo");
@@ -134,18 +126,7 @@ class loginHeader extends Component {
         }
 
         )
-        // localStorage.removeItem("accessToken");
-        // localStorage.removeItem("userInfo");
-        // localStorage.removeItem("email");
-        // localStorage.removeItem("role");
-        // localStorage.removeItem("name");
-        // localStorage.removeItem("image")
-        // localStorage.setItem("loggedIn","LOGOUT");
-        // this.props.dispatch(setLogin("LOGOUT"))
-        // this.props.dispatch(setRole("NOT_LOGGED_IN"))
-        // this.props.dispatch(setProfileImage(""))
-        // alert("Your session is expired")
-        // window.location = '/sign-in'
+
         let deleteToken={"token":localStorage.getItem("accessToken")}
         fetch('http://localhost:3000/logout', {
             method: 'DELETE',
@@ -153,18 +134,14 @@ class loginHeader extends Component {
         })
             .then(res => res.json()) // or res.json()
             .then(res => console.log(res))
-
-
     };
 
 
 
 
     render() {
-        console.log("name",localStorage,localStorage.getItem("name"))
         let image = this.props.url
 
-        console.log("image",image)
         let image_preview;
         if(image!==""){
             image_preview = image
@@ -172,8 +149,6 @@ class loginHeader extends Component {
 
         }
         let healthRedirect;
-        console.log("myrole",localStorage,this.props)
-
         if(localStorage.getItem("role")==="DOCTOR"){
             healthRedirect = "/dashboard/doctor"
         }
@@ -201,8 +176,6 @@ class loginHeader extends Component {
         };
         return (
             <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-
-
                 <div className="container">
                     <Link className="navbar-brand" to={localStorage.getItem("healthRedirect")}>HealthTrack</Link>
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo02">

@@ -1,6 +1,4 @@
 import React, {Component, useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import DatePicker from 'react-datepicker';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -25,7 +23,6 @@ class BookAppointment extends Component {
 
     onFormSubmit(e) {
         e.preventDefault();
-        console.log(this.state.startDate)
         const body = {
             appointmentTime:new Date(this.state.startDate)
         }

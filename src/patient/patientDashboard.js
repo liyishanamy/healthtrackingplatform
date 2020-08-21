@@ -21,8 +21,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import {errorHandling} from "../errorHandling";
 const mapStateToProps = state => {
-
-    console.log("store", state)
     return {daysHavingNoSymptom: state.daysReducer}
 
 
@@ -31,7 +29,6 @@ const mapStateToProps = state => {
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-    console.log("props.state",props)
 
     return (
         <div
@@ -79,21 +76,18 @@ const useStyles = makeStyles((theme) => ({
 const SimpleTabs= props => {
     const classes = useStyles();
     // const [value, setValue] = React.useState(0);
-    console.log("props.state",props,props.daysHavingNoSymptom)
 
     const hash = window.location.hash
     const tabs = ["my_stats", "health_status", "my_appointment", "patient_chat"].map(item => "#" + item)
     const index = tabs.findIndex(item => item === hash)
     const [value, setValue] = React.useState(index > 0 ? index : 0);
     const [data,setData]=React.useState(0)
-    //const [checkAppointment,setCheckAppointment] =React.useState(true)
     let checkAppointment=true
 
 
 
     //Set to 14 once done testing
-    if(props.daysHavingNoSymptom>=2){
-        //setCheckAppointment(false)
+    if(props.daysHavingNoSymptom>=14){
         checkAppointment=false
     }
 

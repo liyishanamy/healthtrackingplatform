@@ -68,7 +68,6 @@ const TestNote= props => {
             "patientEmail":patientEmail,
             "testNote":testNote
         }
-        console.log(data)
 
         fetch('http://localhost:3000/appointment/testNote',{
             method:"PUT",

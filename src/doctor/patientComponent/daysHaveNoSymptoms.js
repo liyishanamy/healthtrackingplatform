@@ -3,12 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {errorHandling} from "../../errorHandling";
-
-
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -47,7 +42,6 @@ const useStyles = makeStyles(theme => ({
 const DaysHaveNoSymptoms= props => {
     const { className, ...rest } = props;
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
-    const [error,setError]=useState("")
 
     const classes = useStyles();
     useEffect(()=>{

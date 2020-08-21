@@ -51,7 +51,6 @@ const columns = [
         minWidth: 100,
         align: "right",
         format: value => {
-            console.log("format",value)
             return manageAppointment(value)
         }
     }
@@ -60,13 +59,11 @@ const columns = [
 
 
 function manageAppointment(email) {
-    console.log("manageAppointment",email)
     return <div key={email}><Link to={`/updateResult/${email}`}>Update Result</Link></div>
 }
 
 
 function createData(name, email, date, time_start, time_end, testDone, testResult, updateResult) {
-    console.log("updateResult",updateResult)
     let testDone_format;
     let date_format;
     let timeStart_format;
@@ -97,8 +94,6 @@ function createData(name, email, date, time_start, time_end, testDone, testResul
     }
     timeEnd_format = new Date(time_end).getHours() + ":" + minute2
     time_format = timeStart_format + '-' + timeEnd_format
-    console.log("test", date_format, time_format, testDone_format)
-    console.log('inCreateData',updateResult)
     updateResult=email
 
     return {name, email, date_format, time_format, testDone_format, testResult, updateResult};
@@ -171,11 +166,6 @@ export default function ManageAppointment() {
     },[startDate, endDate])
 
     useEffect(() => {
-        console.log("fetch data between",startDate, endDate)
-        console.log(new Date(startDate))
-        console.log(new Date(endDate))
-
-
         if(new Date(startDate).getTime()===new Date(endDate).getTime()){
             const today = new Date(startDate)
             const tomorrow = new Date(today)
@@ -195,7 +185,6 @@ export default function ManageAppointment() {
                 value = data
                 setRows([]);
                 for (var i = 0; i < value.length; i++) {
-                    console.log(i, value[i])
                     if (new Date(value[i]['appointmentStart']).getTime() <= new Date(endDate).getTime() && new Date(value[i]['appointmentStart']).getTime() >= new Date(startDate).getTime()) {
                         setRows(rows => [...rows,
                             createData(value[i]['patientName'], value[i]['patientEmail'], value[i]['appointmentStart'], value[i]['appointmentTime']['startTime'], value[i]['appointmentTime']['endTime'], value[i]['testDone'], value[i]['testResult'], value[i]['email'])
@@ -204,10 +193,7 @@ export default function ManageAppointment() {
 
 
                 }
-                console.log("after", rows)
             }).catch( e=> errorHandling(e) );
-
-
     }, [startDate, endDate,page,rowsPerPage])
     const selectionRange = {
         startDate: new Date(),
@@ -257,9 +243,7 @@ export default function ManageAppointment() {
                                 return (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.Email}>
                                         {columns.map((column) => {
-                                            console.log("row", row)
                                             const value = row[column.id];
-                                            console.log(column.id, value)
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {column.format ? column.format(value) : value}

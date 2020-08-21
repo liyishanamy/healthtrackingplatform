@@ -3,11 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {errorHandling} from "../../errorHandling";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Link from "@material-ui/core/Link";
+
 
 
 
@@ -56,8 +53,6 @@ const PatientsProfile= props => {
     const [address,setAddress]=useState("")
     const [result,setResult]=useState("")
     const [image,setImage]=useState("")
-    const [error,setError]=useState("")
-    console.log("email",props.patientEmail)
     const classes = useStyles();
     useEffect(()=>{
         const data = {
@@ -75,7 +70,6 @@ const PatientsProfile= props => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("->",data,props.patientEmail)
                 if(data.message!=="the token is invalid"){
                     setName(data.firstname+" "+data.lastname)
                     setAddress(data.street+" "+data.city+" "+data.state+" "+data.postcode)
@@ -87,14 +81,9 @@ const PatientsProfile= props => {
                     throw data
                 }
             }).catch( e=> errorHandling(e) );
-
-
-
-
     }, [])
     useEffect(()=>{
         const data= {userEmail: email}
-        console.log("data",data)
         fetch('http://localhost:3000/user/getImage', {
             method: 'POST',
             headers: {

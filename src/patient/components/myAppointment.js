@@ -105,7 +105,6 @@ const MyAppointment= props => {
             body: JSON.stringify(data),
         }).then(response => response.json())
             .then(data => {
-                console.log("get",data)
                 if(data.message==="You do not have a booked appointment yet."){
                    setAppointment(false)
                 }

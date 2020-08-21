@@ -4,7 +4,6 @@ import {Button} from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import {errorHandling} from "../errorHandling";
-const eye = <FontAwesomeIcon icon={faEye} />;
 
 class ChangePassword extends Component {
     constructor(props) {
@@ -62,7 +61,6 @@ class ChangePassword extends Component {
                     },
                     body: JSON.stringify(data),
                 }).then(response => {
-                    console.log("response1",response)
                     if(!response.ok) {
                         this.setState({
                             passwordErrorMsg: "You can only change your password once a day"
@@ -72,7 +70,6 @@ class ChangePassword extends Component {
                 })
 
                     .then(data => {
-                        console.log("response",data,data.status)
                         if (data.message === "The password does not match up") {
                             this.setState({
                                 passwordErrorMsg: data.message

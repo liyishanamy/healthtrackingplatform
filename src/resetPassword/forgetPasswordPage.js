@@ -52,7 +52,6 @@ class ForgetPasswordPage extends Component {
                 body: JSON.stringify(data)
             }).then(response => response.json())
                 .then(data => {
-                    console.log('Success:', data);
                     if(data.message==="Your password has been updated!"){
                         const {history} = this.props
                         history.push('/sign-in')

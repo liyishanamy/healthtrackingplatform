@@ -16,7 +16,6 @@ import {errorHandling} from "../../errorHandling";
 class PatientSymptoms extends Component {
     constructor(props) {
         super(props);
-        console.log("props",props)
         this.state={
             patientEmail:props.patientEmail,
             headache:0,
@@ -40,7 +39,6 @@ class PatientSymptoms extends Component {
         }).then(response => response.json())
             .then(data => {
                 if(data.message!=="the token is invalid"){
-                    console.log("symptom".data)
                     this.setState({
                         headache:data.headache,
                         cough:data.cough,
@@ -77,7 +75,6 @@ class PatientSymptoms extends Component {
             "frequency":this.state.breatheHard,
             "fullMark":30
         }]
-        console.log("symptom",symptom)
 
         return (
                 <div>

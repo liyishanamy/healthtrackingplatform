@@ -16,7 +16,6 @@ const mapStateToProps = state => {
 class SignupPage extends Component {
     constructor(props) {
         super(props);
-        console.log("signup",props)
         props.dispatch(setLogin("SIGNUP"))
         this.state={
             firstname:"",
@@ -128,7 +127,6 @@ class SignupPage extends Component {
     handleSubmit=(event)=>{
         event.preventDefault();
         const form = event.target;
-        console.log(event.target);
         if(this.state.password!==this.state.confirmedPassword) {
             this.setState({
                 passwordErrorMsg: "Error message does not match up"
@@ -163,7 +161,6 @@ class SignupPage extends Component {
                     password: this.state.password,
                     confirmedPassword: this.state.confirmedPassword
                 }
-                console.log(JSON.stringify(data))
                 fetch("http://localhost:3000/users/signup", {
                     method: 'POST',
                     headers:{
@@ -173,7 +170,6 @@ class SignupPage extends Component {
                     body: JSON.stringify(data),
                 }).then(response => response.json())
                     .then(data => {
-                        console.log('Success:', data);
                         if(data.message==="The doctor invitation code is not valid") {
                             this.setState({
                                 passwordErrorMsg: data.message

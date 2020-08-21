@@ -53,8 +53,6 @@ const TotalPatients= props => {
     useEffect(()=>{
         var today = Date.now()
         var queryDate = ""+new Date(today).getFullYear()+"-"+(new Date(today).getMonth()+1)+"-"+new Date(today).getUTCDate()
-        console.log("querydate",queryDate,today)
-        console.log("request:http://localhost:3000/users/totalJoinPatients?queryDate="+queryDate)
         fetch(`http://localhost:3000/users/totalJoinPatients?queryDate=`+queryDate,{
             method: 'GET',
             headers: {

@@ -3,8 +3,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import {Link} from "react-router-dom";
 import {errorHandling} from "../../errorHandling";
 
@@ -50,7 +48,6 @@ const PatientAppointment= props => {
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
     const [appointmentDate, setAppointmentDate] = useState(null)
     const [userMsg,setUseMsg] = useState("")
-    const [error,setError]=useState("")
     const [appointmentStart,setAppointmentStart]=useState(null)
     const [appointmentEnd,setAppointmentEnd]=useState(null)
     const [appointment,setAppointment]=useState(false)

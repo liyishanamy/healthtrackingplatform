@@ -17,17 +17,17 @@ export const roleOptions = {
     DOCTOR: 'DOCTOR',
     PATIENT:'PATIENT'
 }
-// Action creators
+// Action login status creators
 export function setLogin(loginOrNot) {
     return { type: SET_LOG_IN, loginOrNot }
 }
 
-// Action creators
+// Action role creators
 export function setRole(role) {
     return { type: SET_ROLE, role }
 }
 /*
- * action creators
+ * action email creators
  */
 
 export function setEmail(email) {
@@ -35,7 +35,7 @@ export function setEmail(email) {
 }
 
 /*
- * action creators
+ * action image creators
  */
 
 export function setProfileImage(url) {

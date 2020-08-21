@@ -92,8 +92,6 @@ class MyStats extends Component {
                 <MySymptoms/>
 
 
-
-
             </div>
 
 

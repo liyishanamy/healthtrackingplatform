@@ -9,8 +9,6 @@ import MessageInput from '../messages/MessageInput'
 export default class ChatContainer extends Component {
     constructor(props) {
         super(props);
-        console.log("chat props", props, this.props)
-
         this.state = {
             chats: [],
             activeChat: null,
@@ -18,59 +16,29 @@ export default class ChatContainer extends Component {
             redirectUser: this.props.redirectUser,
             firstRender:0
         };
-        // console.log("email",this.state.email, this.state.redirectFrom)
-
     }
-
-    // flag = false
-
     componentDidMount() {
         const {socket} = this.props
         this.initSocket(socket)
-
     }
 
     initSocket(socket) {
-
-        const {user} = this.props
         socket.emit(COMMUNITY_CHAT, this.resetChat)
-        const {activeUsers, email, redirectUser} = this.props
-        //console.log("redirectUser",redirectUser)
+        const {redirectUser} = this.props
         if (redirectUser) {
-            console.log("redirectUser", redirectUser)
             let receiver = this.state.redirectUser
             socket.emit(PRIVATE_MESSAGE, {receiver, sender: localStorage.getItem("email")})
         }
-
         socket.on(PRIVATE_MESSAGE, this.addChat)
-
-        // socket.on(PRIVATE_MESSAGE, this.addChat)
         socket.on('connect', () => {
             socket.emit(COMMUNITY_CHAT, this.resetChat)
         })
     }
 
     sendOpenPrivateMessage = (receiver) => {
-        console.log("receiver", receiver)
         const {socket, user} = this.props
-        console.log("send email", user)
         socket.emit(PRIVATE_MESSAGE, {receiver, sender: localStorage.getItem("email")})
     }
-    // sendOpenPrivateMessage1 = () => {
-    //     const {socket, user, activeUsers, email} = this.props
-    //
-    //     for (let i = 0; i < activeUsers.length; i++) {
-    //         if (activeUsers[i] !== user.email) {
-    //             let receiver = activeUsers[i]
-    //             socket.on(PRIVATE_MESSAGE, this.addChat)
-    //
-    //             console.log("receiver", i, receiver)
-    //             socket.emit(PRIVATE_MESSAGE, {receiver, sender: localStorage.getItem("email")})
-    //         }
-    //     }
-    //
-    // }
-
 
     /*
     *	Reset the chat back to only the chat passed in.
@@ -94,19 +62,12 @@ export default class ChatContainer extends Component {
         const {chats} = this.state
         const newChats = reset ? [chat] : [...chats, chat]
         this.setState({chats: newChats, activeChat: reset ? chat : this.state.activeChat})
-        console.log("newchats", chats, newChats)
-
-
 
         const messageEvent = `${MESSAGE_RECIEVED}-${chat.id}`
         const typingEvent = `${TYPING}-${chat.id}`
-        console.log("messageEvent", messageEvent)
-        console.log("typingEvent", typingEvent)
 
         socket.on(typingEvent, this.updateTypingInChat(chat.id))
         socket.on(messageEvent, this.addMessageToChat(chat.id))
-
-
     }
 
     /*
@@ -116,25 +77,17 @@ export default class ChatContainer extends Component {
     * 	@param chatId {number}
     */
     addMessageToChat = (chatId) => {
-
-
             return message => {
-
                 const {chats} = this.state
                 let newChats = chats.map((chat) => {
-                    console.log("add message to chat", chat, chat.id === chatId)
                     if (chat.id === chatId)
                         chat.messages.push(message)
                     return chat
                 })
-
                 this.setState({chats: newChats})
-                console.log("chatssss", chats)
             }
 
     }
-
-
 
     /*
     *	Updates the typing of chat with id passed in.
@@ -143,11 +96,8 @@ export default class ChatContainer extends Component {
     updateTypingInChat = (chatId) => {
         return ({isTyping, user}) => {
             if (user !== this.props.user.name) {
-
                 const {chats} = this.state
-
                 let newChats = chats.map((chat) => {
-                    console.log("updateTypingInChat", chat)
                     if (chat.id === chatId) {
                         if (isTyping && !chat.typingUsers.includes(user)) {
                             chat.typingUsers.push(user)
@@ -158,7 +108,6 @@ export default class ChatContainer extends Component {
                     return chat
                 })
                 this.setState({chats: newChats})
-                console.log("updateTypingInChat", chats)
             }
         }
     }
@@ -169,7 +118,6 @@ export default class ChatContainer extends Component {
     *	@param message {string} The message to be added to the chat.
     */
     sendMessage = (chatId, message, email) => {
-        console.log("sendMessage", chatId, message, email)
         const {socket} = this.props
         socket.emit(MESSAGE_SENT, {chatId, message, email})
     }
@@ -185,19 +133,12 @@ export default class ChatContainer extends Component {
     }
 
     setActiveChat = (activeChat) => {
-        console.log("activechat", activeChat)
         this.setState({activeChat})
     }
 
     render() {
         const {user, logout} = this.props
         const {chats, activeChat} = this.state
-        // this.sendOpenPrivateMessage1()
-        console.log("activechat",activeChat)
-
-
-
-
 
         return (
             <div className="container_chat">
@@ -224,7 +165,6 @@ export default class ChatContainer extends Component {
                                     <MessageInput
                                         sendMessage={
                                             (message) => {
-                                                console.log("send")
                                                 this.sendMessage(activeChat.id, message, this.state.email)
                                             }
                                         }

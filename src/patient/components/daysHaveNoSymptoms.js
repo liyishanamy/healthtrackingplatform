@@ -12,7 +12,6 @@ import store from "../../store/store"
 
 
 const mapStateToProps = state => {
-    console.log("mystats",state)
     if(state.daysReducer){
         return {daysHavingNoSymptom: state}
     }
@@ -55,7 +54,6 @@ const useStyles = makeStyles(theme => ({
 
 const DaysHaveNoSymptoms= props => {
     const { className, ...rest } = props;
-    console.log("props",props)
     const [daysHavingNoSymptoms,setDaysHavingNoSymptoms]=useState(0)
     const classes = useStyles();
     useEffect(()=>{
